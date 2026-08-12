@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Pokédex · Colección</title>
+<meta name="description" content="Marca y guarda qué cartas Pokémon ya tienes en tu colección.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#101012" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pokédex">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#101012;
+    --surface:#1a1a1d;
+    --surface-hover:#212124;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.14);
+    --text:#edede8;
+    --text-dim:#86868c;
+    --accent:#d8b45c;
+    --accent-soft:rgba(216,180,92,0.12);
+    --radius:12px;
+  }
+  :root[data-theme="light"]{
+    --bg:#f5f1e8;
+    --surface:#ffffff;
+    --surface-hover:#efe9db;
+    --border:rgba(23,20,16,0.10);
+    --border-strong:rgba(23,20,16,0.18);
+    --text:#211e18;
+    --text-dim:#83796a;
+    --accent:#a9762e;
+    --accent-soft:rgba(169,118,46,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Sora',system-ui,sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    transition:background .2s ease, color .2s ease;
+  }
+  *:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;}
+
+  header{
+    position:sticky; top:0; z-index:10;
+    background:rgba(16,16,18,0.92);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+    padding:16px 16px 14px;
+  }
+  .header-top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    margin-bottom:12px;
+  }
+  .title-block h1{
+    font-size:19px; font-weight:700; margin:0 0 2px; letter-spacing:-0.01em;
+  }
+  .title-block p{
+    margin:0; font-size:12.5px; color:var(--text-dim);
+  }
+  #overall-count{
+    font-family:'JetBrains Mono',monospace; color:var(--accent); font-weight:500;
+  }
+  .icon-btn{
+    background:var(--surface); border:1px solid var(--border); color:var(--text-dim);
+    width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; cursor:pointer; transition:background .15s ease, color .15s ease, transform .4s ease;
+  }
+  .icon-btn:hover{ background:var(--surface-hover); color:var(--text); }
+  .icon-btn.spinning svg{ animation:spin .7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .progress-track{
+    height:3px; background:var(--border); border-radius:2px; overflow:hidden; margin-bottom:12px;
+  }
+  .progress-fill{
+    height:100%; background:var(--accent); border-radius:2px; width:0%;
+    transition:width .3s ease;
+  }
+
+  .search-wrap{
+    position:relative; display:flex; align-items:center;
+  }
+  .search-wrap svg{ position:absolute; left:11px; color:var(--text-dim); pointer-events:none; }
+  #search{
+    width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text);
+    font-family:'Sora',sans-serif; font-size:14px; padding:9px 12px 9px 34px; border-radius:10px;
+  }
+  #search::placeholder{ color:var(--text-dim); }
+  #search:focus{ border-color:var(--border-strong); }
+
+  .hint{ margin:8px 2px 0; font-size:11px; color:var(--text-dim); }
+
+  .filter-row{ margin-top:10px; }
+  .toggle{
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none;
+  }
+  .toggle input{ position:absolute; opacity:0; width:0; height:0; }
+  .toggle-track{
+    width:36px; height:21px; background:var(--surface); border:1px solid var(--border);
+    border-radius:999px; position:relative; flex-shrink:0;
+    transition:background .2s ease, border-color .2s ease;
+  }
+  .toggle-thumb{
+    position:absolute; top:1px; left:1px; width:17px; height:17px; border-radius:50%;
+    background:var(--text-dim); transition:transform .2s ease, background .2s ease;
+  }
+  .toggle input:checked ~ .toggle-track{ background:var(--accent-soft); border-color:var(--accent); }
+  .toggle input:checked ~ .toggle-track .toggle-thumb{ transform:translateX(15px); background:var(--accent); }
+  .toggle input:focus-visible ~ .toggle-track{ outline:2px solid var(--accent); outline-offset:2px; }
+  .toggle-label{ font-size:13px; color:var(--text); }
+
+  main{ padding:12px 16px 48px; max-width:720px; margin:0 auto; }
+
+  .state-msg{
+    text-align:center; color:var(--text-dim); font-size:13.5px; padding:60px 20px; line-height:1.6;
+  }
+  .state-msg button{
+    margin-top:12px; background:var(--accent); color:#171410; border:none; font-family:'Sora',sans-serif;
+    font-weight:600; font-size:13px; padding:8px 16px; border-radius:8px; cursor:pointer;
+  }
+
+  .gen-section{ margin-bottom:8px; border:1px solid var(--border); border-radius:14px; overflow:hidden; background:var(--surface); }
+  .gen-section.is-hidden{ display:none; }
+  .gen-section.is-inactive{ display:none; }
+
+  .gen-header{
+    width:100%; display:flex; align-items:center; gap:10px; background:transparent; border:none;
+    color:var(--text); padding:12px 14px; text-align:left;
+  }
+  .gen-roman{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent);
+    background:var(--accent-soft); border-radius:6px; padding:2px 6px; flex-shrink:0;
+  }
+  .gen-region{ font-weight:600; font-size:14.5px; flex:1; }
+  .gen-count{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim);
+  }
+
+  .gen-track{ height:2px; background:var(--border); }
+  .gen-fill{ height:100%; background:var(--accent); width:0%; transition:width .3s ease; }
+
+  .gen-body{ padding:12px; }
+
+  /* ---------- Estantería (selector de generación) ---------- */
+  .view-fade{ animation:viewFadeIn .32s ease; }
+  @keyframes viewFadeIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
+
+  .shelf-hint{ text-align:center; color:var(--text-dim); font-size:12.5px; margin:2px 0 14px; }
+
+  .shelf-row{
+    position:relative; display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;
+    align-items:end; padding:8px 4px 20px; margin-bottom:10px;
+  }
+  .shelf-row::after{
+    content:''; position:absolute; left:-2px; right:-2px; bottom:6px; height:7px;
+    background:linear-gradient(180deg, rgba(216,180,92,.32), rgba(216,180,92,.04));
+    border-radius:2px; box-shadow:0 8px 12px -4px rgba(0,0,0,.6);
+  }
+
+  .binder{
+    position:relative; display:flex; align-items:stretch; height:132px;
+    background:var(--surface); border:1px solid var(--border); border-radius:6px 10px 10px 6px;
+    padding:0; cursor:pointer; text-align:left; font-family:inherit; color:inherit;
+    box-shadow:0 6px 14px -8px rgba(0,0,0,.7);
+    transition:transform .15s ease, border-color .15s ease;
+    perspective:700px;
+  }
+  .binder:hover{ transform:translateY(-2px); border-color:var(--border-strong); }
+  .binder:active{ transform:translateY(0); }
+  .binder-spine{
+    width:9px; flex-shrink:0; border-radius:5px 0 0 5px;
+    background:var(--binder-color, var(--accent));
+  }
+  .binder-cover{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:5px; padding:14px 6px 10px; position:relative;
+    transform-origin:top center; backface-visibility:hidden;
+  }
+  .binder-tab{
+    position:absolute; top:-8px; left:12px; background:var(--binder-color, var(--accent));
+    color:#171410; font-family:'JetBrains Mono',monospace; font-size:8.5px; font-weight:700;
+    letter-spacing:.03em; padding:2px 6px; border-radius:4px 4px 0 0; white-space:nowrap;
+  }
+  .binder-roman{
+    font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700;
+    color:var(--binder-color, var(--accent)); line-height:1;
+  }
+  .binder-region{ font-size:12px; font-weight:600; text-align:center; line-height:1.2; }
+  .binder-count{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-dim); }
+  .binder-track{
+    width:78%; height:3px; background:var(--border); border-radius:2px; overflow:hidden; margin-top:1px;
+  }
+  .binder-fill{
+    display:block; height:100%; background:var(--binder-color, var(--accent)); width:0%;
+    transition:width .3s ease;
+  }
+
+  .binder.is-opening{ z-index:5; }
+  .binder.is-opening .binder-cover{
+    animation:binderCoverOpen .42s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  .binder.is-opening .binder-spine{
+    animation:binderSpineGlow .42s ease forwards;
+  }
+  @keyframes binderCoverOpen{
+    0%{ transform:rotateX(0deg); opacity:1; }
+    55%{ transform:rotateX(-75deg); opacity:.75; }
+    100%{ transform:rotateX(-120deg); opacity:0; }
+  }
+  @keyframes binderSpineGlow{
+    0%{ box-shadow:none; }
+    100%{ box-shadow:0 0 14px 2px var(--binder-color, var(--accent)); }
+  }
+
+  /* ---------- Vista de detalle ---------- */
+  .back-btn{
+    display:inline-flex; align-items:center; gap:6px; background:var(--surface);
+    border:1px solid var(--border); color:var(--text); font-family:'Sora',sans-serif;
+    font-size:13px; font-weight:600; padding:8px 13px 8px 10px; border-radius:10px;
+    cursor:pointer; margin-bottom:12px;
+  }
+  .back-btn:hover{ background:var(--surface-hover); }
+  .back-btn svg{ flex-shrink:0; }
+
+  .poke-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(74px, 1fr)); gap:8px;
+  }
+  .poke-card{
+    position:relative; display:flex; flex-direction:column; align-items:center;
+    background:var(--bg); border:1px solid var(--border); border-radius:10px;
+    padding:8px 4px 7px; cursor:pointer; transition:border-color .15s ease, background .15s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .poke-card.is-filtered-out{ display:none; }
+  .poke-card:hover{ background:var(--surface-hover); }
+  .poke-card.owned{ border-color:var(--accent); background:var(--accent-soft); }
+
+  .poke-check{
+    position:absolute; top:4px; right:4px; width:16px; height:16px; border-radius:50%;
+    background:var(--accent); display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:scale(.4); transition:opacity .15s ease, transform .15s ease;
+  }
+  .poke-card.owned .poke-check{ opacity:1; transform:scale(1); }
+  .poke-check svg{ width:10px; height:10px; }
+
+  .poke-sprite-wrap{ width:52px; height:52px; display:flex; align-items:center; justify-content:center; }
+  .poke-card img{
+    width:100%; height:100%; object-fit:contain; filter:grayscale(1); opacity:.45;
+    transition:filter .15s ease, opacity .15s ease;
+  }
+  .poke-card.owned img{ filter:none; opacity:1; }
+  .poke-card img.img-missing{ visibility:hidden; }
+
+  .poke-num{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-dim); margin-top:3px; }
+  .poke-name{
+    font-size:10.5px; color:var(--text); text-align:center; line-height:1.25; margin-top:1px;
+    max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+
+  #no-results{ display:none; }
+  #no-results.show{ display:block; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="title-block">
+      <h1>Mi Pokédex</h1>
+      <p>Marca las cartas que ya tienes · <span id="overall-count">–</span></p>
+    </div>
+    <div style="display:flex; gap:8px; flex-shrink:0;">
+      <button id="theme-btn" class="icon-btn" title="Cambiar tema" aria-label="Cambiar a modo claro u oscuro">
+        <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button id="refresh-btn" class="icon-btn" title="Actualizar datos" aria-label="Actualizar datos">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="overall-fill"></div></div>
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="search" type="text" placeholder="Buscar por nombre o número" autocomplete="off">
+  </div>
+  <div class="filter-row">
+    <label class="toggle">
+      <input type="checkbox" id="missing-toggle">
+      <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      <span class="toggle-label">Solo lo que me falta</span>
+    </label>
+  </div>
+  <p class="hint">Mantén pulsado y desliza para marcar varias seguidas</p>
+</header>
+
+<main>
+  <div id="loading" class="state-msg">Cargando Pokédex…</div>
+  <div id="error" class="state-msg" style="display:none;">
+    No se pudieron cargar los datos. Comprueba tu conexión.
+    <br>
+    <button id="retry-btn">Reintentar</button>
+  </div>
+
+  <div id="shelf-view" class="view-fade">
+    <p class="shelf-hint">Elige una carpeta para ver esa generación</p>
+    <div id="binder-grid"></div>
+  </div>
+
+  <div id="detail-view" class="view-fade" hidden>
+    <button id="back-btn" class="back-btn" type="button">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      <span>Estantería</span>
+    </button>
+    <div id="generations"></div>
+    <p id="no-results" class="state-msg">No se encontraron resultados.</p>
+  </div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var CACHE_KEY = 'pokecheck_cache_v1';
+  var OWNED_KEY = 'pokecheck_owned_v1';
+  var THEME_KEY = 'pokecheck_theme_v1';
+
+  // ---------- Tema (claro/oscuro) ----------
+  var themeBtn = document.getElementById('theme-btn');
+  var sunIcon = document.getElementById('theme-icon-sun');
+  var moonIcon = document.getElementById('theme-icon-moon');
+
+  function applyTheme(theme) {
+    if (theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = '';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      sunIcon.style.display = '';
+      moonIcon.style.display = 'none';
+    }
+  }
+
+  function getStoredTheme() {
+    try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
+  }
+
+  function initTheme() {
+    var stored = getStoredTheme();
+    if (stored === 'light' || stored === 'dark') {
+      applyTheme(stored);
+      return;
+    }
+    var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    applyTheme(prefersLight ? 'light' : 'dark');
+  }
+
+  themeBtn.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    var next = current === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+  });
+
+  initTheme();
+
+  // ---------- Instalable (PWA) ----------
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js').catch(function() {});
+    });
+  }
+
+  var owned = new Set();
+  try {
+    var storedOwned = JSON.parse(localStorage.getItem(OWNED_KEY) || '[]');
+    owned = new Set(storedOwned);
+  } catch (e) { owned = new Set(); }
+
+  var gensContainer = document.getElementById('generations');
+  var loadingEl = document.getElementById('loading');
+  var errorEl = document.getElementById('error');
+  var noResultsEl = document.getElementById('no-results');
+  var searchInput = document.getElementById('search');
+  var missingToggle = document.getElementById('missing-toggle');
+  var refreshBtn = document.getElementById('refresh-btn');
+  var retryBtn = document.getElementById('retry-btn');
+  var overallCountEl = document.getElementById('overall-count');
+  var overallFillEl = document.getElementById('overall-fill');
+  var shelfViewEl = document.getElementById('shelf-view');
+  var detailViewEl = document.getElementById('detail-view');
+  var binderGridEl = document.getElementById('binder-grid');
+  var backBtn = document.getElementById('back-btn');
+
+  var totalCount = 0;
+  var searchQuery = '';
+  var missingOnly = false;
+  var currentGenId = null;
+  var isAnimatingBinder = false;
+  var REDUCE_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  var BINDER_COLORS = [
+    '#d8b45c', '#8fae6b', '#4fa8a3', '#6f8fc9', '#b06bc9',
+    '#c96b96', '#d98f4a', '#6bc9a0', '#c94a4a'
+  ];
+
+  function toRoman(num) {
+    var map = [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],
+      [50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];
+    var res = '';
+    for (var i = 0; i < map.length; i++) {
+      while (num >= map[i][0]) { res += map[i][1]; num -= map[i][0]; }
+    }
+    return res;
+  }
+
+  function formatName(raw) {
+    if (raw === 'nidoran-f') return 'Nidoran \u2640';
+    if (raw === 'nidoran-m') return 'Nidoran \u2642';
+    return raw.split('-').map(function(w){
+      return w.charAt(0).toUpperCase() + w.slice(1);
+    }).join(' ');
+  }
+
+  function formatNum(id) {
+    return '#' + String(id).padStart(3, '0');
+  }
+
+  function officialArtUrl(id) {
+    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/' + id + '.png';
+  }
+  function basicSpriteUrl(id) {
+    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + id + '.png';
+  }
+
+  function idFromUrl(url) {
+    var parts = url.split('/').filter(Boolean);
+    return Number(parts[parts.length - 1]);
+  }
+
+  function loadCache() {
+    try {
+      var raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (parsed && parsed.v === 1 && Array.isArray(parsed.gens)) return parsed.gens;
+    } catch (e) {}
+    return null;
+  }
+
+  function saveCache(gens) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ v: 1, gens: gens, at: Date.now() }));
+    } catch (e) {}
+  }
+
+  function saveOwned() {
+    try {
+      localStorage.setItem(OWNED_KEY, JSON.stringify(Array.from(owned)));
+    } catch (e) {}
+  }
+
+  function fetchAllGenerations() {
+    return fetch('https://pokeapi.co/api/v2/generation?limit=100')
+      .then(function(res) {
+        if (!res.ok) throw new Error('list failed');
+        return res.json();
+      })
+      .then(function(listData) {
+        return Promise.all(listData.results.map(function(r) {
+          return fetch(r.url).then(function(res) {
+            if (!res.ok) throw new Error('gen failed');
+            return res.json();
+          });
+        }));
+      })
+      .then(function(details) {
+        var gens = details.map(function(d) {
+          return {
+            id: d.id,
+            region: d.main_region ? d.main_region.name : '',
+            list: d.pokemon_species.map(function(s) {
+              return { id: idFromUrl(s.url), name: s.name };
+            }).sort(function(a, b) { return a.id - b.id; })
+          };
+        });
+        gens.sort(function(a, b) { return a.id - b.id; });
+        return gens;
+      });
+  }
+
+  function buildImg(id) {
+    var img = document.createElement('img');
+    img.loading = 'lazy';
+    img.alt = '';
+    img.dataset.attempt = '0';
+    img.src = officialArtUrl(id);
+    img.onerror = function() {
+      var attempt = Number(img.dataset.attempt);
+      if (attempt === 0) {
+        img.dataset.attempt = '1';
+        img.src = basicSpriteUrl(id);
+      } else {
+        img.onerror = null;
+        img.classList.add('img-missing');
+      }
+    };
+    return img;
+  }
+
+  function setCardOwned(card, willOwn) {
+    if (card.classList.contains('owned') === willOwn) return false;
+    card.classList.toggle('owned', willOwn);
+    card.setAttribute('aria-pressed', String(willOwn));
+    var id = Number(card.dataset.id);
+    var displayName = formatName(card.dataset.name);
+    card.setAttribute('aria-label', displayName + ', ' + formatNum(id) + (willOwn ? ', en tu colección' : ', no la tienes'));
+    if (willOwn) owned.add(id); else owned.delete(id);
+    return true;
+  }
+
+  function buildCard(pokemon) {
+    var card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'poke-card';
+    card.dataset.id = pokemon.id;
+    card.dataset.name = pokemon.name;
+
+    var isOwned = owned.has(pokemon.id);
+    var displayName = formatName(pokemon.name);
+    if (isOwned) card.classList.add('owned');
+    card.setAttribute('aria-pressed', String(isOwned));
+    card.setAttribute('aria-label', displayName + ', ' + formatNum(pokemon.id) + (isOwned ? ', en tu colección' : ', no la tienes'));
+
+    var check = document.createElement('span');
+    check.className = 'poke-check';
+    check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#171410" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+    var spriteWrap = document.createElement('span');
+    spriteWrap.className = 'poke-sprite-wrap';
+    spriteWrap.appendChild(buildImg(pokemon.id));
+
+    var num = document.createElement('span');
+    num.className = 'poke-num';
+    num.textContent = formatNum(pokemon.id);
+
+    var name = document.createElement('span');
+    name.className = 'poke-name';
+    name.textContent = displayName;
+
+    card.appendChild(check);
+    card.appendChild(spriteWrap);
+    card.appendChild(num);
+    card.appendChild(name);
+
+    card.addEventListener('click', function() {
+      var willOwn = !card.classList.contains('owned');
+      if (setCardOwned(card, willOwn)) {
+        updateSectionCount(card.closest('.gen-section'));
+        saveOwned();
+        updateOverallCount();
+        if (missingOnly) applyFilters();
+      }
+    });
+
+    return card;
+  }
+
+  function updateSectionCount(section) {
+    var cards = section.querySelectorAll('.poke-card');
+    var ownedCount = section.querySelectorAll('.poke-card.owned').length;
+    var total = cards.length;
+    section.querySelector('[data-count]').textContent = ownedCount + '/' + total;
+    var pct = total ? (ownedCount / total) * 100 : 0;
+    section.querySelector('.gen-fill').style.width = pct + '%';
+
+    var binder = binderGridEl.querySelector('.binder[data-gen="' + section.dataset.gen + '"]');
+    if (binder) {
+      binder.querySelector('[data-count]').textContent = ownedCount + '/' + total;
+      binder.querySelector('.binder-fill').style.width = pct + '%';
+    }
+  }
+
+  function updateOverallCount() {
+    var ownedTotal = gensContainer.querySelectorAll('.poke-card.owned').length;
+    overallCountEl.textContent = ownedTotal + ' / ' + totalCount;
+    var pct = totalCount ? (ownedTotal / totalCount) * 100 : 0;
+    overallFillEl.style.width = pct + '%';
+  }
+
+  function cardMatchesFilters(card) {
+    var matchesSearch = true;
+    if (searchQuery) {
+      var name = card.dataset.name.toLowerCase();
+      var num = String(card.dataset.id);
+      matchesSearch = name.indexOf(searchQuery) !== -1 || num.indexOf(searchQuery.replace('#', '')) !== -1;
+    }
+    var matchesMissing = !missingOnly || !card.classList.contains('owned');
+    return matchesSearch && matchesMissing;
+  }
+
+  function applyFilters() {
+    var filtersActive = searchQuery !== '' || missingOnly;
+    var sections = gensContainer.querySelectorAll('.gen-section:not(.is-inactive)');
+    var anyVisible = false;
+
+    sections.forEach(function(section) {
+      var sectionHasMatch = false;
+      section.querySelectorAll('.poke-card').forEach(function(card) {
+        var matches = cardMatchesFilters(card);
+        card.classList.toggle('is-filtered-out', !matches);
+        if (matches) sectionHasMatch = true;
+      });
+      section.classList.toggle('is-hidden', filtersActive && !sectionHasMatch);
+      if (sectionHasMatch) anyVisible = true;
+    });
+
+    noResultsEl.classList.toggle('show', filtersActive && !anyVisible);
+  }
+
+  function buildSection(gen) {
+    var section = document.createElement('section');
+    section.className = 'gen-section';
+    section.dataset.gen = gen.id;
+
+    var header = document.createElement('div');
+    header.className = 'gen-header';
+
+    var roman = document.createElement('span');
+    roman.className = 'gen-roman';
+    roman.textContent = toRoman(gen.id);
+
+    var region = document.createElement('span');
+    region.className = 'gen-region';
+    var regionName = gen.region ? gen.region.charAt(0).toUpperCase() + gen.region.slice(1) : ('Generaci\u00f3n ' + gen.id);
+    region.textContent = regionName;
+
+    var count = document.createElement('span');
+    count.className = 'gen-count';
+    count.dataset.count = '';
+
+    header.appendChild(roman);
+    header.appendChild(region);
+    header.appendChild(count);
+
+    var track = document.createElement('div');
+    track.className = 'gen-track';
+    var fill = document.createElement('div');
+    fill.className = 'gen-fill';
+    track.appendChild(fill);
+
+    var body = document.createElement('div');
+    body.className = 'gen-body';
+
+    var grid = document.createElement('div');
+    grid.className = 'poke-grid';
+    gen.list.forEach(function(p) {
+      grid.appendChild(buildCard(p));
+    });
+    body.appendChild(grid);
+
+    section.appendChild(header);
+    section.appendChild(track);
+    section.appendChild(body);
+
+    return section;
+  }
+
+  function buildBinder(gen) {
+    var color = BINDER_COLORS[(gen.id - 1) % BINDER_COLORS.length];
+    var regionName = gen.region ? gen.region.charAt(0).toUpperCase() + gen.region.slice(1) : ('Generaci\u00f3n ' + gen.id);
+
+    var binder = document.createElement('button');
+    binder.type = 'button';
+    binder.className = 'binder';
+    binder.dataset.gen = gen.id;
+    binder.style.setProperty('--binder-color', color);
+    binder.setAttribute('aria-label', 'Abrir generaci\u00f3n ' + toRoman(gen.id) + ', ' + regionName);
+
+    var spine = document.createElement('span');
+    spine.className = 'binder-spine';
+
+    var cover = document.createElement('span');
+    cover.className = 'binder-cover';
+
+    var tab = document.createElement('span');
+    tab.className = 'binder-tab';
+    tab.textContent = 'GEN ' + toRoman(gen.id);
+
+    var roman = document.createElement('span');
+    roman.className = 'binder-roman';
+    roman.textContent = toRoman(gen.id);
+
+    var region = document.createElement('span');
+    region.className = 'binder-region';
+    region.textContent = regionName;
+
+    var count = document.createElement('span');
+    count.className = 'binder-count';
+    count.dataset.count = '';
+    count.textContent = '0/' + gen.list.length;
+
+    var track = document.createElement('span');
+    track.className = 'binder-track';
+    var fill = document.createElement('span');
+    fill.className = 'binder-fill';
+    track.appendChild(fill);
+
+    cover.appendChild(tab);
+    cover.appendChild(roman);
+    cover.appendChild(region);
+    cover.appendChild(count);
+    cover.appendChild(track);
+
+    binder.appendChild(spine);
+    binder.appendChild(cover);
+
+    binder.addEventListener('click', function() {
+      triggerBinderOpen(binder, gen);
+    });
+
+    return binder;
+  }
+
+  function buildBinderGrid(gens) {
+    binderGridEl.innerHTML = '';
+    for (var i = 0; i < gens.length; i += 3) {
+      var row = document.createElement('div');
+      row.className = 'shelf-row';
+      gens.slice(i, i + 3).forEach(function(gen) {
+        row.appendChild(buildBinder(gen));
+      });
+      binderGridEl.appendChild(row);
+    }
+  }
+
+  function triggerBinderOpen(binderEl, gen) {
+    if (isAnimatingBinder) return;
+    isAnimatingBinder = true;
+    binderEl.classList.add('is-opening');
+    var delay = REDUCE_MOTION ? 0 : 420;
+    setTimeout(function() {
+      binderEl.classList.remove('is-opening');
+      isAnimatingBinder = false;
+      enterDetailMode(gen.id);
+    }, delay);
+  }
+
+  function enterDetailMode(genId) {
+    currentGenId = genId;
+    gensContainer.querySelectorAll('.gen-section').forEach(function(section) {
+      section.classList.toggle('is-inactive', Number(section.dataset.gen) !== genId);
+    });
+    shelfViewEl.hidden = true;
+    detailViewEl.hidden = false;
+    window.scrollTo(0, 0);
+    applyFilters();
+  }
+
+  function enterSearchMode() {
+    currentGenId = null;
+    gensContainer.querySelectorAll('.gen-section').forEach(function(section) {
+      section.classList.remove('is-inactive');
+    });
+    shelfViewEl.hidden = true;
+    detailViewEl.hidden = false;
+    applyFilters();
+  }
+
+  function exitToShelf() {
+    currentGenId = null;
+    detailViewEl.hidden = true;
+    shelfViewEl.hidden = false;
+    searchInput.value = '';
+    searchQuery = '';
+    window.scrollTo(0, 0);
+  }
+
+  function render(gens) {
+    gensContainer.innerHTML = '';
+    totalCount = 0;
+    gens.forEach(function(gen) {
+      totalCount += gen.list.length;
+      gensContainer.appendChild(buildSection(gen));
+    });
+    buildBinderGrid(gens);
+    gensContainer.querySelectorAll('.gen-section').forEach(function(section) {
+      updateSectionCount(section);
+    });
+    updateOverallCount();
+    currentGenId = null;
+    searchQuery = '';
+    searchInput.value = '';
+    shelfViewEl.hidden = false;
+    detailViewEl.hidden = true;
+    applyFilters();
+    loadingEl.style.display = 'none';
+    errorEl.style.display = 'none';
+  }
+
+  function showLoading() {
+    loadingEl.style.display = 'block';
+    errorEl.style.display = 'none';
+    gensContainer.innerHTML = '';
+    binderGridEl.innerHTML = '';
+  }
+
+  function showError() {
+    loadingEl.style.display = 'none';
+    errorEl.style.display = 'block';
+  }
+
+  function init(forceRefresh) {
+    var cached = forceRefresh ? null : loadCache();
+    if (cached) {
+      render(cached);
+      return;
+    }
+    showLoading();
+    fetchAllGenerations().then(function(gens) {
+      saveCache(gens);
+      render(gens);
+    }).catch(function() {
+      showError();
+    });
+  }
+
+  refreshBtn.addEventListener('click', function() {
+    refreshBtn.classList.add('spinning');
+    localStorage.removeItem(CACHE_KEY);
+    fetchAllGenerations().then(function(gens) {
+      saveCache(gens);
+      render(gens);
+    }).catch(function() {
+      showError();
+    }).finally(function() {
+      refreshBtn.classList.remove('spinning');
+    });
+  });
+
+  retryBtn.addEventListener('click', function() { init(false); });
+
+  var LONG_PRESS_MS = 280;
+  var MOVE_CANCEL_PX = 10;
+  var AUTOSCROLL_EDGE = 70;
+  var AUTOSCROLL_MAX_SPEED = 16;
+
+  var touchState = {
+    timer: null,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastY: 0,
+    painting: false,
+    paintTarget: false,
+    visibleCards: [],
+    cardIndexMap: null,
+    originalOwned: [],
+    anchorIndex: -1,
+    rangeStart: -1,
+    rangeEnd: -1,
+    autoScrollSpeed: 0,
+    autoScrollRAF: null
+  };
+
+  function vibrate(ms) {
+    if (navigator.vibrate) {
+      try { navigator.vibrate(ms); } catch (e) {}
+    }
+  }
+
+  // Applies paintTarget to every card in [newStart, newEnd] and reverts anything
+  // outside that range (but inside the previous range) back to its pre-drag state.
+  function applyRange(newStart, newEnd) {
+    var hadRange = touchState.rangeStart !== -1;
+    var unionStart = hadRange ? Math.min(touchState.rangeStart, newStart) : newStart;
+    var unionEnd = hadRange ? Math.max(touchState.rangeEnd, newEnd) : newEnd;
+    var touchedSections = new Set();
+    for (var i = unionStart; i <= unionEnd; i++) {
+      var card = touchState.visibleCards[i];
+      if (!card) continue;
+      var inRange = i >= newStart && i <= newEnd;
+      var target = inRange ? touchState.paintTarget : touchState.originalOwned[i];
+      if (setCardOwned(card, target)) touchedSections.add(card.closest('.gen-section'));
+    }
+    touchedSections.forEach(updateSectionCount);
+    touchState.rangeStart = newStart;
+    touchState.rangeEnd = newEnd;
+  }
+
+  function updateRangeAtPoint(x, y) {
+    var el = document.elementFromPoint(x, y);
+    var card = el && el.closest ? el.closest('.poke-card') : null;
+    if (!card || !touchState.cardIndexMap.has(card)) return;
+    var currentIndex = touchState.cardIndexMap.get(card);
+    applyRange(Math.min(touchState.anchorIndex, currentIndex), Math.max(touchState.anchorIndex, currentIndex));
+    saveOwned();
+    updateOverallCount();
+  }
+
+  function stopAutoScroll() {
+    if (touchState.autoScrollRAF) {
+      cancelAnimationFrame(touchState.autoScrollRAF);
+      touchState.autoScrollRAF = null;
+    }
+  }
+
+  function autoScrollStep() {
+    if (!touchState.painting || touchState.autoScrollSpeed === 0) {
+      stopAutoScroll();
+      return;
+    }
+    window.scrollBy(0, touchState.autoScrollSpeed);
+    updateRangeAtPoint(touchState.lastX, touchState.lastY);
+    touchState.autoScrollRAF = requestAnimationFrame(autoScrollStep);
+  }
+
+  function handleAutoScroll(clientY) {
+    var vh = window.innerHeight;
+    var speed = 0;
+    if (clientY < AUTOSCROLL_EDGE) {
+      speed = -AUTOSCROLL_MAX_SPEED * ((AUTOSCROLL_EDGE - clientY) / AUTOSCROLL_EDGE);
+    } else if (clientY > vh - AUTOSCROLL_EDGE) {
+      speed = AUTOSCROLL_MAX_SPEED * ((clientY - (vh - AUTOSCROLL_EDGE)) / AUTOSCROLL_EDGE);
+    }
+    touchState.autoScrollSpeed = speed;
+    if (speed !== 0 && !touchState.autoScrollRAF) {
+      touchState.autoScrollRAF = requestAnimationFrame(autoScrollStep);
+    }
+  }
+
+  gensContainer.addEventListener('touchstart', function(e) {
+    clearTimeout(touchState.timer);
+    touchState.painting = false;
+    touchState.rangeStart = -1;
+    touchState.rangeEnd = -1;
+    if (e.touches.length > 1) return;
+    var anchorCard = e.target.closest ? e.target.closest('.poke-card') : null;
+    if (!anchorCard) return;
+    var touch = e.touches[0];
+    touchState.startX = touch.clientX;
+    touchState.startY = touch.clientY;
+    touchState.timer = setTimeout(function() {
+      var cards = Array.prototype.slice.call(gensContainer.querySelectorAll('.poke-card'))
+        .filter(function(c) { return c.offsetParent !== null; });
+      var map = new Map();
+      var orig = new Array(cards.length);
+      cards.forEach(function(c, idx) {
+        map.set(c, idx);
+        orig[idx] = c.classList.contains('owned');
+      });
+      var anchorIndex = map.has(anchorCard) ? map.get(anchorCard) : -1;
+      if (anchorIndex === -1) return;
+
+      touchState.painting = true;
+      touchState.visibleCards = cards;
+      touchState.cardIndexMap = map;
+      touchState.originalOwned = orig;
+      touchState.anchorIndex = anchorIndex;
+      touchState.paintTarget = !orig[anchorIndex];
+      applyRange(anchorIndex, anchorIndex);
+      saveOwned();
+      updateOverallCount();
+      vibrate(8);
+    }, LONG_PRESS_MS);
+  }, { passive: true });
+
+  gensContainer.addEventListener('touchmove', function(e) {
+    if (e.touches.length > 1) { clearTimeout(touchState.timer); return; }
+    var touch = e.touches[0];
+    touchState.lastX = touch.clientX;
+    touchState.lastY = touch.clientY;
+    if (!touchState.painting) {
+      var dx = Math.abs(touch.clientX - touchState.startX);
+      var dy = Math.abs(touch.clientY - touchState.startY);
+      if (dx > MOVE_CANCEL_PX || dy > MOVE_CANCEL_PX) clearTimeout(touchState.timer);
+      return;
+    }
+    e.preventDefault();
+    handleAutoScroll(touch.clientY);
+    updateRangeAtPoint(touch.clientX, touch.clientY);
+  }, { passive: false });
+
+  function endPaint(e) {
+    clearTimeout(touchState.timer);
+    stopAutoScroll();
+    touchState.autoScrollSpeed = 0;
+    if (touchState.painting) {
+      e.preventDefault();
+      touchState.painting = false;
+      if (missingOnly) applyFilters();
+    }
+  }
+  gensContainer.addEventListener('touchend', endPaint);
+  gensContainer.addEventListener('touchcancel', endPaint);
+
+  // ---------- Swipe lateral para volver a la estantería ----------
+  var SWIPE_MIN_DX = 60;
+  var SWIPE_MAX_OFF_AXIS = 60;
+  var SWIPE_MAX_TIME = 600;
+  var swipeNav = { tracking: false, startX: 0, startY: 0, startTime: 0 };
+
+  detailViewEl.addEventListener('touchstart', function(e) {
+    if (e.touches.length !== 1 || touchState.painting) {
+      swipeNav.tracking = false;
+      return;
+    }
+    var touch = e.touches[0];
+    swipeNav.tracking = true;
+    swipeNav.startX = touch.clientX;
+    swipeNav.startY = touch.clientY;
+    swipeNav.startTime = Date.now();
+  }, { passive: true });
+
+  detailViewEl.addEventListener('touchmove', function(e) {
+    if (touchState.painting) swipeNav.tracking = false;
+  }, { passive: true });
+
+  detailViewEl.addEventListener('touchend', function(e) {
+    if (!swipeNav.tracking) return;
+    swipeNav.tracking = false;
+    if (touchState.painting || shelfViewEl.hidden === false) return;
+    var touch = e.changedTouches[0];
+    var dx = touch.clientX - swipeNav.startX;
+    var dy = touch.clientY - swipeNav.startY;
+    var dt = Date.now() - swipeNav.startTime;
+    if (dt > SWIPE_MAX_TIME) return;
+    if (Math.abs(dx) < SWIPE_MIN_DX) return;
+    if (Math.abs(dy) > SWIPE_MAX_OFF_AXIS) return;
+    exitToShelf();
+  }, { passive: true });
+
+  detailViewEl.addEventListener('touchcancel', function() {
+    swipeNav.tracking = false;
+  }, { passive: true });
+
+  searchInput.addEventListener('input', function() {
+    searchQuery = searchInput.value.trim().toLowerCase();
+    if (currentGenId === null) {
+      if (searchQuery !== '' && !shelfViewEl.hidden) {
+        enterSearchMode();
+        return;
+      }
+      if (searchQuery === '' && shelfViewEl.hidden) {
+        exitToShelf();
+        return;
+      }
+    }
+    applyFilters();
+  });
+
+  missingToggle.addEventListener('change', function() {
+    missingOnly = missingToggle.checked;
+    applyFilters();
+  });
+
+  backBtn.addEventListener('click', function() {
+    exitToShelf();
+  });
+
+  init(false);
+})();
+</script>
+
+</body>
+</html>
