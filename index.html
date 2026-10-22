@@ -209,6 +209,24 @@
   .shop-icon-btn:hover{ color:var(--accent); background:var(--accent-soft); }
   .shop-tag{ display:inline-block; font-size:10px; padding:1px 6px; border-radius:999px; background:var(--accent-soft); color:var(--accent); margin-left:4px; vertical-align:1px; }
   .shop-empty{ color:var(--text-dim); font-size:13px; text-align:center; padding:18px 8px; }
+  .shop-tab-badge{ display:inline-block; min-width:15px; height:15px; line-height:15px; margin-left:4px; padding:0 4px; border-radius:999px; background:#d9485f; color:#fff; font-size:10px; font-weight:700; text-align:center; vertical-align:middle; }
+  .shop-tab-badge[hidden]{ display:none; }
+  .shop-alerts{ margin:0 0 12px; padding:10px 12px; border-radius:12px; background:var(--accent-soft); border:1px solid var(--accent); }
+  .shop-alerts[hidden]{ display:none; }
+  .shop-alerts-title{ margin:0 0 6px; font-size:12.5px; font-weight:700; color:var(--accent); }
+  .shop-alert-row{ display:flex; justify-content:space-between; gap:10px; font-size:12.5px; color:var(--text); padding:2px 0; }
+  .shop-alert-row b{ color:var(--accent); white-space:nowrap; }
+  .shop-row.shop-row-alert{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+  .shop-icon-btn.is-on{ color:var(--accent); background:var(--accent-soft); }
+  .shop-form{ display:flex; flex-direction:column; gap:8px; padding:4px 0 6px; }
+  .shop-form[hidden]{ display:none; }
+  .shop-form input{ min-width:0; background:var(--surface); border:1px solid var(--border-strong); color:var(--text); font-family:var(--font); font-size:13px; padding:9px 10px; border-radius:10px; }
+  .shop-release{ display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px 10px; margin:0 0 6px; }
+  .shop-release-date{ flex-shrink:0; width:46px; text-align:center; font-size:11px; font-weight:700; color:var(--accent); line-height:1.2; text-transform:uppercase; }
+  .shop-release-date b{ display:block; font-size:18px; color:var(--text); }
+  .shop-release-main{ flex:1; min-width:0; }
+  .shop-release-name{ font-size:13px; font-weight:600; color:var(--text); }
+  .shop-release-meta{ font-size:11.5px; color:var(--text-dim); margin-top:2px; }
   .shop-section-title{ font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin:6px 2px 8px; }
   .shop-suggest-actions{ display:flex; gap:8px; padding:0 2px 8px; }
   .shop-suggest-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(92px,1fr)); gap:8px; padding:0 2px 10px; }
@@ -790,6 +808,12 @@
     width:90px; background:var(--surface); border:1px solid var(--border); color:var(--text);
     font-family:var(--font); font-size:13px; padding:6px 8px; border-radius:8px; text-align:right;
   }
+  .tcg-lightbox-pin-btn{
+    border:1px solid var(--border-strong); background:var(--surface); color:var(--text); border-radius:999px;
+    padding:5px 12px; font-family:var(--font); font-size:12px; font-weight:600; cursor:pointer;
+  }
+  .tcg-lightbox-pin-btn.is-pinned{ background:var(--accent); color:#fff; border-color:transparent; }
+  .tcg-lightbox-pin-btn[disabled]{ opacity:.65; cursor:default; }
   .tcg-lightbox-price-title{
     display:flex; align-items:center; gap:6px; margin:0 0 8px; font-size:11.5px; font-weight:700;
     color:var(--text-dim);
@@ -1361,7 +1385,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     <button type="button" class="mode-tab" id="tab-dex" data-mode="dex">Pokédex</button>
     <button type="button" class="mode-tab" id="tab-vgc" data-mode="vgc" data-testid="tab-vgc">VGC</button>
     <button type="button" class="mode-tab" id="tab-tcg" data-mode="tcg">TCG</button>
-    <button type="button" class="mode-tab" id="tab-shop" data-mode="shop" data-testid="tab-shop">Tienda</button>
+    <button type="button" class="mode-tab" id="tab-shop" data-mode="shop" data-testid="tab-shop">Tienda<span id="shop-tab-badge" class="shop-tab-badge" hidden></span></button>
   </div>
 
   <div id="dex-controls" hidden>
@@ -1842,6 +1866,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <div id="tcg-missing-shop-list" class="tcg-missing-shop-list"></div>
       </div>
     </div>
+    <div id="tcg-owned" class="tcg-missing-dex">
+      <button type="button" id="tcg-owned-toggle" class="tcg-missing-dex-toggle" aria-expanded="false">
+        <span class="tcg-missing-dex-toggle-label">Mis cartas</span>
+        <span id="tcg-owned-badge" class="tcg-missing-dex-badge">0</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div id="owned-grid" class="tcg-grid tcg-missing-dex-grid" hidden></div>
+      <p id="owned-status" class="tcg-missing-dex-empty" hidden></p>
+    </div>
     <div id="tcg-saved" class="tcg-missing-dex">
       <button type="button" id="tcg-saved-toggle" class="tcg-missing-dex-toggle" aria-expanded="false">
         <span class="tcg-missing-dex-toggle-label">Cartas guardadas</span>
@@ -1850,24 +1883,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </button>
       <div id="saved-grid" class="tcg-grid tcg-missing-dex-grid" hidden></div>
       <p id="saved-empty" class="tcg-missing-dex-empty" hidden>Todavía no has guardado ninguna carta. Pulsa el 🔖 en una carta para guardarla aquí.</p>
-    </div>
-    <div id="tcg-anniversary" class="tcg-missing-dex">
-      <button type="button" id="tcg-anniversary-toggle" class="tcg-missing-dex-toggle" aria-expanded="false">
-        <span class="tcg-missing-dex-toggle-label">30 Aniversario</span>
-        <span id="tcg-anniversary-badge" class="tcg-missing-dex-badge">0</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div id="anniversary-grid" class="tcg-grid tcg-missing-dex-grid" hidden></div>
-      <p id="anniversary-status" class="tcg-missing-dex-empty" hidden></p>
-    </div>
-    <div id="tcg-eevee" class="tcg-missing-dex">
-      <button type="button" id="tcg-eevee-toggle" class="tcg-missing-dex-toggle" aria-expanded="false">
-        <span class="tcg-missing-dex-toggle-label">Eevee y evoluciones</span>
-        <span id="tcg-eevee-badge" class="tcg-missing-dex-badge">0</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div id="eevee-grid" class="tcg-grid tcg-missing-dex-grid" hidden></div>
-      <p id="eevee-status" class="tcg-missing-dex-empty" hidden></p>
     </div>
     <div id="tcg-custom-sections"></div>
     <button type="button" id="tcg-custom-section-create-btn" class="tcg-custom-section-create-btn">
@@ -1894,6 +1909,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       <div id="shop-stats" class="shop-head-stats" data-testid="shop-stats"></div>
       <p id="shop-note" class="shop-note"></p>
     </div>
+    <div id="shop-alerts" class="shop-alerts" hidden data-testid="shop-alerts"></div>
     <div id="shop-movers" class="shop-movers" hidden data-testid="shop-movers"></div>
     <div class="shop-toolbar">
       <div id="shop-chips" class="shop-chips" data-testid="shop-filter-chips"></div>
@@ -1905,21 +1921,45 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     </div>
     <div id="shop-list" class="shop-list" data-testid="shop-list"></div>
     <p class="shop-section-title">Añadir al seguimiento</p>
+    <div id="shop-suggest-sections"></div>
+    <p class="shop-section-title">Productos sellados</p>
     <div class="tcg-missing-dex">
-      <button type="button" id="shop-suggest-anniv-toggle" class="tcg-missing-dex-toggle" aria-expanded="false" data-testid="shop-suggest-anniv-toggle">
-        <span class="tcg-missing-dex-toggle-label">30 Aniversario (castellano)</span>
-        <span id="shop-suggest-anniv-badge" class="tcg-missing-dex-badge">0</span>
+      <button type="button" id="shop-sealed-toggle" class="tcg-missing-dex-toggle" aria-expanded="false" data-testid="shop-sealed-toggle">
+        <span class="tcg-missing-dex-toggle-label">Añadir producto sellado</span>
+        <span id="shop-sealed-badge" class="tcg-missing-dex-badge">0</span>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-      <div id="shop-suggest-anniv" hidden></div>
+      <div id="shop-sealed-form" class="shop-form" hidden>
+        <p class="tcg-missing-dex-empty">ETB, cajas de sobres, mazos… Pega el enlace de su ficha en Cardmarket para que el precio se lea solo; sin enlace, se busca con Claude si tienes clave en Ajustes. Aparecen en la lista de arriba, en el filtro «Sellados».</p>
+        <input type="text" id="shop-sealed-name" placeholder="Nombre (ej. ETB 30 Aniversario)" autocomplete="off" data-testid="shop-sealed-name">
+        <input type="url" id="shop-sealed-url" placeholder="Enlace de Cardmarket (opcional)" autocomplete="off" data-testid="shop-sealed-url">
+        <input type="url" id="shop-sealed-img" placeholder="URL de una imagen (opcional)" autocomplete="off">
+        <input type="number" id="shop-sealed-target" inputmode="decimal" step="0.01" min="0" placeholder="Avisarme si baja de… € (opcional)" data-testid="shop-sealed-target">
+        <button type="button" id="shop-sealed-add" class="shop-refresh-btn" data-testid="shop-sealed-add">Añadir</button>
+        <p id="shop-sealed-status" class="tcg-add-status" hidden></p>
+      </div>
     </div>
+    <p class="shop-section-title">Próximos lanzamientos</p>
     <div class="tcg-missing-dex">
-      <button type="button" id="shop-suggest-eevee-toggle" class="tcg-missing-dex-toggle" aria-expanded="false" data-testid="shop-suggest-eevee-toggle">
-        <span class="tcg-missing-dex-toggle-label">Eevee y evoluciones</span>
-        <span id="shop-suggest-eevee-badge" class="tcg-missing-dex-badge">0</span>
+      <button type="button" id="shop-releases-toggle" class="tcg-missing-dex-toggle" aria-expanded="true" data-testid="shop-releases-toggle">
+        <span class="tcg-missing-dex-toggle-label">Calendario</span>
+        <span id="shop-releases-badge" class="tcg-missing-dex-badge">0</span>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-      <div id="shop-suggest-eevee" hidden></div>
+      <div id="shop-releases-box">
+        <div id="shop-releases-list" data-testid="shop-releases-list"></div>
+        <p id="shop-releases-note" class="tcg-missing-dex-empty"></p>
+        <div class="shop-suggest-actions">
+          <button type="button" id="shop-releases-claude" class="shop-refresh-btn" data-testid="shop-releases-claude">Actualizar con Claude</button>
+          <button type="button" id="shop-releases-add-toggle" class="shop-chip" data-testid="shop-releases-add-toggle">+ Añadir fecha</button>
+        </div>
+        <div id="shop-releases-form" class="shop-form" hidden>
+          <input type="text" id="shop-releases-name" placeholder="Nombre del lanzamiento" autocomplete="off" data-testid="shop-releases-name">
+          <input type="date" id="shop-releases-date" data-testid="shop-releases-date">
+          <button type="button" id="shop-releases-add" class="shop-refresh-btn" data-testid="shop-releases-add">Guardar</button>
+        </div>
+        <p id="shop-releases-status" class="tcg-add-status" hidden></p>
+      </div>
     </div>
   </div>
   <div id="vgc-view" hidden data-testid="vgc-view">
@@ -1980,6 +2020,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <div class="tcg-lightbox-qty-row">
           <label for="tcg-lightbox-paid" class="tcg-lightbox-qty-label">Precio pagado (ud.)</label>
           <input type="number" id="tcg-lightbox-paid" inputmode="decimal" step="0.01" min="0" placeholder="0,00">
+        </div>
+        <div class="tcg-lightbox-qty-row">
+          <span class="tcg-lightbox-qty-label">Mostrar en «Mis cartas»</span>
+          <button type="button" id="tcg-lightbox-pin" class="tcg-lightbox-pin-btn">Añadir</button>
         </div>
       </div>
       <p class="tcg-lightbox-price-title">
@@ -2301,14 +2345,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var tcgSavedBadgeEl = document.getElementById('tcg-saved-badge');
   var savedGridEl = document.getElementById('saved-grid');
   var savedEmptyEl = document.getElementById('saved-empty');
-  var tcgAnniversaryToggleBtn = document.getElementById('tcg-anniversary-toggle');
-  var tcgAnniversaryBadgeEl = document.getElementById('tcg-anniversary-badge');
-  var anniversaryGridEl = document.getElementById('anniversary-grid');
-  var anniversaryStatusEl = document.getElementById('anniversary-status');
-  var tcgEeveeToggleBtn = document.getElementById('tcg-eevee-toggle');
-  var tcgEeveeBadgeEl = document.getElementById('tcg-eevee-badge');
-  var eeveeGridEl = document.getElementById('eevee-grid');
-  var eeveeStatusEl = document.getElementById('eevee-status');
   var customSectionsContainer = document.getElementById('tcg-custom-sections');
   var customSectionCreateBtn = document.getElementById('tcg-custom-section-create-btn');
   var customSectionPopup = document.getElementById('custom-section-popup');
@@ -2824,109 +2860,202 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   });
 
 
-  // Set oficial del 30 aniversario en el catálogo de TCGdex (id "30th", serie "me"). Se pide
-  // una sola vez por sesión: /sets/{id} devuelve de golpe la lista completa de cartas del set,
-  // así que no hace falta ir carta a carta. No se guarda en localStorage (a diferencia de los
-  // tipos de Pokémon) porque aquí sí puede tener sentido que se refresque de vez en cuando.
-  var TCG_ANNIVERSARY_SET_ID = '30th';
-  var tcgAnniversaryCards = null; // null = aún no pedido; [] = pedido pero vacío o con error
-  var tcgAnniversaryFetching = null;
-  var tcgAnniversaryExpanded = false;
+  // "Mis cartas": solo tus cartas AR (Illustration Rare / Special Illustration Rare, se detectan
+  // solas por su rareza) más las que tú elijas con el botón "Mostrar en «Mis cartas»" del visor
+  // de la carta; así no se llena de básicas. Las cartas añadidas a mano solo entran si las
+  // eliges. De cada carta solo se guardaba el id (+ slug/set/número), no la imagen ni la rareza,
+  // así que se piden a TCGdex una sola vez (4 a la vez, en segundo plano) y se guardan en
+  // localStorage: las siguientes veces sale al instante.
+  var TCG_OWNED_CARDS_KEY = 'pokecheck_tcg_owned_cards_v2';
+  var TCG_PINNED_KEY = 'pokecheck_tcg_pinned_v1';
+  var TCG_AR_RE = /illustration|ilustraci[oó]n|art rare|^s?ar$/i;
+  var tcgOwnedCardsCache = {};
+  try { tcgOwnedCardsCache = JSON.parse(localStorage.getItem(TCG_OWNED_CARDS_KEY) || '{}') || {}; } catch (e) { tcgOwnedCardsCache = {}; }
+  var tcgPinned = new Set();
+  try { tcgPinned = new Set(JSON.parse(localStorage.getItem(TCG_PINNED_KEY) || '[]')); } catch (e) { tcgPinned = new Set(); }
+  var tcgOwnedToggleBtn = document.getElementById('tcg-owned-toggle');
+  var tcgOwnedBadgeEl = document.getElementById('tcg-owned-badge');
+  var ownedGridEl = document.getElementById('owned-grid');
+  var ownedStatusEl = document.getElementById('owned-status');
+  var tcgLightboxPinBtn = document.getElementById('tcg-lightbox-pin');
+  var tcgOwnedExpanded = false;
+  var tcgOwnedDirty = true;
+  var tcgOwnedRenderToken = 0;
+  var tcgOwnedPrefetched = false;
 
-  function fetchAnniversaryCards() {
-    if (tcgAnniversaryCards) return Promise.resolve(tcgAnniversaryCards);
-    if (tcgAnniversaryFetching) return tcgAnniversaryFetching;
-    tcgAnniversaryFetching = tcgFetchJson('https://api.tcgdex.net/v2/en/sets/' + TCG_ANNIVERSARY_SET_ID)
-      .then(function(set) {
-        tcgAnniversaryCards = (set && Array.isArray(set.cards)) ? set.cards : [];
-        tcgAnniversaryFetching = null;
-        return tcgAnniversaryCards;
+  function saveTcgOwnedCardsCache() {
+    try { localStorage.setItem(TCG_OWNED_CARDS_KEY, JSON.stringify(tcgOwnedCardsCache)); } catch (e) {}
+  }
+  function saveTcgPinned() {
+    try { localStorage.setItem(TCG_PINNED_KEY, JSON.stringify(Array.from(tcgPinned))); } catch (e) {}
+  }
+  function tcgIsArCard(id) {
+    var c = tcgOwnedCardsCache[id];
+    return !!(c && TCG_AR_RE.test(c.rarity || ''));
+  }
+  // ¿Va esta carta en "Mis cartas"? Las normales: AR o elegida a mano. Las "custom-": solo elegidas.
+  function tcgInOwnedSection(id) {
+    if (!tcgOwned.has(id)) return false;
+    if (tcgPinned.has(id)) return true;
+    return id.indexOf('custom-') !== 0 && tcgIsArCard(id);
+  }
+  function tcgOwnedCardInfo(id) {
+    var c = tcgOwnedCardsCache[id];
+    return c && c.image ? c : null;
+  }
+  // Necesitan consulta las normales de las que aún no sabemos la rareza (o la imagen).
+  function tcgOwnedIdsToFetch() {
+    return Array.from(tcgOwned).filter(function(id) {
+      return id.indexOf('custom-') !== 0 && !(tcgOwnedCardsCache[id] && tcgOwnedCardsCache[id].rarity !== undefined);
+    });
+  }
+  function fetchOwnedCardInfo(id) {
+    var lang = (tcgOwnedMeta[id] && tcgOwnedMeta[id].lang) || 'en';
+    function get(l) { return tcgFetchJson('https://api.tcgdex.net/v2/' + encodeURIComponent(l) + '/cards/' + encodeURIComponent(id)); }
+    return get(lang)
+      .catch(function(err) { if (lang === 'en') throw err; return get('en'); })
+      .then(function(d) {
+        if (!d || !d.image) return null;
+        var info = { name: d.name, image: d.image, localId: d.localId, set: d.set ? { id: d.set.id, name: d.set.name } : null, rarity: d.rarity || '' };
+        tcgOwnedCardsCache[id] = info;
+        return info;
       })
-      .catch(function() {
-        tcgAnniversaryCards = [];
-        tcgAnniversaryFetching = null;
-        return tcgAnniversaryCards;
-      });
-    return tcgAnniversaryFetching;
+      .catch(function() { return null; });
+  }
+  function loadOwnedCardInfos(ids, onProgress) {
+    var queue = ids.slice(), done = 0, total = ids.length;
+    return new Promise(function(resolve) {
+      if (!total) { resolve(); return; }
+      function next() {
+        var id = queue.shift();
+        if (!id) return;
+        fetchOwnedCardInfo(id).then(function() {
+          done++;
+          if (onProgress) onProgress(done, total);
+          if (done === total) resolve(); else next();
+        });
+      }
+      for (var i = 0; i < Math.min(4, total); i++) next();
+    });
   }
 
-  function renderAnniversaryGrid() {
-    fetchAnniversaryCards().then(function(cards) {
-      anniversaryGridEl.innerHTML = '';
-      if (cards.length === 0) {
-        anniversaryGridEl.hidden = true;
-        anniversaryStatusEl.hidden = false;
-        anniversaryStatusEl.textContent = 'No se pudo cargar el set del 30 aniversario. Inténtalo de nuevo más tarde.';
+  function tcgOwnedSectionCount() {
+    return Array.from(tcgOwned).filter(tcgInOwnedSection).length;
+  }
+
+  function renderOwnedGrid() {
+    var token = ++tcgOwnedRenderToken;
+    ownedGridEl.innerHTML = '';
+    function paint() {
+      if (token !== tcgOwnedRenderToken || !tcgOwnedExpanded) return;
+      var ids = Array.from(tcgOwned).filter(tcgInOwnedSection);
+      tcgOwnedBadgeEl.textContent = ids.length;
+      if (!ids.length) {
+        ownedGridEl.hidden = true;
+        ownedStatusEl.hidden = false;
+        ownedStatusEl.textContent = 'Aquí salen tus cartas AR y las que añadas con «Mostrar en Mis cartas» desde el visor de la carta.';
+        tcgOwnedDirty = false;
         return;
       }
-      anniversaryStatusEl.hidden = true;
-      anniversaryGridEl.hidden = false;
-      // Siempre por número de carta, como una checklist del set: no depende del orden de
-      // búsqueda que el usuario tenga elegido en otra parte de la pestaña TCG.
-      var ordered = cards.slice().sort(function(a, b) {
-        var an = parseInt(String(a.localId || '').replace(/\D/g, ''), 10);
-        var bn = parseInt(String(b.localId || '').replace(/\D/g, ''), 10);
-        if (isNaN(an)) an = 999999;
-        if (isNaN(bn)) bn = 999999;
-        return an - bn;
+      var items = [];
+      ids.forEach(function(id) {
+        if (id.indexOf('custom-') === 0) {
+          var entry = tcgCustom[id];
+          if (entry) items.push({ set: entry.setName || 'Añadida a mano', num: parseInt(entry.number, 10), build: function() { return buildCustomTcgCard(entry); } });
+          return;
+        }
+        var info = tcgOwnedCardInfo(id), meta = tcgOwnedMeta[id], slug = tcgMetaSlug(meta);
+        var card = info
+          ? { id: id, name: info.name, image: info.image, localId: info.localId, set: info.set }
+          : { id: id, name: slug || id, image: '', localId: (meta && meta.number) || '', set: null };
+        if (meta && meta.lang) card._matchLang = meta.lang;
+        var setLabel = (info && info.set && info.set.name) || tcgMetaSetName(meta) || id.split('-')[0];
+        items.push({ set: setLabel, num: parseInt(String(card.localId || '').replace(/\D/g, ''), 10), build: function() { return buildTcgCard(card, setLabel, slug || card.name); } });
       });
-      ordered.forEach(function(card) {
-        anniversaryGridEl.appendChild(buildTcgCard(card, '30th Celebration', card.name));
+      items.sort(function(a, b) {
+        var c = String(a.set).localeCompare(String(b.set));
+        if (c) return c;
+        return (isNaN(a.num) ? 999999 : a.num) - (isNaN(b.num) ? 999999 : b.num);
       });
-    });
+      ownedStatusEl.hidden = true;
+      ownedGridEl.hidden = false;
+      items.forEach(function(it) { ownedGridEl.appendChild(it.build()); });
+      tcgOwnedDirty = false;
+    }
+    var missing = tcgOwnedIdsToFetch();
+    if (!missing.length) { paint(); return; }
+    ownedGridEl.hidden = true;
+    ownedStatusEl.hidden = false;
+    ownedStatusEl.textContent = 'Buscando tus cartas AR… 0/' + missing.length;
+    loadOwnedCardInfos(missing, function(done, total) {
+      if (token === tcgOwnedRenderToken) ownedStatusEl.textContent = 'Buscando tus cartas AR… ' + done + '/' + total;
+    }).then(function() { saveTcgOwnedCardsCache(); paint(); });
   }
 
-  // Actualiza el contador "tienes/total" del desplegable. Se llama cada vez que se redibuja la
-  // vista inicial de la pestaña TCG (igual que "Cartas guardadas"), así el contador está al día
-  // aunque el desplegable esté cerrado, sin tener que volver a pedir nada si ya se cargó antes.
-  function renderTcgAnniversarySection() {
-    fetchAnniversaryCards().then(function(cards) {
-      var ownedCount = cards.filter(function(c) { return tcgOwned.has(c.id); }).length;
-      tcgAnniversaryBadgeEl.textContent = cards.length ? (ownedCount + '/' + cards.length) : '0';
-      if (tcgAnniversaryExpanded) renderAnniversaryGrid();
-    });
+  function renderTcgOwnedSection() {
+    tcgOwnedDirty = true;
+    tcgOwnedBadgeEl.textContent = tcgOwnedSectionCount();
+    if (tcgOwnedExpanded) renderOwnedGrid();
+    // Una sola vez por sesión, en segundo plano: averigua la rareza de las cartas que aún no
+    // se conoce para que el contador ya esté bien sin abrir la sección.
+    if (!tcgOwnedPrefetched) {
+      tcgOwnedPrefetched = true;
+      setTimeout(function() {
+        var missing = tcgOwnedIdsToFetch();
+        if (!missing.length) return;
+        loadOwnedCardInfos(missing).then(function() {
+          saveTcgOwnedCardsCache();
+          tcgOwnedBadgeEl.textContent = tcgOwnedSectionCount();
+          tcgOwnedDirty = true;
+        });
+      }, 1500);
+    }
   }
 
-  tcgAnniversaryToggleBtn.addEventListener('click', function() {
-    tcgAnniversaryExpanded = !tcgAnniversaryExpanded;
-    tcgAnniversaryToggleBtn.setAttribute('aria-expanded', String(tcgAnniversaryExpanded));
-    if (!tcgAnniversaryExpanded) {
-      anniversaryGridEl.hidden = true;
-      anniversaryStatusEl.hidden = true;
+  tcgOwnedToggleBtn.addEventListener('click', function() {
+    tcgOwnedExpanded = !tcgOwnedExpanded;
+    tcgOwnedToggleBtn.setAttribute('aria-expanded', String(tcgOwnedExpanded));
+    if (!tcgOwnedExpanded) {
+      tcgOwnedRenderToken++;
+      ownedGridEl.hidden = true;
+      ownedStatusEl.hidden = true;
       return;
     }
-    renderAnniversaryGrid();
+    renderOwnedGrid();
+  });
+  // Mantiene el contador al día cuando marcas/desmarcas una carta desde la pestaña TCG.
+  document.getElementById('tcg-view').addEventListener('click', function() {
+    setTimeout(function() {
+      tcgOwnedBadgeEl.textContent = tcgOwnedSectionCount();
+      tcgOwnedDirty = true;
+    }, 0);
   });
 
-  // Eevee y sus 8 evoluciones. A diferencia de "30 Aniversario" (un único set), aquí hace
-  // falta una búsqueda por nombre por cada especie (como la barra de búsqueda normal, pero
-  // repetida 9 veces y fusionando el resultado), porque las cartas están repartidas por
-  // decenas de sets distintos. Se piden las 9 en paralelo, una sola vez por sesión.
+  // Botón del visor de la carta: añadir/quitar a mano de "Mis cartas". Las AR entran solas.
+  function tcgUpdatePinBtn(id) {
+    var auto = tcgIsArCard(id), pinned = tcgPinned.has(id);
+    tcgLightboxPinBtn.disabled = auto;
+    tcgLightboxPinBtn.classList.toggle('is-pinned', pinned && !auto);
+    tcgLightboxPinBtn.textContent = auto ? 'AR · automática' : (pinned ? 'Quitar' : 'Añadir');
+  }
+  tcgLightboxPinBtn.addEventListener('click', function() {
+    var id = tcgLightboxEl.dataset.cardId;
+    if (!id) return;
+    if (tcgPinned.has(id)) tcgPinned.delete(id); else tcgPinned.add(id);
+    saveTcgPinned();
+    tcgUpdatePinBtn(id);
+    renderTcgOwnedSection();
+  });
+
+  // Lista de Eevee y sus 8 evoluciones: ya no es una sección fija, solo es la plantilla de
+  // una de las secciones que se crean de serie a quien ya usaba la app (se pueden borrar).
   var EEVEE_FAMILY_NAMES = ['Eevee', 'Vaporeon', 'Jolteon', 'Flareon', 'Espeon', 'Umbreon', 'Leafeon', 'Glaceon', 'Sylveon'];
-  var tcgEeveeCards = null;
-  var tcgEeveeFetching = null;
-  var tcgEeveeExpanded = false;
 
   // El resultado ya deduplicado (y con ilustrador + fecha de cada carta) se guarda en
   // localStorage 14 días: ese dato en sí no cambia nunca, pero de vez en cuando sale un set
   // nuevo con cartas de la familia Eevee, así que conviene refrescarlo de cuando en cuando
   // en vez de guardarlo para siempre (a diferencia de los tipos de Pokémon, que sí son fijos).
-  var TCG_EEVEE_CACHE_KEY = 'pokecheck_eevee_cards_v1';
   var TCG_EEVEE_CACHE_TTL_MS = 14 * 24 * 60 * 60 * 1000;
-
-  function loadEeveeCache() {
-    try {
-      var raw = localStorage.getItem(TCG_EEVEE_CACHE_KEY);
-      if (!raw) return null;
-      var parsed = JSON.parse(raw);
-      if (!parsed || !Array.isArray(parsed.cards) || !parsed.ts) return null;
-      if (Date.now() - parsed.ts > TCG_EEVEE_CACHE_TTL_MS) return null;
-      return parsed.cards;
-    } catch (e) { return null; }
-  }
-  function saveEeveeCache(cards) {
-    try { localStorage.setItem(TCG_EEVEE_CACHE_KEY, JSON.stringify({ ts: Date.now(), cards: cards })); } catch (e) {}
-  }
 
   // De cada grupo de cartas con el mismo nombre + mismo ilustrador (= mismo arte, aunque sean
   // de sets distintos) se queda solo una: la que ya tienes si alguna lo está (para que el
@@ -2952,110 +3081,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
   }
 
-  function fetchEeveeCards() {
-    if (tcgEeveeCards) return Promise.resolve(tcgEeveeCards);
-    if (tcgEeveeFetching) return tcgEeveeFetching;
-    var cached = loadEeveeCache();
-    if (cached) { tcgEeveeCards = cached; return Promise.resolve(tcgEeveeCards); }
-
-    tcgEeveeFetching = Promise.all(
-      EEVEE_FAMILY_NAMES.map(function(speciesName) {
-        return tcgFetchJson(tcgNameSearchUrl('en', speciesName)).catch(function() { return []; });
-      })
-    ).then(function(resultsPerSpecies) {
-      var seen = {};
-      var merged = [];
-      resultsPerSpecies.forEach(function(matches) {
-        (Array.isArray(matches) ? matches : []).forEach(function(card) {
-          // Solo cartas con foto disponible, tal y como se pidió: muchas ediciones en
-          // catálogos poco frecuentes no tienen la imagen digitalizada todavía en TCGdex.
-          if (!card.image || seen[card.id]) return;
-          seen[card.id] = true;
-          merged.push(card);
-        });
-      });
-      // Segunda pasada: ficha completa de cada carta (el ilustrador solo viene ahí, no en el
-      // listado) + fecha de su set. Esto sí pide una vez por carta, pero la fecha del set se
-      // aprovecha de la misma caché que ya usa el resto de la app (ensureSetInfo), así que si
-      // varias cartas comparten set esa parte no se repite.
-      return Promise.all(merged.map(function(card) {
-        return tcgFetchJson('https://api.tcgdex.net/v2/en/cards/' + encodeURIComponent(card.id))
-          .catch(function() { return null; })
-          .then(function(detail) {
-            var setId = tcgCardSetId(card);
-            return ensureSetInfo(setId).then(function(setInfo) {
-              return {
-                id: card.id, localId: card.localId, name: card.name, image: card.image,
-                set: card.set || (setInfo && setInfo.name ? { id: setId, name: setInfo.name } : null),
-                illustrator: detail ? (detail.illustrator || null) : null,
-                releaseDate: setInfo ? setInfo.releaseDate : null
-              };
-            });
-          });
-      }));
-    }).then(function(enriched) {
-      var deduped = dedupeCardsByArt(enriched);
-      tcgEeveeCards = deduped;
-      tcgEeveeFetching = null;
-      saveEeveeCache(deduped);
-      return deduped;
-    }).catch(function() {
-      tcgEeveeCards = [];
-      tcgEeveeFetching = null;
-      return tcgEeveeCards;
-    });
-    return tcgEeveeFetching;
-  }
-
-  function renderEeveeGrid() {
-    fetchEeveeCards().then(function(cards) {
-      eeveeGridEl.innerHTML = '';
-      if (cards.length === 0) {
-        eeveeGridEl.hidden = true;
-        eeveeStatusEl.hidden = false;
-        eeveeStatusEl.textContent = 'No se pudo cargar esta colecci\u00f3n. Int\u00e9ntalo de nuevo m\u00e1s tarde.';
-        return;
-      }
-      eeveeStatusEl.hidden = true;
-      eeveeGridEl.hidden = false;
-      // Agrupadas por especie en orden de evoluci\u00f3n (no alfab\u00e9tico) y, dentro de cada
-      // una, de más antigua a más reciente.
-      var ordered = cards.slice().sort(function(a, b) {
-        var an = EEVEE_FAMILY_NAMES.indexOf(a.name.split(' ')[0]);
-        var bn = EEVEE_FAMILY_NAMES.indexOf(b.name.split(' ')[0]);
-        if (an === -1) an = EEVEE_FAMILY_NAMES.length;
-        if (bn === -1) bn = EEVEE_FAMILY_NAMES.length;
-        if (an !== bn) return an - bn;
-        var aDate = a.releaseDate ? new Date(a.releaseDate).getTime() : Infinity;
-        var bDate = b.releaseDate ? new Date(b.releaseDate).getTime() : Infinity;
-        return aDate - bDate;
-      });
-      ordered.forEach(function(card) {
-        var setLabel = card.set ? card.set.name : '';
-        eeveeGridEl.appendChild(buildTcgCard(card, setLabel, card.name));
-      });
-    });
-  }
-
-  function renderTcgEeveeSection() {
-    fetchEeveeCards().then(function(cards) {
-      var ownedCount = cards.filter(function(c) { return tcgOwned.has(c.id); }).length;
-      tcgEeveeBadgeEl.textContent = cards.length ? (ownedCount + '/' + cards.length) : '0';
-      if (tcgEeveeExpanded) renderEeveeGrid();
-    });
-  }
-
-  tcgEeveeToggleBtn.addEventListener('click', function() {
-    tcgEeveeExpanded = !tcgEeveeExpanded;
-    tcgEeveeToggleBtn.setAttribute('aria-expanded', String(tcgEeveeExpanded));
-    if (!tcgEeveeExpanded) {
-      eeveeGridEl.hidden = true;
-      eeveeStatusEl.hidden = true;
-      return;
-    }
-    renderEeveeGrid();
-  });
-
   // ---------- Secciones personalizadas ----------
   // Cada una es: { id, label, mode: 'names'|'set', names?: [...], setId?: '...', setName?: '...' }.
   // Las guarda el propio usuario desde el popup "Crear sección". El resultado (ya deduplicado
@@ -3073,6 +3098,26 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       var raw = localStorage.getItem(TCG_CUSTOM_SECTIONS_KEY);
       customSections = raw ? (JSON.parse(raw) || []) : [];
     } catch (e) { customSections = []; }
+  }
+  // Quien ya tenía datos (cartas, guardadas, seguimiento o secciones) conserva "30 Aniversario" y
+  // "Eevee y evoluciones" como secciones normales, que se pueden borrar como cualquier otra.
+  // Quien empieza de cero no recibe ninguna: cada uno crea las suyas. Se hace una sola vez.
+  var TCG_DEFAULT_SECTIONS_SEEDED_KEY = 'pokecheck_default_sections_seeded_v1';
+  function seedDefaultCustomSections() {
+    try {
+      if (localStorage.getItem(TCG_DEFAULT_SECTIONS_SEEDED_KEY)) return;
+      localStorage.setItem(TCG_DEFAULT_SECTIONS_SEEDED_KEY, '1');
+    } catch (e) { return; }
+    var hasData = tcgOwned.size || tcgSaved.size || Object.keys(shopFollow).length || customSections.length;
+    if (!hasData) return;
+    var defaults = [
+      { id: 'default-30th', label: '30 Aniversario', mode: 'set', setId: '30th', setName: '30th Celebration' },
+      { id: 'default-eevee', label: 'Eevee y evoluciones', mode: 'names', names: EEVEE_FAMILY_NAMES.slice() }
+    ];
+    var have = {};
+    customSections.forEach(function(d) { have[d.id] = true; });
+    customSections = defaults.filter(function(d) { return !have[d.id]; }).concat(customSections);
+    saveCustomSections();
   }
   function saveCustomSections() {
     try { localStorage.setItem(TCG_CUSTOM_SECTIONS_KEY, JSON.stringify(customSections)); } catch (e) {}
@@ -3446,13 +3491,16 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       tcgOwnedMeta: tcgOwnedMeta,
       tcgSaved: Array.from(tcgSaved),
       tcgSavedMeta: tcgSavedMeta,
+      tcgPinned: Array.from(tcgPinned),
       tcgCustom: tcgCustom,
       tcgLang: tcgLang,
       huchaHistory: huchaHistory,
       tcgQuantities: tcgQuantities,
       tcgPricePaid: tcgPricePaid,
       tcgImageOverrides: tcgImageOverrides,
-      shopFollow: shopFollow
+      shopFollow: shopFollow,
+      shopTargets: shopTargets,
+      shopReleasesUser: shopReleasesUser
     };
     var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     var url = URL.createObjectURL(blob);
@@ -3491,11 +3539,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       tcgSaved = new Set(importedTcgSaved);
       tcgSavedMeta = (data.tcgSavedMeta && typeof data.tcgSavedMeta === 'object') ? data.tcgSavedMeta : {};
       tcgCustom = (data.tcgCustom && typeof data.tcgCustom === 'object') ? data.tcgCustom : {};
+      tcgPinned = new Set(Array.isArray(data.tcgPinned) ? data.tcgPinned : []);
+      saveTcgPinned();
       if (Array.isArray(data.huchaHistory)) { huchaHistory = data.huchaHistory; saveHuchaHistory(); }
       if (data.tcgQuantities && typeof data.tcgQuantities === 'object') { tcgQuantities = data.tcgQuantities; saveTcgQuantities(); }
       if (data.tcgPricePaid && typeof data.tcgPricePaid === 'object') { tcgPricePaid = data.tcgPricePaid; saveTcgPricePaid(); }
       if (data.tcgImageOverrides && typeof data.tcgImageOverrides === 'object') { tcgImageOverrides = data.tcgImageOverrides; saveTcgImageOverrides(); }
       if (data.shopFollow && typeof data.shopFollow === 'object') { shopFollow = data.shopFollow; shopSave(); }
+      if (data.shopTargets && typeof data.shopTargets === 'object') { shopTargets = data.shopTargets; shopAlerted = {}; shopSave(); }
+      if (Array.isArray(data.shopReleasesUser)) { shopReleasesUser = data.shopReleasesUser; saveShopReleasesUser(); renderShopReleases(); }
       saveOwned();
       saveTcgOwned();
       saveTcgOwnedMeta();
@@ -5738,6 +5790,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!id || !tcgOwned.has(id)) { tcgLightboxOwnedBox.hidden = true; return; }
     tcgLightboxOwnedBox.hidden = false;
     tcgLightboxQtyValueEl.textContent = String(tcgQuantityOf(id));
+    tcgUpdatePinBtn(id);
     var paid = tcgPricePaid[id];
     tcgLightboxPaidInput.value = (typeof paid === 'number') ? String(paid) : '';
   }
@@ -5922,9 +5975,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgStatusEl.style.display = 'block';
     tcgStatusEl.style.padding = '';
     renderTcgMissingDexSection();
+    renderTcgOwnedSection();
     renderTcgSavedSection();
-    renderTcgAnniversarySection();
-    renderTcgEeveeSection();
     renderAllCustomSections();
   }
 
@@ -7774,6 +7826,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var SHOP_CLAUDE_BATCH = 8;
   var SHOP_CLAUDE_MAX = 24;
   var SHOP_ICON_CART = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>';
+  var SHOP_ICON_BELL = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>';
   var SHOP_ICON_X = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
 
   function shopLoad(key, fallback) {
@@ -7781,11 +7834,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
   var shopPrices = shopLoad(SHOP_PRICES_KEY, {});
   var shopFollow = shopLoad(SHOP_FOLLOW_KEY, {});
+  // Precio objetivo por carta/producto (id -> euros) y último precio por el que ya se avisó.
+  var SHOP_TARGETS_KEY = 'pokecheck_shop_targets_v1';
+  var SHOP_ALERTED_KEY = 'pokecheck_shop_alerted_v1';
+  var shopTargets = shopLoad(SHOP_TARGETS_KEY, {});
+  var shopAlerted = shopLoad(SHOP_ALERTED_KEY, {});
   var shopFilter = 'all';
   var shopSort = 'change';
   var shopRefreshing = false;
   var shopProgress = { done: 0, total: 0 };
-  var shopAnnivCards = null;
 
   var shopViewEl = document.getElementById('shop-view');
   var vgcViewEl = document.getElementById('vgc-view');
@@ -7806,6 +7863,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     try {
       localStorage.setItem(SHOP_PRICES_KEY, JSON.stringify(shopPrices));
       localStorage.setItem(SHOP_FOLLOW_KEY, JSON.stringify(shopFollow));
+      localStorage.setItem(SHOP_TARGETS_KEY, JSON.stringify(shopTargets));
+      localStorage.setItem(SHOP_ALERTED_KEY, JSON.stringify(shopAlerted));
     } catch (e) {}
   }
 
@@ -7816,10 +7875,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     return n;
   }
 
-  function shopGroupOf(id, name) {
-    if (id.indexOf('30th-') === 0) return 'anniv';
-    var lower = String(name || '').toLowerCase();
-    return EEVEE_FAMILY_NAMES.some(function(n) { return lower.indexOf(n.toLowerCase()) !== -1; }) ? 'eevee' : 'other';
+  // ¿Pertenece esta carta seguida a la sección (de las de la pestaña TCG)? Por set (prefijo del
+  // id) o por nombre de especie, según cómo esté definida la sección.
+  function shopInSection(def, item) {
+    if (def.mode === 'set') return item.id.indexOf(def.setId + '-') === 0;
+    var lower = (item.englishName + ' ' + item.name).toLowerCase();
+    return (def.names || []).some(function(n) { return lower.indexOf(String(n).toLowerCase()) !== -1; });
   }
 
   // Une las cartas guardadas (siempre se siguen) con las añadidas desde las sugerencias.
@@ -7827,7 +7888,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var items = {};
     function add(id, m, saved) {
       if (!m) return;
-      var isCustom = id.indexOf('custom-') === 0;
+      var isCustom = id.indexOf('custom-') === 0 || id.indexOf('sealed-') === 0;
       var base = m.image || '';
       if (id.indexOf('30th-') === 0) base = base.replace('/en/', '/es/');
       var img = tcgImageOverrides[id] || (isCustom ? base : (base ? tcgCardImageUrl(base, 'low') : ''));
@@ -7837,7 +7898,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         id: id, name: name, englishName: english, imageBase: isCustom ? null : base, image: img,
         localId: m.localId || m.number || '', setName: m.setName || (m.set && m.set.name) || '',
         cmUrl: isCustom ? (m.cardmarketUrl || '') : '', saved: saved,
-        group: shopGroupOf(id, english + ' ' + name)
+        anniv: id.indexOf('30th-') === 0,
+        sealed: id.indexOf('sealed-') === 0
       };
     }
     tcgSaved.forEach(function(id) { add(id, tcgSavedMeta[id] || tcgCustom[id], true); });
@@ -7873,13 +7935,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function shopCardmarketUrl(item) {
     var info = shopInfo(item.id);
     var url = info.url || item.cmUrl;
-    if (url) return item.group === 'anniv' && url.indexOf('/Products/Singles/') !== -1 && url.indexOf('language=') === -1 ? url + (url.indexOf('?') === -1 ? '?' : '&') + 'language=4' : url;
+    if (url) return item.anniv && url.indexOf('/Products/Singles/') !== -1 && url.indexOf('language=') === -1 ? url + (url.indexOf('?') === -1 ? '?' : '&') + 'language=4' : url;
+    if (item.sealed) return 'https://www.cardmarket.com/es/Pokemon/Products/Search?searchString=' + encodeURIComponent(item.name);
     return cardmarketCardSearchUrl(item.englishName, tcgCardLocalNumber({ id: item.id, localId: item.localId }), null);
   }
 
   // Precio sin IA: primero TCGdex (incluye Cardmarket), si no, la ficha de Cardmarket vía proxy.
   function shopFetchFree(item, force) {
-    if (item.id.indexOf('custom-') === 0) {
+    if (item.id.indexOf('custom-') === 0 || item.sealed) {
       if (!item.cmUrl) return Promise.resolve(null);
       return fetchManualCardmarketPrice(item.cmUrl).then(function(p) {
         var v = pickCardmarketPrice(p);
@@ -7903,8 +7966,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function shopClaudeLookup(batch) {
     var lines = batch.map(function(it) {
       return '- key=' + it.id + ' | ' + it.englishName + (it.name !== it.englishName ? ' (' + it.name + ')' : '') +
-        ' | set: ' + (it.group === 'anniv' ? '30th Celebration / 30 Aniversario' : (it.setName || '?')) +
-        ' | n\u00ba ' + (it.localId || '?') + (it.group === 'anniv' ? ' | edici\u00f3n en castellano' : '');
+        ' | set: ' + (it.anniv ? '30th Celebration / 30 Aniversario' : (it.setName || '?')) +
+        ' | n\u00ba ' + (it.localId || '?') + (it.anniv ? ' | edici\u00f3n en castellano' : '');
     }).join('\n');
     var prompt = 'Busca en cardmarket.com el precio actual en euros de estas cartas del TCG de Pok\u00e9mon. ' +
       'Usa el "Price Trend" (Tendencia) de la ficha; si la carta indica edici\u00f3n en castellano, prioriza el precio de las ofertas en espa\u00f1ol (desde). ' +
@@ -7990,6 +8053,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       try { localStorage.setItem(SHOP_LAST_REFRESH_KEY, String(Date.now())); } catch (e) {}
       shopSave();
       renderShop();
+      shopCheckNewAlerts();
     });
   }
 
@@ -8013,7 +8077,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   function renderShopHead() {
-    var items = shopTrackedItems();
+    var items = shopTrackedItems().filter(function(it) { return !it.sealed; });
     var total = 0, known = 0, ups = 0, downs = 0;
     items.forEach(function(it) {
       var info = shopInfo(it.id);
@@ -8072,14 +8136,16 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     img.alt = item.name;
     if (item.image) img.src = item.image;
     img.addEventListener('click', function() {
-      if (item.imageBase) openTcgLightbox(tcgImageOverrides[item.id] || tcgCardImageUrl(item.imageBase, 'high'), item.name, { id: item.id, image: item.imageBase, localId: item.localId }, item.englishName, item.setName, item.group === 'anniv' ? 'es' : 'en');
+      if (item.imageBase) openTcgLightbox(tcgImageOverrides[item.id] || tcgCardImageUrl(item.imageBase, 'high'), item.name, { id: item.id, image: item.imageBase, localId: item.localId }, item.englishName, item.setName, item.anniv ? 'es' : 'en');
       else if (item.image) window.open(item.image, '_blank', 'noopener');
     });
     var main = shopEl('div', 'shop-row-main');
     var nameEl = shopEl('div', 'shop-row-name', item.name);
     if (info.src === 'Claude') nameEl.appendChild(shopEl('span', 'shop-tag', 'Claude'));
     main.appendChild(nameEl);
-    var meta = [item.group === 'anniv' ? '30 Aniversario \u00b7 ES' : item.setName, item.localId ? '#' + item.localId : '', item.saved ? 'Guardada' : 'Seguida'].filter(Boolean).join(' \u00b7 ');
+    var target = shopTargetOf(item.id);
+    var meta = [item.sealed ? 'Sellado' : (item.anniv ? '30 Aniversario \u00b7 ES' : item.setName), item.localId ? '#' + item.localId : '', item.sealed ? '' : (item.saved ? 'Guardada' : 'Seguida'), target != null ? '\ud83d\udd14 \u2264 ' + formatEuro(target) : ''].filter(Boolean).join(' \u00b7 ');
+    if (target != null && info.price != null && info.price <= target) row.classList.add('shop-row-alert');
     main.appendChild(shopEl('div', 'shop-row-meta', meta));
     if (info.history.length > 1) main.insertAdjacentHTML('beforeend', shopSparkline(info.history));
     else main.appendChild(shopEl('div', 'shop-row-spark-empty', info.history.length ? 'Hist\u00f3rico desde ' + info.history[0].d.split('-').reverse().join('/') : ''));
@@ -8100,13 +8166,20 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     cm.innerHTML = SHOP_ICON_CART;
     cm.setAttribute('data-testid', 'shop-row-cardmarket-' + item.id);
     actions.appendChild(cm);
+    var bell = shopEl('button', 'shop-icon-btn' + (target != null ? ' is-on' : ''));
+    bell.type = 'button';
+    bell.title = 'Alerta de precio';
+    bell.innerHTML = SHOP_ICON_BELL;
+    bell.setAttribute('data-testid', 'shop-row-alert-' + item.id);
+    bell.addEventListener('click', function() { shopEditTarget(item); });
+    actions.appendChild(bell);
     if (!item.saved) {
       var rm = shopEl('button', 'shop-icon-btn');
       rm.type = 'button';
       rm.title = 'Dejar de seguir';
       rm.innerHTML = SHOP_ICON_X;
       rm.setAttribute('data-testid', 'shop-row-unfollow-' + item.id);
-      rm.addEventListener('click', function() { delete shopFollow[item.id]; shopSave(); renderShop(); refreshShopSuggestions(); });
+      rm.addEventListener('click', function() { delete shopFollow[item.id]; delete shopTargets[item.id]; delete shopAlerted[item.id]; shopSave(); renderShop(); refreshShopSuggestions(); });
       actions.appendChild(rm);
     }
     row.appendChild(img);
@@ -8121,17 +8194,28 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     renderShopHead();
     var items = shopTrackedItems();
     renderShopMovers(items);
-    var counts = { all: items.length, saved: 0, anniv: 0, eevee: 0 };
-    items.forEach(function(it) { if (it.saved) counts.saved++; if (counts[it.group] != null) counts[it.group]++; });
+    renderShopSuggestSections();
+    renderShopAlerts(items);
+    var counts = { all: items.length, saved: 0, sealed: 0, alert: 0 };
+    var chips = [['all', 'Todas'], ['saved', 'Guardadas']];
+    items.forEach(function(it) { if (it.saved) counts.saved++; if (it.sealed) counts.sealed++; if (shopTargetOf(it.id) != null) counts.alert++; });
+    if (counts.sealed) chips.push(['sealed', 'Sellados']);
+    if (counts.alert) chips.push(['alert', 'Con alerta']);
+    customSections.forEach(function(def) {
+      chips.push([def.id, def.label]);
+      counts[def.id] = items.filter(function(it) { return shopInSection(def, it); }).length;
+    });
+    if (shopFilter !== 'all' && shopFilter !== 'saved' && !(shopFilter === 'sealed' && counts.sealed) && !(shopFilter === 'alert' && counts.alert) && !customSections.some(function(d) { return d.id === shopFilter; })) shopFilter = 'all';
+    var activeDef = customSections.filter(function(d) { return d.id === shopFilter; })[0];
     shopChipsEl.innerHTML = '';
-    [['all', 'Todas'], ['saved', 'Guardadas'], ['anniv', '30 Aniversario'], ['eevee', 'Eevee']].forEach(function(c) {
+    chips.forEach(function(c) {
       var chip = shopEl('button', 'shop-chip' + (shopFilter === c[0] ? ' is-active' : ''), c[1] + ' ' + counts[c[0]]);
       chip.type = 'button';
       chip.setAttribute('data-testid', 'shop-filter-' + c[0]);
       chip.addEventListener('click', function() { shopFilter = c[0]; renderShop(); });
       shopChipsEl.appendChild(chip);
     });
-    var list = items.filter(function(it) { return shopFilter === 'all' || (shopFilter === 'saved' ? it.saved : it.group === shopFilter); });
+    var list = items.filter(function(it) { return shopFilter === 'all' || (shopFilter === 'saved' ? it.saved : shopFilter === 'sealed' ? it.sealed : shopFilter === 'alert' ? shopTargetOf(it.id) != null : shopInSection(activeDef, it)); });
     list.sort(function(a, b) {
       var ia = shopInfo(a.id), ib = shopInfo(b.id);
       if (shopSort === 'name') return a.name.localeCompare(b.name);
@@ -8140,7 +8224,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
     shopListEl.innerHTML = '';
     if (!list.length) {
-      var empty = shopEl('p', 'shop-empty', items.length ? 'No hay cartas en este filtro.' : 'Guarda cartas con el \ud83d\udd16 en TCG o a\u00f1ade abajo cartas del 30 Aniversario y de Eevee para seguir su precio.');
+      var empty = shopEl('p', 'shop-empty', items.length ? 'No hay cartas en este filtro.' : 'Guarda cartas con el \ud83d\udd16 en TCG o a\u00f1ade abajo cartas de tus secciones para seguir su precio.');
       empty.setAttribute('data-testid', 'shop-empty');
       shopListEl.appendChild(empty);
       return;
@@ -8148,39 +8232,50 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     list.forEach(function(it) { shopListEl.appendChild(buildShopRow(it)); });
   }
 
-  // ----- Sugerencias: 30 Aniversario (en castellano) y familia Eevee -----
-  var shopSuggestState = { anniv: false, eevee: false };
+  // ----- Sugerencias: una por cada sección de tu pestaña TCG -----
+  var shopSuggestState = {};   // id de sección -> desplegada
+  var shopSectionCards = {};   // id de sección -> cartas ya cargadas
+  var shopSuggestSig = null;
+  var shopSuggestSectionsEl = document.getElementById('shop-suggest-sections');
 
-  function fetchShopAnnivCards() {
-    if (shopAnnivCards) return Promise.resolve(shopAnnivCards);
-    return Promise.all([
-      tcgFetchJson('https://api.tcgdex.net/v2/es/sets/' + TCG_ANNIVERSARY_SET_ID).catch(function() { return null; }),
-      fetchAnniversaryCards()
-    ]).then(function(res) {
-      var en = {};
-      (res[1] || []).forEach(function(c) { en[c.id] = c; });
-      var es = res[0] && Array.isArray(res[0].cards) ? res[0].cards : (res[1] || []);
-      shopAnnivCards = es.map(function(c) {
-        return { id: c.id, name: c.name, englishName: en[c.id] ? en[c.id].name : c.name, image: c.image || (en[c.id] && en[c.id].image), localId: c.localId, setName: '30 Aniversario' };
-      }).sort(function(a, b) { return (parseInt(a.localId, 10) || 9999) - (parseInt(b.localId, 10) || 9999); });
-      return shopAnnivCards;
-    });
-  }
-
-  function fetchShopEeveeCards() {
-    return fetchEeveeCards().then(function(cards) {
-      return cards.map(function(c) {
-        return { id: c.id, name: c.name, englishName: c.name, image: c.image, localId: c.localId, setName: c.set && c.set.name ? c.set.name : '' };
+  // Mismas cartas que la sección de TCG. Si es un set, se intenta la versión en castellano
+  // (nombres e imágenes en español, como se hacía con el 30 Aniversario) y si no existe se usa la inglesa.
+  function fetchShopSectionCards(def) {
+    if (shopSectionCards[def.id]) return Promise.resolve(shopSectionCards[def.id]);
+    var base = fetchCustomSectionCards(def);
+    var p;
+    if (def.mode === 'set') {
+      p = Promise.all([
+        tcgFetchJson('https://api.tcgdex.net/v2/es/sets/' + encodeURIComponent(def.setId)).catch(function() { return null; }),
+        base
+      ]).then(function(res) {
+        var en = {};
+        (res[1] || []).forEach(function(c) { en[c.id] = c; });
+        var es = res[0] && Array.isArray(res[0].cards) ? res[0].cards : (res[1] || []);
+        return es.map(function(c) {
+          return { id: c.id, name: c.name, englishName: en[c.id] ? en[c.id].name : c.name, image: c.image || (en[c.id] && en[c.id].image), localId: c.localId, setName: def.label };
+        }).sort(function(a, b) { return (parseInt(a.localId, 10) || 9999) - (parseInt(b.localId, 10) || 9999); });
       });
+    } else {
+      p = base.then(function(cards) {
+        return sortCustomSectionCards(def, cards).map(function(c) {
+          return { id: c.id, name: c.name, englishName: c.name, image: c.image, localId: c.localId, setName: c.set && c.set.name ? c.set.name : '' };
+        });
+      });
+    }
+    return p.then(function(cards) {
+      if (cards.length) shopSectionCards[def.id] = cards;
+      return cards;
     });
   }
 
   function shopIsTracked(id) { return tcgSaved.has(id) || !!shopFollow[id]; }
 
-  function renderShopSuggest(key) {
+  function renderShopSuggest(def) {
+    var key = def.id;
     var box = document.getElementById('shop-suggest-' + key);
     var badge = document.getElementById('shop-suggest-' + key + '-badge');
-    var loader = key === 'anniv' ? fetchShopAnnivCards : fetchShopEeveeCards;
+    var loader = function() { return fetchShopSectionCards(def); };
     if (shopSuggestState[key]) { box.hidden = false; if (!box.childNodes.length) box.appendChild(shopEl('p', 'tcg-missing-dex-empty', 'Cargando cartas\u2026')); }
     loader().then(function(cards) {
       badge.textContent = cards.filter(function(c) { return shopIsTracked(c.id); }).length + '/' + cards.length;
@@ -8237,20 +8332,280 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
   }
 
-  function refreshShopSuggestions() {
-    ['anniv', 'eevee'].forEach(function(k) { if (shopSuggestState[k]) renderShopSuggest(k); });
+  // Contador "siguiendo/total" de cada desplegable (sin pedir nada extra: reutiliza las cartas
+  // que ya carga la pestaña TCG para esa sección).
+  function updateShopSuggestBadges() {
+    customSections.forEach(function(def) {
+      var badge = document.getElementById('shop-suggest-' + def.id + '-badge');
+      if (!badge) return;
+      fetchCustomSectionCards(def).then(function(cards) {
+        badge.textContent = cards.filter(function(c) { return shopIsTracked(c.id); }).length + '/' + cards.length;
+      });
+    });
   }
 
-  ['anniv', 'eevee'].forEach(function(key) {
-    var toggle = document.getElementById('shop-suggest-' + key + '-toggle');
-    toggle.addEventListener('click', function() {
-      shopSuggestState[key] = !shopSuggestState[key];
-      toggle.setAttribute('aria-expanded', String(shopSuggestState[key]));
-      var box = document.getElementById('shop-suggest-' + key);
-      if (!shopSuggestState[key]) { box.hidden = true; return; }
-      renderShopSuggest(key);
+  function refreshShopSuggestions() {
+    customSections.forEach(function(def) { if (shopSuggestState[def.id]) renderShopSuggest(def); });
+    updateShopSuggestBadges();
+  }
+
+  // Reconstruye los desplegables solo cuando cambia la lista de secciones (crear/borrar).
+  function renderShopSuggestSections() {
+    if (!shopSuggestSectionsEl) return;
+    var sig = customSections.map(function(d) { return d.id; }).join('|');
+    if (sig === shopSuggestSig) return;
+    shopSuggestSig = sig;
+    shopSuggestSectionsEl.innerHTML = '';
+    customSections.forEach(function(def) {
+      var wrap = shopEl('div', 'tcg-missing-dex');
+      var toggle = shopEl('button', 'tcg-missing-dex-toggle');
+      toggle.type = 'button';
+      toggle.setAttribute('aria-expanded', String(!!shopSuggestState[def.id]));
+      toggle.setAttribute('data-testid', 'shop-suggest-' + def.id + '-toggle');
+      toggle.innerHTML = '<span class="tcg-missing-dex-toggle-label">' + shareEscapeHtml(def.label) + '</span>' +
+        '<span id="shop-suggest-' + def.id + '-badge" class="tcg-missing-dex-badge">0</span>' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>';
+      var box = shopEl('div');
+      box.id = 'shop-suggest-' + def.id;
+      box.hidden = !shopSuggestState[def.id];
+      wrap.appendChild(toggle);
+      wrap.appendChild(box);
+      shopSuggestSectionsEl.appendChild(wrap);
+      toggle.addEventListener('click', function() {
+        shopSuggestState[def.id] = !shopSuggestState[def.id];
+        toggle.setAttribute('aria-expanded', String(shopSuggestState[def.id]));
+        if (!shopSuggestState[def.id]) { box.hidden = true; return; }
+        renderShopSuggest(def);
+      });
+      if (shopSuggestState[def.id]) renderShopSuggest(def);
     });
+    updateShopSuggestBadges();
+  }
+
+  // ----- Alertas de precio -----
+  // Cada carta/producto puede tener un precio objetivo. Se evalúa tras cada refresco de precios
+  // (la app abre y refresca sola a los pocos segundos): banner en la Tienda y en el Inicio,
+  // contador en la pestaña y, si activaste los avisos en Ajustes, notificación del navegador.
+  // Una página web no puede avisar con la app cerrada: solo se entera cuando la abres.
+  var shopTabBadgeEl = document.getElementById('shop-tab-badge');
+  var shopAlertsEl = document.getElementById('shop-alerts');
+
+  function shopTargetOf(id) {
+    var t = shopTargets[id];
+    return (typeof t === 'number' && t > 0) ? t : null;
+  }
+  function shopAlertItems(items) {
+    return items.filter(function(it) {
+      var t = shopTargetOf(it.id), pr = shopInfo(it.id).price;
+      return t != null && pr != null && pr <= t;
+    });
+  }
+  function renderShopAlerts(items) {
+    var hits = shopAlertItems(items || shopTrackedItems());
+    if (shopTabBadgeEl) { shopTabBadgeEl.hidden = !hits.length; shopTabBadgeEl.textContent = String(hits.length); }
+    if (!shopAlertsEl) return;
+    shopAlertsEl.innerHTML = '';
+    shopAlertsEl.hidden = !hits.length;
+    if (!hits.length) return;
+    shopAlertsEl.appendChild(shopEl('p', 'shop-alerts-title', '\ud83d\udd14 ' + (hits.length === 1 ? '1 en tu precio' : hits.length + ' en tu precio')));
+    hits.forEach(function(it) {
+      var row = shopEl('div', 'shop-alert-row');
+      row.appendChild(shopEl('span', null, it.name));
+      row.appendChild(shopEl('b', null, formatEuro(shopInfo(it.id).price) + ' (\u2264 ' + formatEuro(shopTargetOf(it.id)) + ')'));
+      shopAlertsEl.appendChild(row);
+    });
+  }
+  // Avisa solo de lo nuevo: una carta ya avisada no vuelve a avisar salvo que baje aún más o
+  // suba por encima del objetivo y vuelva a bajar.
+  function shopCheckNewAlerts() {
+    var items = shopTrackedItems(), fresh = [];
+    items.forEach(function(it) {
+      var t = shopTargetOf(it.id), pr = shopInfo(it.id).price;
+      if (t != null && pr != null && pr <= t) {
+        if (shopAlerted[it.id] == null || pr < shopAlerted[it.id]) { shopAlerted[it.id] = pr; fresh.push({ name: it.name, price: pr, target: t }); }
+      } else if (shopAlerted[it.id] != null) delete shopAlerted[it.id];
+    });
+    if (fresh.length) {
+      shopSave();
+      if (typeof priceAlertsEnabled !== 'undefined' && priceAlertsEnabled && 'Notification' in window && Notification.permission === 'granted') {
+        var title = fresh.length === 1 ? fresh[0].name + ' ha llegado a tu precio' : fresh.length + ' cartas han llegado a tu precio';
+        var body = fresh.slice(0, 5).map(function(f) { return f.name + ' ' + formatEuro(f.price); }).join(', ') + (fresh.length > 5 ? '\u2026' : '');
+        try { new Notification(title, { body: body }); } catch (e) {}
+      }
+    }
+    renderShopAlerts(items);
+    renderHome();
+  }
+  function shopEditTarget(item) {
+    var cur = shopTargetOf(item.id);
+    var price = shopInfo(item.id).price;
+    var msg = 'Avisarme cuando "' + item.name + '" baje de (€)' + (price != null ? '. Ahora: ' + formatEuro(price) : '') + '. Déjalo vacío para quitar la alerta.';
+    var ans = window.prompt(msg, cur != null ? String(cur).replace('.', ',') : '');
+    if (ans === null) return;
+    var v = parseFloat(String(ans).replace(',', '.'));
+    if (!ans.trim() || isNaN(v) || v <= 0) { delete shopTargets[item.id]; delete shopAlerted[item.id]; }
+    else shopTargets[item.id] = v;
+    shopSave();
+    shopCheckNewAlerts();
+    renderShop();
+  }
+
+  // ----- Productos sellados -----
+  var shopSealedToggle = document.getElementById('shop-sealed-toggle');
+  var shopSealedForm = document.getElementById('shop-sealed-form');
+  var shopSealedStatus = document.getElementById('shop-sealed-status');
+  function shopSealedCount() { return Object.keys(shopFollow).filter(function(id) { return id.indexOf('sealed-') === 0; }).length; }
+  function updateShopSealedBadge() { document.getElementById('shop-sealed-badge').textContent = String(shopSealedCount()); }
+  function shopSealedMsg(text, isError) {
+    shopSealedStatus.hidden = !text;
+    shopSealedStatus.textContent = text || '';
+    shopSealedStatus.classList.toggle('is-error', !!isError);
+  }
+  shopSealedToggle.addEventListener('click', function() {
+    var open = shopSealedForm.hidden;
+    shopSealedForm.hidden = !open;
+    shopSealedToggle.setAttribute('aria-expanded', String(open));
   });
+  document.getElementById('shop-sealed-add').addEventListener('click', function() {
+    var name = document.getElementById('shop-sealed-name').value.trim();
+    var url = document.getElementById('shop-sealed-url').value.trim();
+    var img = document.getElementById('shop-sealed-img').value.trim();
+    var target = parseFloat(document.getElementById('shop-sealed-target').value.replace(',', '.'));
+    if (!name) { shopSealedMsg('Ponle un nombre al producto.', true); return; }
+    if (url && url.indexOf('cardmarket.com') === -1) { shopSealedMsg('El enlace tiene que ser de cardmarket.com (es de donde se lee el precio).', true); return; }
+    var id = 'sealed-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
+    shopFollow[id] = { name: name, englishName: name, image: img, setName: 'Producto sellado', cardmarketUrl: url, sealed: true };
+    if (!isNaN(target) && target > 0) shopTargets[id] = target;
+    shopSave();
+    ['shop-sealed-name', 'shop-sealed-url', 'shop-sealed-img', 'shop-sealed-target'].forEach(function(f) { document.getElementById(f).value = ''; });
+    shopSealedMsg('Añadido. Lo verás arriba, en el filtro «Sellados».', false);
+    shopFilter = 'sealed';
+    updateShopSealedBadge();
+    renderShop();
+    shopRefresh(false);
+  });
+
+  // ----- Calendario de lanzamientos -----
+  // Lista de partida (webs de coleccionismo, oct 2026; fechas de EE. UU./Japón según el caso, en
+  // España pueden variar), más las que añadas tú, más lo que Claude encuentre al pulsar
+  // "Actualizar con Claude" (sustituye a la lista de partida). Solo se muestran las futuras.
+  var SHOP_RELEASES_USER_KEY = 'pokecheck_releases_user_v1';
+  var SHOP_RELEASES_AUTO_KEY = 'pokecheck_releases_auto_v1';
+  var SHOP_RELEASES_SEED = [
+    { d: '2026-10-23', n: "Deck Crafter's Collection", k: 'Producto' },
+    { d: '2026-10-30', n: '30th Celebration Battle Decks (Espeon ex y Umbreon ex)', k: 'Producto' },
+    { d: '2026-11-06', n: '30th Celebration Premium: Ultra-Premium Day & Night, Ditto, Mew y Mewtwo', k: 'Producto' },
+    { d: '2026-11-06', n: 'Mega Evolution: Delta Reign (prelanzamiento 24 oct \u2013 1 nov)', k: 'Expansión' },
+    { d: '2026-11-27', n: 'ME7 Aura Seeker (Japón)', k: 'Expansión' }
+  ];
+  var shopReleasesUser = [];
+  try { shopReleasesUser = JSON.parse(localStorage.getItem(SHOP_RELEASES_USER_KEY) || '[]') || []; } catch (e) { shopReleasesUser = []; }
+  var shopReleasesAuto = null;
+  try { shopReleasesAuto = JSON.parse(localStorage.getItem(SHOP_RELEASES_AUTO_KEY) || 'null'); } catch (e) { shopReleasesAuto = null; }
+  var shopReleasesListEl = document.getElementById('shop-releases-list');
+  var shopReleasesStatusEl = document.getElementById('shop-releases-status');
+
+  function saveShopReleasesUser() { try { localStorage.setItem(SHOP_RELEASES_USER_KEY, JSON.stringify(shopReleasesUser)); } catch (e) {} }
+  function shopReleasesMsg(text, isError) {
+    shopReleasesStatusEl.hidden = !text;
+    shopReleasesStatusEl.textContent = text || '';
+    shopReleasesStatusEl.classList.toggle('is-error', !!isError);
+  }
+  function shopDaysUntil(d) {
+    var t = new Date(); t.setHours(0, 0, 0, 0);
+    var x = new Date(d + 'T00:00:00');
+    return Math.round((x - t) / 86400000);
+  }
+  function renderShopReleases() {
+    var base = (shopReleasesAuto && Array.isArray(shopReleasesAuto.items) && shopReleasesAuto.items.length) ? shopReleasesAuto.items : SHOP_RELEASES_SEED;
+    var all = base.map(function(r) { return { d: r.d, n: r.n, k: r.k, user: false }; })
+      .concat(shopReleasesUser.map(function(r, i) { return { d: r.d, n: r.n, k: 'Mi recordatorio', user: true, idx: i }; }))
+      .filter(function(r) { return /^\d{4}-\d{2}-\d{2}$/.test(r.d) && shopDaysUntil(r.d) >= 0; })
+      .sort(function(a, b) { return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; });
+    document.getElementById('shop-releases-badge').textContent = String(all.length);
+    shopReleasesListEl.innerHTML = '';
+    if (!all.length) shopReleasesListEl.appendChild(shopEl('p', 'tcg-missing-dex-empty', 'No hay lanzamientos próximos. Añade uno o pulsa «Actualizar con Claude».'));
+    all.forEach(function(r) {
+      var days = shopDaysUntil(r.d);
+      var dt = new Date(r.d + 'T00:00:00');
+      var row = shopEl('div', 'shop-release');
+      var dateEl = shopEl('div', 'shop-release-date');
+      dateEl.appendChild(shopEl('b', null, String(dt.getDate())));
+      dateEl.appendChild(document.createTextNode(dt.toLocaleDateString('es-ES', { month: 'short' }).replace('.', '')));
+      var main = shopEl('div', 'shop-release-main');
+      main.appendChild(shopEl('div', 'shop-release-name', r.n));
+      main.appendChild(shopEl('div', 'shop-release-meta', [r.k, days === 0 ? 'hoy' : days === 1 ? 'mañana' : 'faltan ' + days + ' días'].filter(Boolean).join(' \u00b7 ')));
+      row.appendChild(dateEl);
+      row.appendChild(main);
+      if (r.user) {
+        var rm = shopEl('button', 'shop-icon-btn');
+        rm.type = 'button'; rm.title = 'Quitar'; rm.innerHTML = SHOP_ICON_X;
+        rm.addEventListener('click', function() { shopReleasesUser.splice(r.idx, 1); saveShopReleasesUser(); renderShopReleases(); });
+        row.appendChild(rm);
+      }
+      shopReleasesListEl.appendChild(row);
+    });
+    document.getElementById('shop-releases-note').textContent = (shopReleasesAuto && shopReleasesAuto.items && shopReleasesAuto.items.length)
+      ? 'Actualizado con Claude ' + huchaRelativeTime(shopReleasesAuto.ts) + '. Revisa siempre la fecha en la tienda donde compres.'
+      : 'Lista de partida de webs de coleccionismo (oct 2026); las fechas pueden cambiar según el país. Pulsa «Actualizar con Claude» para ponerla al día.';
+  }
+  document.getElementById('shop-releases-toggle').addEventListener('click', function() {
+    var box = document.getElementById('shop-releases-box');
+    box.hidden = !box.hidden;
+    this.setAttribute('aria-expanded', String(!box.hidden));
+  });
+  document.getElementById('shop-releases-add-toggle').addEventListener('click', function() {
+    var f = document.getElementById('shop-releases-form');
+    f.hidden = !f.hidden;
+  });
+  document.getElementById('shop-releases-add').addEventListener('click', function() {
+    var n = document.getElementById('shop-releases-name').value.trim();
+    var d = document.getElementById('shop-releases-date').value;
+    if (!n || !/^\d{4}-\d{2}-\d{2}$/.test(d)) { shopReleasesMsg('Pon un nombre y una fecha.', true); return; }
+    shopReleasesUser.push({ d: d, n: n });
+    saveShopReleasesUser();
+    document.getElementById('shop-releases-name').value = '';
+    document.getElementById('shop-releases-date').value = '';
+    document.getElementById('shop-releases-form').hidden = true;
+    shopReleasesMsg('', false);
+    renderShopReleases();
+  });
+  document.getElementById('shop-releases-claude').addEventListener('click', function() {
+    var btn = this;
+    if (!anthropicApiKey) { shopReleasesMsg('Necesitas tu clave de Claude en Ajustes para esto.', true); return; }
+    btn.disabled = true;
+    shopReleasesMsg('Buscando lanzamientos…', false);
+    var today = new Date().toISOString().slice(0, 10);
+    var prompt = 'Hoy es ' + today + '. Busca en la web los próximos lanzamientos del TCG de Pokémon (expansiones y productos importantes como Elite Trainer Box, colecciones premium o mazos) con fecha confirmada en los próximos 6 meses para España/Europa; si solo hay fecha de EE. UU. o Japón, úsala. ' +
+      'Responde ÚNICAMENTE con un array JSON sin texto adicional ni backticks, con máximo 15 elementos ordenados por fecha: [{"d":"AAAA-MM-DD","n":"nombre del lanzamiento","k":"Expansión" o "Producto"}].';
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': anthropicApiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: CLAUDE_SCAN_MODEL, max_tokens: 3000, thinking: { type: 'disabled' },
+        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    }).then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(data) {
+      var text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
+      var a = text.indexOf('['), e = text.lastIndexOf(']');
+      var arr = (a !== -1 && e > a) ? JSON.parse(text.slice(a, e + 1)) : [];
+      var items = (Array.isArray(arr) ? arr : []).filter(function(r) { return r && /^\d{4}-\d{2}-\d{2}$/.test(r.d) && typeof r.n === 'string' && r.n; })
+        .map(function(r) { return { d: r.d, n: r.n.slice(0, 120), k: r.k === 'Expansión' ? 'Expansión' : 'Producto' }; });
+      if (!items.length) throw new Error('empty');
+      shopReleasesAuto = { ts: Date.now(), items: items };
+      try { localStorage.setItem(SHOP_RELEASES_AUTO_KEY, JSON.stringify(shopReleasesAuto)); } catch (err) {}
+      shopReleasesMsg('', false);
+      renderShopReleases();
+    }).catch(function(err) {
+      shopReleasesMsg(err && err.message === 'empty' ? 'Claude no encontró lanzamientos con fecha. Inténtalo más tarde.' : 'No se pudo consultar a Claude (' + (err && err.message ? err.message : 'error') + ').', true);
+    }).then(function() { btn.disabled = false; });
+  });
+  updateShopSealedBadge();
+  renderShopReleases();
 
   shopSortEl.addEventListener('change', function() { shopSort = shopSortEl.value; renderShop(); });
   shopRefreshBtn.addEventListener('click', function() { shopRefresh(true); });
@@ -8335,6 +8690,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       movers.slice(0, 5).map(function(m) {
         return row(m.name, (m.pct > 0 ? '+' : '') + (m.pct * 100).toFixed(1).replace('.', ',') + '% \u00b7 ' + formatEuro(m.price), m.pct > 0 ? 'up' : 'down');
       }).join('') : '<p class="home-sub">Cuando cambie el precio de las cartas que sigues en la tienda, lo ver\u00e1s aqu\u00ed.</p>') + '</section>';
+    try {
+      var hitItems = shopAlertItems(shopTrackedItems());
+      if (hitItems.length) html += '<section class="home-card"><h3>\ud83d\udd14 En tu precio</h3>' +
+        hitItems.slice(0, 5).map(function(it) { return row(it.name, formatEuro(shopInfo(it.id).price) + ' (\u2264 ' + formatEuro(shopTargetOf(it.id)) + ')', 'down'); }).join('') + '</section>';
+    } catch (e) {}
     if (priced.length) html += '<section class="home-card"><h3>Tus cartas m\u00e1s valiosas</h3>' +
       priced.slice(0, 3).map(function(p) { return row(p.name, formatEuro(p.price)); }).join('') + '</section>';
     homeViewEl.innerHTML = html;
@@ -8595,6 +8955,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   loadPokemonTypesCache();
   loadCustomSections();
+  seedDefaultCustomSections();
   // ================= VGC · Pokémon Champions =================
   // Datos: Pikalytics (páginas markdown /ai/pokedex/<formato>/<Pokémon>), vía fetch directo o proxies CORS.
   // Para una regulación nueva basta añadir una línea a VGC_REGS (si no, se intenta detectar sola).
@@ -9265,7 +9626,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true'
       },
-      body: JSON.stringify({ model: CLAUDE_VGC_MODEL, max_tokens: 4000, system: VGC_AI_SYSTEM, messages: [{ role: 'user', content: vgcAiData(c) }] })
+      body: JSON.stringify({ model: CLAUDE_VGC_MODEL, max_tokens: 4000, thinking: { type: 'disabled' }, system: VGC_AI_SYSTEM, messages: [{ role: 'user', content: vgcAiData(c) }] })
     }).then(function(res) {
       if (!res.ok) {
         return res.text().then(function(t) {
@@ -9279,8 +9640,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (vgc.ctx !== c) return;
       var text = (data.content || []).map(function(b) { return b.text || ''; }).join('').trim();
       if (!text) throw new Error('empty');
-      try { if (k) localStorage.setItem(k, text); } catch (e) {}
-      vgcAiShow(text);
+      var cut = data.stop_reason === 'max_tokens';
+      if (!cut) { try { if (k) localStorage.setItem(k, text); } catch (e) {} }
+      vgcAiShow(cut ? text + '\n\nLa respuesta se ha cortado por longitud. Pulsa "Volver a generar".' : text);
     }).catch(function(err) {
       if (vgc.ctx !== c) return;
       var msg = err && err.status === 401 ? 'La clave API no es válida. Revísala en Ajustes.' :
@@ -9411,6 +9773,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // Respeta el TTL de 24h de la hucha, así que si ya se comprobó hoy no llama a nada.
   setTimeout(function() { refreshHuchaPrices(false); }, 4000);
   // Tienda: mismo criterio de 24h, al abrir la app.
+  renderShopAlerts();
   setTimeout(function() { shopRefresh(false); }, 6000);
 })();
 </script>
