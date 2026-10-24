@@ -1917,13 +1917,17 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </div>
       <p id="settings-api-key-status" class="backup-status" hidden></p>
       </div></details>
-      <details class="settings-group"><summary>Avisos de precios y lanzamientos</summary><div class="settings-group-body">
-      <p class="backup-desc">Aviso cuando una carta baja de precio un 10% o más. Importante: solo se comprueba al abrir la app o las Estadísticas — no es un aviso push real con la app cerrada, esta app no tiene servidor propio.</p>
-      <button type="button" id="price-alerts-btn" class="backup-action">
+            <details class="settings-group"><summary>Notificaciones</summary><div class="settings-group-body">
+      <p class="backup-desc">Un solo permiso del sistema para todo: bajadas de precio (al abrir la app), lanzamientos, avisos del Worker y mensajes de intercambios. Al activarlas se encienden todas las que se puedan en este dispositivo.</p>
+      <button type="button" id="notif-master-btn" class="backup-action">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span id="notif-master-label">Activar notificaciones</span>
+      </button>
+      <p id="notif-master-status" class="backup-desc" style="margin-top:6px"></p>
+      <button type="button" id="price-alerts-btn" class="backup-action" hidden>
         <span id="price-alerts-label">Avisos de bajada de precio: desactivados</span>
       </button>
-      <p class="backup-desc">Avisos con la app cerrada, por notificación push de la app y/o por Telegram. Necesitan tu Worker de avisos (pasos en LEEME-avisos.md): la app le envía tus precios objetivo y el calendario, y él vigila los precios y te avisa cuando una carta llega a tu precio o se acerca un lanzamiento.</p>
+      <p class="backup-desc" style="margin-top:12px">Opciones del Worker de avisos (precios objetivo y lanzamientos con la app cerrada). Pasos en LEEME-avisos.md.</p>
       <div class="tcg-add-field">
         <label for="settings-push-url">URL del Worker de avisos</label>
         <input id="settings-push-url" type="url" autocomplete="off" placeholder="https://pokedex-avisos.tuusuario.workers.dev">
@@ -1944,10 +1948,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </label>
       <button type="button" id="push-sync-btn" class="backup-action">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <span>Guardar y sincronizar</span>
+        <span>Guardar y sincronizar Worker</span>
       </button>
-      <button type="button" id="push-webpush-btn" class="backup-action">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <button type="button" id="push-webpush-btn" class="backup-action" hidden>
         <span id="push-webpush-label">Notificaciones push en este móvil: desactivadas</span>
       </button>
       <button type="button" id="push-test-btn" class="backup-action">
@@ -1956,7 +1959,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </button>
       <p id="push-status" class="backup-status" hidden></p>
       </div></details>
-      <details class="settings-group"><summary>Compartir mi colección</summary><div class="settings-group-body">
+      
+<details class="settings-group"><summary>Compartir mi colección</summary><div class="settings-group-body">
       <p class="backup-desc">Genera una página HTML con tu colección para enviar a quien quieras. Es una foto fija del momento: no se actualiza sola ni permite editar nada.</p>
       <button type="button" id="share-export-btn" class="backup-action">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
@@ -7042,7 +7046,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       }).catch(function(e) { tradeShowMsg(msg, e.message, true); });
     }));
         tradeRootEl.appendChild(shopEl('div', 'trade-h', 'Notificaciones'));
-    tradeRootEl.appendChild(shopEl('p', 'backup-desc', 'Te avisamos en el m\u00f3vil cuando alguien te escriba un mensaje, aunque la app est\u00e9 cerrada. En iPhone hay que a\u00f1adir la app a la pantalla de inicio y abrirla desde ah\u00ed.'));
+    tradeRootEl.appendChild(shopEl('p', 'backup-desc', 'Las notificaciones se activan en Ajustes \u2192 Notificaciones (un solo permiso para precios, lanzamientos y mensajes). Aqu\u00ed puedes activar o probar solo el chat. En iPhone: a\u00f1ade la app a la pantalla de inicio.'));
     var pushMsgEl = tradeMsgEl();
     var pushActions = shopEl('div', 'trade-actions');
     function tradePushSupported() {
@@ -7088,8 +7092,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     }
     pushActions.appendChild(tradeButton('Activar notificaciones de mensajes', 'shop-refresh-btn', function() {
       tradeShowMsg(pushMsgEl, 'Activando\u2026', false);
-      tradeEnablePush().then(function() {
+      var go = (typeof notifEnableAll === 'function')
+        ? notifEnableAll()
+        : tradeEnablePush().then(function() { return ['trade-ok']; });
+      go.then(function() {
         tradeShowMsg(pushMsgEl, 'Notificaciones activadas en este dispositivo.', false);
+        try { notifUpdateMasterUi(); } catch (e) {}
       }).catch(function(e) {
         tradeShowMsg(pushMsgEl, e && e.message ? e.message : 'No se pudo activar.', true);
       });
@@ -10534,6 +10542,129 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       return sub.unsubscribe().then(function() { return pushRequest('/unsubscribe', 'POST', JSON.stringify({ endpoint: endpoint })); });
     });
   }
+  // ----- Notificaciones unificadas (precios + push Worker + chat intercambios) -----
+  var notifMasterBtn = document.getElementById('notif-master-btn');
+  var notifMasterLabel = document.getElementById('notif-master-label');
+  var notifMasterStatus = document.getElementById('notif-master-status');
+
+  function notifUpdateMasterUi(detail) {
+    var perm = ('Notification' in window) ? Notification.permission : 'denied';
+    var on = perm === 'granted' && priceAlertsEnabled;
+    if (notifMasterLabel) {
+      notifMasterLabel.textContent = on ? 'Notificaciones activadas (tocar para desactivar)' : 'Activar notificaciones';
+    }
+    if (notifMasterStatus) {
+      if (detail) {
+        notifMasterStatus.textContent = detail;
+      } else if (perm === 'denied') {
+        notifMasterStatus.textContent = 'Permiso bloqueado en el sistema. Act\u00edvalo en ajustes del navegador o del m\u00f3vil.';
+      } else if (on) {
+        notifMasterStatus.textContent = 'Activas: bajadas de precio al abrir la app, lanzamientos (si el Worker est\u00e1 configurado) y mensajes de intercambios.';
+      } else {
+        notifMasterStatus.textContent = 'Al activar se pide un solo permiso y se encienden todos los avisos disponibles.';
+      }
+    }
+    try { updatePriceAlertsBtn(); } catch (e) {}
+    try { pushRefreshWebLabel(); } catch (e) {}
+  }
+
+  function notifEnableAll() {
+    if (!('Notification' in window)) {
+      return Promise.reject(new Error('Este navegador no admite notificaciones.'));
+    }
+    // Releases y Telegram: por defecto activos al aceptar
+    try {
+      var rel = document.getElementById('settings-push-releases');
+      if (rel) rel.checked = true;
+      var tg = document.getElementById('settings-push-telegram');
+      if (tg) tg.checked = true;
+    } catch (e) {}
+
+    return Notification.requestPermission().then(function(perm) {
+      if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
+      priceAlertsEnabled = true;
+      try { localStorage.setItem(PRICE_ALERTS_KEY, 'on'); } catch (e) {}
+
+      var steps = [];
+      // Web Push del Worker de avisos (si hay URL/clave)
+      try { pushReadForm(); } catch (e) {}
+      if (webPushSupported() && typeof pushConfigured === 'function' && pushConfigured()) {
+        steps.push(
+          pushEnableWeb().then(function() { return 'worker-ok'; }).catch(function(err) {
+            return 'worker: ' + (err && err.message ? err.message : 'error');
+          })
+        );
+      } else {
+        steps.push(Promise.resolve('worker-skip'));
+      }
+      // Push de mensajes de intercambios
+      if (typeof tradeRegistered === 'function' && tradeRegistered() && typeof tradeEnablePush === 'function') {
+        steps.push(
+          tradeEnablePush().then(function() {
+            try { tradeMarkPushAsked(); } catch (e) {}
+            return 'trade-ok';
+          }).catch(function(err) {
+            try { tradeMarkPushAsked(); } catch (e) {}
+            return 'trade: ' + (err && err.message ? err.message : 'error');
+          })
+        );
+      } else {
+        steps.push(Promise.resolve('trade-skip'));
+      }
+      // Sincronizar targets del Worker si se puede
+      try { pushSync(false); } catch (e) {}
+      return Promise.all(steps);
+    });
+  }
+
+  function notifDisableAll() {
+    priceAlertsEnabled = false;
+    try { localStorage.setItem(PRICE_ALERTS_KEY, 'off'); } catch (e) {}
+    var jobs = [];
+    if (typeof pushDisableWeb === 'function') {
+      jobs.push(pushDisableWeb().catch(function() {}));
+    }
+    if (typeof tradeDisablePush === 'function') {
+      jobs.push(tradeDisablePush().catch(function() {}));
+    }
+    return Promise.all(jobs);
+  }
+
+  if (notifMasterBtn) {
+    notifMasterBtn.addEventListener('click', function() {
+      var perm = ('Notification' in window) ? Notification.permission : 'denied';
+      var on = perm === 'granted' && priceAlertsEnabled;
+      notifMasterBtn.disabled = true;
+      if (on) {
+        notifUpdateMasterUi('Desactivando\u2026');
+        notifDisableAll().then(function() {
+          notifUpdateMasterUi('Notificaciones desactivadas en este dispositivo.');
+        }).catch(function(err) {
+          notifUpdateMasterUi(err && err.message ? err.message : 'Error al desactivar.');
+        }).then(function() { notifMasterBtn.disabled = false; });
+      } else {
+        notifUpdateMasterUi('Activando\u2026');
+        notifEnableAll().then(function(results) {
+          var parts = [];
+          parts.push('Permiso concedido.');
+          parts.push('Avisos de precio al abrir la app: s\u00ed.');
+          (results || []).forEach(function(r) {
+            if (r === 'worker-ok') parts.push('Push del Worker de avisos: s\u00ed.');
+            else if (r === 'worker-skip') parts.push('Worker de avisos: configura URL y clave m\u00e1s abajo si quieres avisos con la app cerrada.');
+            else if (r === 'trade-ok') parts.push('Mensajes de intercambios: s\u00ed.');
+            else if (r === 'trade-skip') parts.push('Intercambios: crea tu perfil para recibir mensajes push.');
+            else if (typeof r === 'string' && r.indexOf('worker:') === 0) parts.push('Worker: ' + r.slice(7));
+            else if (typeof r === 'string' && r.indexOf('trade:') === 0) parts.push('Chat: ' + r.slice(6));
+          });
+          notifUpdateMasterUi(parts.join(' '));
+        }).catch(function(err) {
+          notifUpdateMasterUi(err && err.message ? err.message : 'No se pudieron activar.');
+        }).then(function() { notifMasterBtn.disabled = false; });
+      }
+    });
+  }
+  notifUpdateMasterUi();
+
   pushWebBtn.addEventListener('click', function() {
     pushReadForm();
     if (!webPushSupported()) { pushMsg('Este navegador no admite notificaciones push. En iPhone, a\u00f1ade antes la app a la pantalla de inicio.', true); return; }
@@ -10549,7 +10680,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         pushSync(false);
       });
     }).catch(function(err) { pushMsg(pushNetErr(err), true); })
-      .then(pushRefreshWebLabel);
+      .then(function() { pushRefreshWebLabel(); notifUpdateMasterUi(); });
   });
   pushRefreshWebLabel();
   setTimeout(function() { pushSync(false); }, 8000);
