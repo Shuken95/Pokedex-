@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'pokecheck-shell-v1';
+const SHELL_CACHE = 'pokecheck-shell-v2';
 const RUNTIME_CACHE = 'pokecheck-runtime-v1';
 
 const SHELL_FILES = [
@@ -12,7 +12,7 @@ const SHELL_FILES = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(SHELL_CACHE)
-      .then((cache) => cache.addAll(SHELL_FILES))
+      .then((cache) => cache.addAll(SHELL_FILES).catch(() => {}))
       .then(() => self.skipWaiting())
   );
 });
@@ -38,8 +38,6 @@ self.addEventListener('fetch', (event) => {
   const isPokeData = url.hostname === 'pokeapi.co' || url.hostname === 'raw.githubusercontent.com';
 
   if (isApp) {
-    // App shell: network first, fall back to cache, so updates are picked up
-    // when online but the app still works offline.
     event.respondWith(
       fetch(req)
         .then((res) => {
@@ -53,8 +51,6 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (isPokeData) {
-    // Pokémon data/sprites: cache first, since they never change, so the
-    // Pokédex works fully offline after the first successful load.
     event.respondWith(
       caches.match(req).then((cached) => {
         if (cached) return cached;
@@ -68,4 +64,47 @@ self.addEventListener('fetch', (event) => {
       })
     );
   }
+});
+
+// ---- Notificaciones push (mensajes de intercambios y avisos) ----
+self.addEventListener('push', (event) => {
+  let data = { title: 'Pokédex', body: 'Tienes un aviso nuevo', tag: 'pokedex', url: './' };
+  try {
+    if (event.data) {
+      const parsed = event.data.json();
+      if (parsed && typeof parsed === 'object') {
+        data = Object.assign(data, parsed);
+      } else {
+        data.body = event.data.text();
+      }
+    }
+  } catch (e) {
+    try { data.body = event.data ? event.data.text() : data.body; } catch (x) {}
+  }
+  event.waitUntil(
+    self.registration.showNotification(data.title || 'Pokédex', {
+      body: data.body || '',
+      tag: data.tag || 'pokedex',
+      renotify: true,
+      data: { url: data.url || './', from: data.from || null },
+      icon: './icon-192.png',
+      badge: './icon-192.png'
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = (event.notification.data && event.notification.data.url) || './';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
+        if ('focus' in client) {
+          client.postMessage({ type: 'notification-click', url: target, from: event.notification.data && event.notification.data.from });
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) return clients.openWindow(target);
+    })
+  );
 });
