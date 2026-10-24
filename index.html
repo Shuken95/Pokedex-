@@ -6526,7 +6526,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // ---------- Cambios: pestaña de intercambios entre usuarios (mapa, lista y mensajes) ----------
   // Necesita el Worker de la carpeta intercambios-worker. Cuando lo despliegues, pon su URL en
   // TRADE_DEFAULT_URL (así los demás usuarios no tienen que escribirla) y vuelve a repartir la app.
-  var TRADE_DEFAULT_URL = 'https://pokedex-intercambios.danicrevi95.workers.dev';
+  var TRADE_DEFAULT_URL = '';
   var TRADE_CFG_KEY = 'pokecheck_trade_cfg_v1';
   var tradeCfg = { url: '', token: '', id: '', name: '', zone: '', contact: '', lat: null, lon: null, sig: '', hidden: false };
   try {
@@ -7041,6 +7041,76 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         renderTradeWelcome();
       }).catch(function(e) { tradeShowMsg(msg, e.message, true); });
     }));
+        tradeRootEl.appendChild(shopEl('div', 'trade-h', 'Notificaciones'));
+    tradeRootEl.appendChild(shopEl('p', 'backup-desc', 'Te avisamos en el m\u00f3vil cuando alguien te escriba un mensaje, aunque la app est\u00e9 cerrada. En iPhone hay que a\u00f1adir la app a la pantalla de inicio y abrirla desde ah\u00ed.'));
+    var pushMsgEl = tradeMsgEl();
+    var pushActions = shopEl('div', 'trade-actions');
+    function tradePushSupported() {
+      return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+    }
+    function tradeB64ToBytes(b64) {
+      var str = atob((b64 + '='.repeat((4 - b64.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/'));
+      var out = new Uint8Array(str.length);
+      for (var i = 0; i < str.length; i++) out[i] = str.charCodeAt(i);
+      return out;
+    }
+    function tradeEnablePush() {
+      if (!tradePushSupported()) return Promise.reject(new Error('Este navegador no admite notificaciones push. En iPhone, a\u00f1ade la app a la pantalla de inicio.'));
+      return Notification.requestPermission().then(function(perm) {
+        if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
+        return navigator.serviceWorker.register('sw.js');
+      }).then(function() { return navigator.serviceWorker.ready; })
+      .then(function(reg) {
+        return tradeApi('/push-key', 'GET').then(function(d) {
+          if (!d || !d.key) throw new Error('El servidor no tiene push configurado.');
+          return reg.pushManager.getSubscription().then(function(old) {
+            return old ? old.unsubscribe() : true;
+          }).then(function() {
+            return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: tradeB64ToBytes(d.key) });
+          });
+        });
+      }).then(function(sub) {
+        return tradeApi('/push-subscribe', 'POST', { subscription: sub.toJSON() });
+      });
+    }
+    function tradeDisablePush() {
+      if (!tradePushSupported()) return Promise.resolve();
+      return navigator.serviceWorker.getRegistration().then(function(reg) {
+        if (!reg) return null;
+        return reg.pushManager.getSubscription();
+      }).then(function(sub) {
+        if (!sub) return null;
+        var endpoint = sub.endpoint;
+        return sub.unsubscribe().then(function() {
+          return tradeApi('/push-unsubscribe', 'POST', { endpoint: endpoint });
+        });
+      });
+    }
+    pushActions.appendChild(tradeButton('Activar notificaciones de mensajes', 'shop-refresh-btn', function() {
+      tradeShowMsg(pushMsgEl, 'Activando\u2026', false);
+      tradeEnablePush().then(function() {
+        tradeShowMsg(pushMsgEl, 'Notificaciones activadas en este dispositivo.', false);
+      }).catch(function(e) {
+        tradeShowMsg(pushMsgEl, e && e.message ? e.message : 'No se pudo activar.', true);
+      });
+    }));
+    pushActions.appendChild(tradeButton('Probar notificaci\u00f3n', 'shop-chip', function() {
+      tradeShowMsg(pushMsgEl, 'Enviando prueba\u2026', false);
+      tradeApi('/push-test', 'POST', {}).then(function() {
+        tradeShowMsg(pushMsgEl, 'Prueba enviada. Mira las notificaciones del m\u00f3vil.', false);
+      }).catch(function(e) {
+        tradeShowMsg(pushMsgEl, e && e.message ? e.message : 'Error al enviar la prueba.', true);
+      });
+    }));
+    pushActions.appendChild(tradeButton('Desactivar en este dispositivo', 'shop-chip', function() {
+      tradeDisablePush().then(function() {
+        tradeShowMsg(pushMsgEl, 'Notificaciones desactivadas en este dispositivo.', false);
+      }).catch(function(e) {
+        tradeShowMsg(pushMsgEl, e && e.message ? e.message : 'Error.', true);
+      });
+    }));
+    tradeRootEl.appendChild(pushActions);
+    tradeRootEl.appendChild(pushMsgEl);
     tradeRootEl.appendChild(actions2); tradeRootEl.appendChild(msg);
   }
 
