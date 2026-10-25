@@ -41,8 +41,11 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(SHELL_CACHE).then((cache) => cache.put(req, copy));
+          // Solo se guardan respuestas correctas: una 404/500 no debe quedarse en la caché sin conexión.
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(SHELL_CACHE).then((cache) => cache.put(req, copy));
+          }
           return res;
         })
         .catch(() => caches.match(req))
@@ -95,12 +98,16 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const target = (event.notification.data && event.notification.data.url) || './';
+  const data = event.notification.data || {};
+  // La URL del aviso puede ser relativa o solo un "#trade": se resuelve contra el alcance de la app
+  // (si no, openWindow la resolvería contra sw.js y abriría ese archivo). Con "from" se abre el chat.
+  const hash = data.from && /^#trade$/.test(data.url || '') ? '#trade/' + data.from : '';
+  const target = new URL(hash || data.url || './', self.registration.scope).href;
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       for (const client of list) {
         if ('focus' in client) {
-          client.postMessage({ type: 'notification-click', url: target, from: event.notification.data && event.notification.data.from });
+          client.postMessage({ type: 'notification-click', url: target, from: data.from || null });
           return client.focus();
         }
       }

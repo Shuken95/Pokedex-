@@ -4045,6 +4045,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       shopFollow: shopFollow,
       shopTargets: shopTargets,
       shopReleasesUser: shopReleasesUser,
+      customSections: customSections,
       shopStoresCustom: shopStoresCustom
     };
     var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -4094,6 +4095,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (data.tcgImageOverrides && typeof data.tcgImageOverrides === 'object') { tcgImageOverrides = data.tcgImageOverrides; saveTcgImageOverrides(); }
       if (data.shopFollow && typeof data.shopFollow === 'object') { shopFollow = data.shopFollow; shopSave(); }
       if (data.shopTargets && typeof data.shopTargets === 'object') { shopTargets = data.shopTargets; shopAlerted = {}; shopSave(); }
+      if (Array.isArray(data.customSections)) {
+        customSections = data.customSections.filter(function(d) { return d && typeof d.id === 'string' && typeof d.label === 'string' && (d.mode === 'set' || d.mode === 'names'); });
+        saveCustomSections();
+        renderAllCustomSections();
+      }
       if (Array.isArray(data.shopReleasesUser)) { shopReleasesUser = data.shopReleasesUser; saveShopReleasesUser(); renderShopReleases(); }
       if (Array.isArray(data.shopStoresCustom)) { shopStoresCustom = data.shopStoresCustom.filter(shopStoreValid); saveShopStoresCustom(); renderReleaseCustom(); }
       saveOwned();
@@ -5970,7 +5976,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       title = drops.length + ' cartas han bajado de precio';
       body = drops.slice(0, 5).map(function(d) { return d.name + ' ' + Math.round(d.pct * 100) + '%'; }).join(', ') + (drops.length > 5 ? '\u2026' : '');
     }
-    try { new Notification(title, { body: body }); } catch (e) {}
+    appNotify(title, body, 'pokedex-precio');
   }
 
   function computeHuchaTotal() {
@@ -7052,44 +7058,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     function tradePushSupported() {
       return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
     }
-    function tradeB64ToBytes(b64) {
-      var str = atob((b64 + '='.repeat((4 - b64.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/'));
-      var out = new Uint8Array(str.length);
-      for (var i = 0; i < str.length; i++) out[i] = str.charCodeAt(i);
-      return out;
-    }
     function tradeEnablePush() {
-      if (!tradePushSupported()) return Promise.reject(new Error('Este navegador no admite notificaciones push. En iPhone, a\u00f1ade la app a la pantalla de inicio.'));
-      return Notification.requestPermission().then(function(perm) {
-        if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
-        return navigator.serviceWorker.register('sw.js');
-      }).then(function() { return navigator.serviceWorker.ready; })
-      .then(function(reg) {
-        return tradeApi('/push-key', 'GET').then(function(d) {
-          if (!d || !d.key) throw new Error('El servidor no tiene push configurado.');
-          return reg.pushManager.getSubscription().then(function(old) {
-            return old ? old.unsubscribe() : true;
-          }).then(function() {
-            return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: tradeB64ToBytes(d.key) });
-          });
-        });
-      }).then(function(sub) {
-        return tradeApi('/push-subscribe', 'POST', { subscription: sub.toJSON() });
-      });
+      return pushEnableShared().then(function(r) { if (r.trade !== 'ok') throw new Error(r.trade === 'skip' ? 'Crea tu perfil para recibir mensajes.' : r.trade); });
     }
-    function tradeDisablePush() {
-      if (!tradePushSupported()) return Promise.resolve();
-      return navigator.serviceWorker.getRegistration().then(function(reg) {
-        if (!reg) return null;
-        return reg.pushManager.getSubscription();
-      }).then(function(sub) {
-        if (!sub) return null;
-        var endpoint = sub.endpoint;
-        return sub.unsubscribe().then(function() {
-          return tradeApi('/push-unsubscribe', 'POST', { endpoint: endpoint });
-        });
-      });
-    }
+    function tradeDisablePush() { return pushDisableShared(); }
     pushActions.appendChild(tradeButton('Activar notificaciones de mensajes', 'shop-refresh-btn', function() {
       tradeShowMsg(pushMsgEl, 'Activando\u2026', false);
       var go = (typeof notifEnableAll === 'function')
@@ -9978,7 +9950,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (typeof priceAlertsEnabled !== 'undefined' && priceAlertsEnabled && 'Notification' in window && Notification.permission === 'granted') {
         var title = fresh.length === 1 ? fresh[0].name + ' ha llegado a tu precio' : fresh.length + ' cartas han llegado a tu precio';
         var body = fresh.slice(0, 5).map(function(f) { return f.name + ' ' + formatEuro(f.price); }).join(', ') + (fresh.length > 5 ? '\u2026' : '');
-        try { new Notification(title, { body: body }); } catch (e) {}
+        appNotify(title, body, 'pokedex-objetivo');
       }
     }
     renderShopAlerts(items);
@@ -10519,27 +10491,96 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function pushNetErr(err) {
     return err && err.message && err.message.indexOf('Failed to fetch') === -1 ? err.message : 'No se pudo conectar con el Worker. Revisa la URL.';
   }
-  function pushEnableWeb() {
+  // Un navegador solo admite UNA suscripción push por service worker. Por eso la app se suscribe una
+  // sola vez y registra esa misma suscripción en cada servidor (Worker de avisos y de intercambios).
+  // Para que ambos puedan escribirle, los dos Workers deben usar las mismas claves VAPID.
+  function pushNormKey(k) { return String(k || '').replace(/=+$/, ''); }
+  function pushBytesToB64(buf) {
+    var u8 = new Uint8Array(buf), bin = '';
+    for (var i = 0; i < u8.length; i++) bin += String.fromCharCode(u8[i]);
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  function pushEnsureSubscription(reg, keyB64) {
+    return reg.pushManager.getSubscription().then(function(old) {
+      if (old && old.options && old.options.applicationServerKey && pushBytesToB64(old.options.applicationServerKey) === pushNormKey(keyB64)) return old;
+      return (old ? old.unsubscribe() : Promise.resolve()).then(function() {
+        return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: pushB64ToBytes(pushNormKey(keyB64)) });
+      });
+    });
+  }
+  // Devuelve { worker, trade } con 'ok', 'skip' o un texto de error para cada servidor.
+  function pushEnableShared() {
+    if (!webPushSupported()) return Promise.reject(new Error('Este navegador no admite notificaciones push. En iPhone, a\u00f1ade antes la app a la pantalla de inicio.'));
+    var useWorker = typeof pushConfigured === 'function' && pushConfigured();
+    var useTrade = typeof tradeRegistered === 'function' && tradeRegistered();
+    var out = { worker: 'skip', trade: 'skip' };
+    if (!useWorker && !useTrade) return Promise.resolve(out);
     return Notification.requestPermission().then(function(perm) {
       if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
       return navigator.serviceWorker.register('sw.js');
-    }).then(function() {
-      return navigator.serviceWorker.ready;
-    }).then(function(reg) {
-      return pushRequest('/push-key', 'GET').then(function(d) {
-        return reg.pushManager.getSubscription().then(function(old) { return old ? old.unsubscribe() : true; }).then(function() {
-          return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: pushB64ToBytes(d.key) });
+    }).then(function() { return navigator.serviceWorker.ready; }).then(function(reg) {
+      var keys = {}, errs = {}, jobs = [];
+      if (useWorker) jobs.push(pushRequest('/push-key', 'GET').then(function(d) { keys.worker = d && d.key; }).catch(function(e) { errs.worker = pushNetErr(e); }));
+      if (useTrade) jobs.push(tradeApi('/push-key', 'GET').then(function(d) { keys.trade = d && d.key; }).catch(function(e) { errs.trade = e && e.message ? e.message : 'error'; }));
+      return Promise.all(jobs).then(function() {
+        if (useWorker && !keys.worker) out.worker = errs.worker || 'El Worker de avisos no tiene push configurado.';
+        if (useTrade && !keys.trade) out.trade = errs.trade || 'El servidor de intercambios no tiene push configurado.';
+        var chosen = keys.trade || keys.worker;
+        if (!chosen) return out;
+        return pushEnsureSubscription(reg, chosen).then(function(sub) {
+          var json = sub.toJSON(), regs = [];
+          if (keys.trade) regs.push(tradeApi('/push-subscribe', 'POST', { subscription: json }).then(function() { out.trade = 'ok'; }).catch(function(e) { out.trade = e && e.message ? e.message : 'error'; }));
+          if (keys.worker) {
+            if (pushNormKey(keys.worker) !== pushNormKey(chosen)) out.worker = 'su clave VAPID es distinta a la del servidor de intercambios; usa las mismas claves en los dos Workers (mira LEEME-avisos.md).';
+            else regs.push(pushRequest('/subscribe', 'POST', JSON.stringify({ subscription: json })).then(function() { out.worker = 'ok'; }).catch(function(e) { out.worker = pushNetErr(e); }));
+          }
+          return Promise.all(regs).then(function() { return out; });
         });
       });
-    }).then(function(sub) {
-      return pushRequest('/subscribe', 'POST', JSON.stringify({ subscription: sub.toJSON() }));
     });
   }
-  function pushDisableWeb() {
+  function pushDisableShared() {
     return pushCurrentSub().then(function(sub) {
       if (!sub) return null;
       var endpoint = sub.endpoint;
-      return sub.unsubscribe().then(function() { return pushRequest('/unsubscribe', 'POST', JSON.stringify({ endpoint: endpoint })); });
+      return sub.unsubscribe().then(function() {
+        var jobs = [];
+        if (typeof pushConfigured === 'function' && pushConfigured()) jobs.push(pushRequest('/unsubscribe', 'POST', JSON.stringify({ endpoint: endpoint })).catch(function() {}));
+        if (typeof tradeRegistered === 'function' && tradeRegistered()) jobs.push(tradeApi('/push-unsubscribe', 'POST', { endpoint: endpoint }).catch(function() {}));
+        return Promise.all(jobs);
+      });
+    });
+  }
+  function pushEnableWeb() {
+    return pushEnableShared().then(function(r) { if (r.worker !== 'ok') throw new Error(r.worker === 'skip' ? 'Configura la URL y la clave del Worker.' : r.worker); });
+  }
+  function pushDisableWeb() { return pushDisableShared(); }
+
+  // Aviso local con la app abierta: en Android, Chrome no admite "new Notification()", hay que pasar por el service worker.
+  function appNotify(title, body, tag) {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    var opts = { body: body, tag: tag || 'pokedex', icon: './icon-192.png' };
+    var fallback = function() { try { new Notification(title, opts); } catch (e) {} };
+    if (!('serviceWorker' in navigator)) { fallback(); return; }
+    navigator.serviceWorker.getRegistration().then(function(reg) {
+      if (reg && reg.showNotification) return reg.showNotification(title, opts);
+      fallback();
+    }).catch(fallback);
+  }
+
+  // Al tocar un aviso: el service worker avisa a la app abierta, o abre la app con #trade.
+  function pushHandleClick(fromId) {
+    if (typeof switchMode !== 'function') return;
+    switchMode('trade');
+    if (!fromId || typeof tradeRegistered !== 'function' || !tradeRegistered()) return;
+    tradeApi('/chat/' + encodeURIComponent(fromId) + '?after=999999999', 'GET').then(function(d) {
+      openTradeChat(fromId, (d && d.name) || 'Conversaci\u00f3n', 'chats');
+    }).catch(function() {});
+  }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', function(e) {
+      var d = e.data;
+      if (d && d.type === 'notification-click') pushHandleClick(d.from || '');
     });
   }
   // ----- Notificaciones unificadas (precios + push Worker + chat intercambios) -----
@@ -10572,62 +10613,25 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!('Notification' in window)) {
       return Promise.reject(new Error('Este navegador no admite notificaciones.'));
     }
-    // Releases y Telegram: por defecto activos al aceptar
-    try {
-      var rel = document.getElementById('settings-push-releases');
-      if (rel) rel.checked = true;
-      var tg = document.getElementById('settings-push-telegram');
-      if (tg) tg.checked = true;
-    } catch (e) {}
-
     return Notification.requestPermission().then(function(perm) {
       if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
       priceAlertsEnabled = true;
       try { localStorage.setItem(PRICE_ALERTS_KEY, 'on'); } catch (e) {}
 
-      var steps = [];
-      // Web Push del Worker de avisos (si hay URL/clave)
       try { pushReadForm(); } catch (e) {}
-      if (webPushSupported() && typeof pushConfigured === 'function' && pushConfigured()) {
-        steps.push(
-          pushEnableWeb().then(function() { return 'worker-ok'; }).catch(function(err) {
-            return 'worker: ' + (err && err.message ? err.message : 'error');
-          })
-        );
-      } else {
-        steps.push(Promise.resolve('worker-skip'));
-      }
-      // Push de mensajes de intercambios
-      if (typeof tradeRegistered === 'function' && tradeRegistered() && typeof tradeEnablePush === 'function') {
-        steps.push(
-          tradeEnablePush().then(function() {
-            try { tradeMarkPushAsked(); } catch (e) {}
-            return 'trade-ok';
-          }).catch(function(err) {
-            try { tradeMarkPushAsked(); } catch (e) {}
-            return 'trade: ' + (err && err.message ? err.message : 'error');
-          })
-        );
-      } else {
-        steps.push(Promise.resolve('trade-skip'));
-      }
-      // Sincronizar targets del Worker si se puede
-      try { pushSync(false); } catch (e) {}
-      return Promise.all(steps);
+      // Un solo paso: una suscripción compartida, registrada en el Worker de avisos y en el de intercambios.
+      return pushEnableShared().then(function(r) {
+        try { pushSync(false); } catch (e) {}
+        function tag(name, v) { return v === 'ok' ? name + '-ok' : v === 'skip' ? name + '-skip' : name + ': ' + v; }
+        return [tag('worker', r.worker), tag('trade', r.trade)];
+      });
     });
   }
 
   function notifDisableAll() {
     priceAlertsEnabled = false;
     try { localStorage.setItem(PRICE_ALERTS_KEY, 'off'); } catch (e) {}
-    var jobs = [];
-    if (typeof pushDisableWeb === 'function') {
-      jobs.push(pushDisableWeb().catch(function() {}));
-    }
-    if (typeof tradeDisablePush === 'function') {
-      jobs.push(tradeDisablePush().catch(function() {}));
-    }
-    return Promise.all(jobs);
+    return pushDisableShared().catch(function() {});
   }
 
   if (notifMasterBtn) {
@@ -11853,6 +11857,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   setTimeout(function() { refreshHuchaPrices(false); }, 4000);
   // Tienda: mismo criterio de 24h, al abrir la app.
   renderShopAlerts();
+  var hashTrade = /^#trade(?:\/([A-Za-z0-9-]{4,20}))?$/.exec(location.hash);
+  if (hashTrade) {
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    setTimeout(function() { pushHandleClick(hashTrade[1] || ''); }, 400);
+  }
   setTimeout(function() { shopRefresh(false); }, 6000);
 })();
 </script>
