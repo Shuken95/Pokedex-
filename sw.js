@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'pokecheck-shell-v2';
+const SHELL_CACHE = 'pokecheck-shell-v3';
 const RUNTIME_CACHE = 'pokecheck-runtime-v1';
 
 const SHELL_FILES = [
@@ -69,7 +69,7 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-// ---- Notificaciones push (mensajes de intercambios y avisos) ----
+// ---- Notificaciones push (mensajes de intercambios, bajadas de precio y lanzamientos) ----
 self.addEventListener('push', (event) => {
   let data = { title: 'Pokédex', body: 'Tienes un aviso nuevo', tag: 'pokedex', url: './' };
   try {
@@ -92,6 +92,16 @@ self.addEventListener('push', (event) => {
       data: { url: data.url || './', from: data.from || null },
       icon: './icon-192.png',
       badge: './icon-192.png'
+    })
+  );
+});
+
+// Si el navegador renueva o invalida la suscripción push, se avisa a la app abierta para que registre la nueva
+// (el service worker no tiene el token del usuario). Si la app está cerrada, lo recupera sola al abrirse.
+self.addEventListener('pushsubscriptionchange', (event) => {
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      list.forEach((client) => client.postMessage({ type: 'push-resubscribe' }));
     })
   );
 });

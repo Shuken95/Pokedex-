@@ -1909,14 +1909,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>Copia de seguridad</span>
       </button>
-      <details class="settings-group"><summary>Claude (clave de Anthropic)</summary><div class="settings-group-body">
-      <p class="backup-desc">Clave API de Anthropic (Claude), para identificar cartas al escanearlas con la cámara y para la explicación de equipos en VGC. Se guarda únicamente en este dispositivo. Consíguela en console.anthropic.com.</p>
-      <div class="tcg-add-field">
-        <label for="settings-api-key">Clave API</label>
-        <input id="settings-api-key" type="password" inputmode="text" autocomplete="off" placeholder="sk-ant-...">
-      </div>
-      <p id="settings-api-key-status" class="backup-status" hidden></p>
-      </div></details>
             <details class="settings-group"><summary>Notificaciones</summary><div class="settings-group-body">
       <p class="backup-desc">Un solo permiso del sistema para todo: bajadas de precio (al abrir la app), lanzamientos, avisos del Worker y mensajes de intercambios. Al activarlas se encienden todas las que se puedan en este dispositivo.</p>
       <button type="button" id="notif-master-btn" class="backup-action">
@@ -1936,11 +1928,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <label for="settings-push-key">Clave de sincronización</label>
         <input id="settings-push-key" type="password" autocomplete="off" placeholder="La misma que pusiste como SYNC_SECRET">
       </div>
-      <label class="toggle" style="margin:0 2px 10px">
-        <input type="checkbox" id="settings-push-telegram" checked>
-        <span class="toggle-track"><span class="toggle-thumb"></span></span>
-        <span class="toggle-label">Avisar por Telegram (si lo has vinculado)</span>
-      </label>
       <label class="toggle" style="margin:0 2px 10px">
         <input type="checkbox" id="settings-push-releases" checked>
         <span class="toggle-track"><span class="toggle-thumb"></span></span>
@@ -2255,7 +2242,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div id="shop-sealed-form" class="shop-form" hidden>
-        <p class="tcg-missing-dex-empty">ETB, cajas de sobres, mazos… Pega el enlace de su ficha en Cardmarket para que el precio se lea solo; sin enlace, se busca con Claude si tienes clave en Ajustes. Aparecen en la lista de arriba, en el filtro «Sellados».</p>
+        <p class="tcg-missing-dex-empty">ETB, cajas de sobres, mazos… Pega el enlace de su ficha en Cardmarket para que el precio se lea solo; sin enlace, se busca con IA al pulsar Actualizar. Aparecen en la lista de arriba, en el filtro «Sellados».</p>
         <input type="text" id="shop-sealed-name" placeholder="Nombre (ej. ETB 30 Aniversario)" autocomplete="off" data-testid="shop-sealed-name">
         <input type="url" id="shop-sealed-url" placeholder="Enlace de Cardmarket (opcional)" autocomplete="off" data-testid="shop-sealed-url">
         <input type="url" id="shop-sealed-img" placeholder="URL de una imagen (opcional)" autocomplete="off">
@@ -2275,7 +2262,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <div id="shop-releases-list" data-testid="shop-releases-list"></div>
         <p id="shop-releases-note" class="tcg-missing-dex-empty"></p>
         <div class="shop-suggest-actions">
-          <button type="button" id="shop-releases-claude" class="shop-refresh-btn" data-testid="shop-releases-claude">Actualizar con Claude</button>
+          <button type="button" id="shop-releases-claude" class="shop-refresh-btn" data-testid="shop-releases-claude">Actualizar con IA</button>
           <button type="button" id="shop-releases-add-toggle" class="shop-chip" data-testid="shop-releases-add-toggle">+ Añadir fecha</button>
         </div>
         <div id="shop-releases-form" class="shop-form" hidden>
@@ -2372,9 +2359,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       <input type="text" id="release-query" class="release-query" autocomplete="off" placeholder="Qué buscar" aria-label="Qué buscar en las tiendas">
       <p id="release-popup-jp" class="backup-desc" hidden>Edición japonesa: en las tiendas españolas suele llegar más tarde o solo por importación. eBay y Cardmarket suelen ser lo más práctico.</p>
       <div class="release-group">Preventas activas</div>
-      <p class="backup-desc">La app no puede leer las webs de las tiendas, así que usa a Claude para buscar en internet quién tiene reserva abierta (incluye tiendas que no están en la lista de abajo). Puede equivocarse o quedarse atrás: comprueba siempre el enlace.</p>
+      <p class="backup-desc">La app no puede leer las webs de las tiendas, así que usa una IA para buscar en internet quién tiene reserva abierta (incluye tiendas que no están en la lista de abajo). Puede equivocarse o quedarse atrás: comprueba siempre el enlace.</p>
       <div class="shop-suggest-actions">
-        <button type="button" id="release-preorder-btn" class="shop-refresh-btn">Buscar preventas con Claude</button>
+        <button type="button" id="release-preorder-btn" class="shop-refresh-btn">Buscar preventas con IA</button>
       </div>
       <p id="release-preorder-status" class="tcg-add-status" hidden></p>
       <div id="release-preorders" class="cardmarket-list"></div>
@@ -2428,7 +2415,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var TCG_SHOP_USERNAME_KEY = 'pokecheck_tcg_shop_username_v1';
   var SWIPE_HINT_KEY = 'pokecheck_swipe_hint_seen_v1';
   var TABTIPS_KEY = 'pokecheck_tabtips_seen_v1';
-  var ANTHROPIC_KEY_KEY = 'pokecheck_anthropic_key_v1';
   var PRICE_ALERTS_KEY = 'pokecheck_price_alerts_v1';
   var TCG_HUCHA_CACHE_KEY = 'pokecheck_tcg_hucha_cache_v1';
   var TCG_HUCHA_HISTORY_KEY = 'pokecheck_tcg_hucha_history_v1';
@@ -2664,8 +2650,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!tcgImageOverrides || typeof tcgImageOverrides !== 'object') tcgImageOverrides = {};
   } catch (e) { tcgImageOverrides = {}; }
 
-  var anthropicApiKey = '';
-  try { anthropicApiKey = localStorage.getItem(ANTHROPIC_KEY_KEY) || ''; } catch (e) { anthropicApiKey = ''; }
+  // IA integrada de serie (Groq, plan gratuito). OJO: esta clave va dentro del HTML y cualquiera que abra la app
+  // puede verla y usarla. Es válida para probar; antes de repartir la app a más gente conviene revocarla en
+  // console.groq.com y volver a que la clave viva en un Worker.
+  var GROQ_API_KEY = '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';
 
   // Aviso de bajada de precio: IMPORTANTE, no es push real en segundo plano (esta app no
   // tiene backend). Solo comprueba precios cuando se abre la app o las Estadísticas, y si
@@ -2819,8 +2807,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var settingsPopup = document.getElementById('settings-popup');
   var settingsBackdrop = document.getElementById('settings-backdrop');
   var settingsClose = document.getElementById('settings-close');
-  var settingsApiKeyInput = document.getElementById('settings-api-key');
-  var settingsApiKeyStatus = document.getElementById('settings-api-key-status');
   var priceAlertsBtn = document.getElementById('price-alerts-btn');
   var priceAlertsLabelEl = document.getElementById('price-alerts-label');
   var shareExportBtn = document.getElementById('share-export-btn');
@@ -3157,7 +3143,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   function openSettingsPopup() {
-    settingsApiKeyInput.value = anthropicApiKey;
     settingsPopup.hidden = false;
     requestAnimationFrame(function() { settingsPopup.classList.add('is-open'); });
   }
@@ -4149,13 +4134,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   settingsBtn.addEventListener('click', openSettingsPopup);
   settingsBackdrop.addEventListener('click', closeSettingsPopup);
   settingsClose.addEventListener('click', closeSettingsPopup);
-  settingsApiKeyInput.addEventListener('change', function() {
-    anthropicApiKey = settingsApiKeyInput.value.trim();
-    try { localStorage.setItem(ANTHROPIC_KEY_KEY, anthropicApiKey); } catch (e) {}
-    settingsApiKeyStatus.hidden = false;
-    settingsApiKeyStatus.textContent = anthropicApiKey ? 'Clave guardada en este dispositivo.' : 'Clave eliminada.';
-    setTimeout(function() { settingsApiKeyStatus.hidden = true; }, 2500);
-  });
+
 
   function updatePriceAlertsBtn() {
     priceAlertsLabelEl.textContent = 'Avisos de bajada de precio: ' + (priceAlertsEnabled ? 'activados' : 'desactivados');
@@ -5290,7 +5269,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // enlace de Cardmarket: la IA solo rellena nombre/set/número/idioma, el usuario revisa y
   // confirma con el botón normal de "Añadir a mi colección". No se añade nada sin repasar.
 
-  var CLAUDE_SCAN_MODEL = 'claude-sonnet-5';
   var CLAUDE_SCAN_PROMPT = 'Esta es una foto de una carta del juego de cartas coleccionables de Pok\u00e9mon, en cualquier idioma (incluido japon\u00e9s). Identif\u00edcala y responde \u00daNICAMENTE con un objeto JSON sin texto adicional ni backticks, con esta forma exacta: {"name": "nombre del Pok\u00e9mon en ingl\u00e9s", "set": "nombre de la expansi\u00f3n o set si se distingue, si no cadena vac\u00eda", "number": "n\u00famero impreso en la carta tal cual aparece (ej. 025/078), si no cadena vac\u00eda", "lang": "c\u00f3digo de idioma de la carta: en, ja, es, es-mx, fr, de, it, pt, pt-br, pt-pt, nl, pl, ru, ko, zh-tw, zh-cn, id o th; cadena vac\u00eda si no est\u00e1s seguro"}. Si no reconoces la carta con confianza, deja "name" como cadena vac\u00eda.';
 
   // Redimensiona/comprime la foto en el propio navegador antes de enviarla: una foto de
@@ -5319,34 +5297,69 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     return TCG_LANGS.some(function(l) { return l[0] === code && l[0] !== 'all'; });
   }
 
-  function callClaudeCardScan(base64Image) {
-    return fetch('https://api.anthropic.com/v1/messages', {
+  // ---------- IA: Groq (plan gratuito), llamado directamente desde la app ----------
+  // aiRun() devuelve { text, cut }; los errores llevan .status (y .apiMsg si Groq mandó un mensaje).
+  //   o.task: 'scan' (foto), 'search' (con búsqueda web) o 'text' (solo texto)
+  //   o.prompt, o.system, o.image (JPEG en base64), o.maxTokens
+  // Cada tarea usa un modelo distinto porque en el plan gratuito cada modelo tiene su propio cupo diario.
+  // Si Groq retira alguno, basta con cambiar el ID aquí (lista actual en console.groq.com/docs/models).
+  var GROQ_MODELS = { scan: 'qwen/qwen3.8-27b', text: 'openai/gpt-oss-20b', search: 'openai/gpt-oss-120b' };
+  function aiError(status, apiMsg) {
+    var e = new Error('HTTP ' + status);
+    e.status = status;
+    if (apiMsg) e.apiMsg = apiMsg;
+    return e;
+  }
+  function aiErrMsg(err) {
+    var st = err && err.status;
+    if (!st) return 'No he podido conectar con la IA. Comprueba la conexión e inténtalo de nuevo.';
+    if (st === 429) return 'Se ha agotado el cupo gratuito de la IA por ahora (es limitado por minuto y por día). Espera un poco e inténtalo otra vez.';
+    if (st === 413) return 'La consulta es demasiado grande para el plan gratuito de la IA. Inténtalo con menos elementos.';
+    if (st === 401 || st === 403) return 'La clave de la IA no es válida o ha sido revocada.';
+    if (st === 404 || st === 400) return 'La IA no ha aceptado la petición (el modelo gratuito puede haber cambiado): HTTP ' + st + (err.apiMsg ? ' · ' + err.apiMsg : '') + '.';
+    return 'La IA ha respondido con un error (HTTP ' + st + (err.apiMsg ? ': ' + err.apiMsg : '') + ').';
+  }
+  function aiRun(o) {
+    var task = o.task === 'scan' || o.task === 'search' ? o.task : 'text';
+    var model = GROQ_MODELS[task];
+    // El plan gratuito admite ~8.000 tokens por minuto en total por petición: se acota la salida.
+    var asked = Math.max(1, Math.floor(o.maxTokens || 1000));
+    var maxTokens = task === 'scan' ? 1200 : task === 'search' ? Math.min(asked, 2500) : Math.min(asked, 3000);
+    var messages = [];
+    if (o.system) messages.push({ role: 'system', content: o.system });
+    messages.push({
+      role: 'user',
+      content: task === 'scan'
+        ? [{ type: 'text', text: o.prompt }, { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + o.image } }]
+        : o.prompt
+    });
+    var body = { model: model, messages: messages, max_completion_tokens: maxTokens, temperature: 0.3 };
+    if (task === 'scan') body.response_format = { type: 'json_object' };
+    if (task === 'search') { body.tools = [{ type: 'browser_search' }]; body.tool_choice = 'required'; }
+    if (model.indexOf('openai/gpt-oss') === 0) body.reasoning_effort = 'low';
+    return fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: CLAUDE_SCAN_MODEL,
-        max_tokens: 300,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64Image } },
-            { type: 'text', text: CLAUDE_SCAN_PROMPT }
-          ]
-        }]
-      })
+      headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + GROQ_API_KEY },
+      body: JSON.stringify(body)
     }).then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    }).then(function(data) {
-      var text = (data.content || []).map(function(b) { return b.text || ''; }).join('').trim();
+      return res.json().catch(function() { return {}; }).then(function(d) {
+        if (!res.ok) throw aiError(res.status, d && d.error && d.error.message ? String(d.error.message).slice(0, 160) : '');
+        var ch = d && d.choices && d.choices[0];
+        var text = String((ch && ch.message && ch.message.content) || '').replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+        return { text: text, cut: !!(ch && ch.finish_reason === 'length') };
+      });
+    });
+  }
+
+  function callClaudeCardScan(base64Image) {
+    return aiRun({ task: 'scan', prompt: CLAUDE_SCAN_PROMPT, image: base64Image, maxTokens: 300 }).then(function(r) {
+      var text = String(r.text || '').trim();
       text = text.replace(/^```json\s*|^```\s*|```\s*$/g, '').trim();
       var parsed;
-      try { parsed = JSON.parse(text); } catch (e) { return null; }
+      try { parsed = JSON.parse(text); } catch (e) {
+        var a = text.indexOf('{'), z = text.lastIndexOf('}');
+        try { parsed = (a !== -1 && z > a) ? JSON.parse(text.slice(a, z + 1)) : null; } catch (e2) { return null; }
+      }
       return (parsed && parsed.name) ? parsed : null;
     });
   }
@@ -5514,24 +5527,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         tcgAddAnalyzeBtn.disabled = false;
         tcgScanPreview.hidden = true;
         tcgScanPreview.classList.remove('is-scanning');
-        var isAuthError = err && /HTTP 401/.test(err.message || '');
         showTcgAddForm(
           {},
-          isAuthError
-            ? 'La clave API no es válida. Revísala en Ajustes.'
-            : 'No se pudo consultar la IA. Rellena los datos a mano.',
+          (err && err.status ? aiErrMsg(err) : 'No se pudo consultar la IA.') + ' Rellena los datos a mano.',
           true
         );
       });
   }
 
   tcgAddScanBtn.addEventListener('click', function() {
-    if (!anthropicApiKey) {
-      tcgAddLinkStatus.hidden = false;
-      tcgAddLinkStatus.className = 'tcg-add-status is-error';
-      tcgAddLinkStatus.textContent = 'Añade tu clave API de Claude en Ajustes para poder escanear cartas.';
-      return;
-    }
     tcgScanFileInput.value = '';
     tcgScanFileInput.click();
   });
@@ -9488,28 +9492,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       'Usa el "Price Trend" (Tendencia) de la ficha; si la carta indica edici\u00f3n en castellano, prioriza el precio de las ofertas en espa\u00f1ol (desde). ' +
       'Responde \u00daNICAMENTE con un array JSON sin texto adicional ni backticks, con esta forma: ' +
       '[{"key":"la key indicada","price":n\u00famero o null,"url":"url de la ficha de Cardmarket o cadena vac\u00eda"}].\n\nCartas:\n' + lines;
-    return fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: CLAUDE_SCAN_MODEL,
-        max_tokens: 2000,
-        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 6 }],
-        messages: [{ role: 'user', content: prompt }]
-      })
-    }).then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    }).then(function(data) {
-      var text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
-      var s = text.indexOf('['), e = text.lastIndexOf(']');
-      if (s === -1 || e <= s) return [];
-      try { var arr = JSON.parse(text.slice(s, e + 1)); return Array.isArray(arr) ? arr : []; } catch (err) { return []; }
+    return aiRun({ task: 'search', prompt: prompt, maxTokens: 2000 }).then(function(r) {
+      var text = r.text || '';
+      var s0 = text.indexOf('['), e0 = text.lastIndexOf(']');
+      if (s0 === -1 || e0 <= s0) return [];
+      try { var arr = JSON.parse(text.slice(s0, e0 + 1)); return Array.isArray(arr) ? arr : []; } catch (err) { return []; }
     }).catch(function() { return []; });
   }
 
@@ -9543,12 +9530,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var workers = [];
     for (var w = 0; w < 3; w++) workers.push(next());
     Promise.all(workers).then(function() {
-      if (!anthropicApiKey || missing.length === 0) return;
-      var todo = missing.slice(0, SHOP_CLAUDE_MAX);
-      skipped = missing.slice(SHOP_CLAUDE_MAX).map(function(it) { return it.id; });
+      // El cupo gratuito de la IA es pequeño: solo se usa si pulsas Actualizar y con una sola tanda.
+      // (Para que busque sola al abrir la app, quita «!force» de la condición.)
+      if (missing.length === 0 || !force) return;
+      var todo = missing.slice(0, SHOP_CLAUDE_BATCH);
+      skipped = missing.slice(SHOP_CLAUDE_BATCH).map(function(it) { return it.id; });
       var batches = [];
       for (var b = 0; b < todo.length; b += SHOP_CLAUDE_BATCH) batches.push(todo.slice(b, b + SHOP_CLAUDE_BATCH));
-      shopRefreshLabel.textContent = 'Claude\u2026';
+      shopRefreshLabel.textContent = 'IA\u2026';
       return batches.reduce(function(chain, batch) {
         return chain.then(function() {
           return shopClaudeLookup(batch).then(function(results) {
@@ -9556,13 +9545,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
               if (!r || !r.key) return;
               var price = typeof r.price === 'number' ? r.price : parseFloat(String(r.price || '').replace(',', '.'));
               var url = (typeof r.url === 'string' && r.url.indexOf('cardmarket.com') !== -1) ? r.url : null;
-              if (!isNaN(price)) shopRecord(r.key, price, 'Claude', url);
+              if (!isNaN(price)) shopRecord(r.key, price, 'IA', url);
             });
           });
         });
       }, Promise.resolve());
     }).then(function() {
-      // Las que no le tocaron a Claude en esta tanda se reintentan la próxima vez que se abra.
+      // Las que no le tocaron a la IA en esta tanda se reintentan la próxima vez que se abra.
       pending.forEach(function(it) { if (skipped.indexOf(it.id) === -1) shopRecord(it.id, null); });
       shopRefreshing = false;
       try { localStorage.setItem(SHOP_LAST_REFRESH_KEY, String(Date.now())); } catch (e) {}
@@ -9611,11 +9600,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       shopStatsEl.appendChild(shopEl('span', 'shop-down', '\u25bc ' + downs + ' bajan'));
     }
     shopNoteEl.textContent = 'Precios de Cardmarket (tendencia, EUR). Se refrescan solos cada 24 h al abrir la app.' +
-      (anthropicApiKey ? ' Las cartas sin precio se buscan con Claude.' : ' A\u00f1ade tu clave de Claude en Ajustes para buscar las que no tengan precio.');
+      ' Las cartas sin precio se buscan con IA al pulsar Actualizar.';
     shopRefreshBtn.disabled = shopRefreshing;
     shopRefreshBtn.classList.toggle('is-busy', shopRefreshing);
     if (shopRefreshing) {
-      if (shopRefreshLabel.textContent !== 'Claude\u2026' || shopProgress.done < shopProgress.total) shopRefreshLabel.textContent = shopProgress.done + '/' + shopProgress.total;
+      if (shopRefreshLabel.textContent !== 'IA\u2026' || shopProgress.done < shopProgress.total) shopRefreshLabel.textContent = shopProgress.done + '/' + shopProgress.total;
     } else shopRefreshLabel.textContent = 'Actualizar';
     renderHome();
   }
@@ -9656,7 +9645,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
     var main = shopEl('div', 'shop-row-main');
     var nameEl = shopEl('div', 'shop-row-name', item.name);
-    if (info.src === 'Claude') nameEl.appendChild(shopEl('span', 'shop-tag', 'Claude'));
+    if (info.src === 'Claude' || info.src === 'IA') nameEl.appendChild(shopEl('span', 'shop-tag', info.src));
     main.appendChild(nameEl);
     var target = shopTargetOf(item.id);
     var meta = [item.sealed ? 'Sellado' : (item.anniv ? '30 Aniversario \u00b7 ES' : item.setName), item.localId ? '#' + item.localId : '', item.sealed ? '' : (item.saved ? 'Guardada' : 'Seguida'), ''].filter(Boolean).join(' \u00b7 ');
@@ -10047,7 +10036,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var all = shopReleasesAll();
     document.getElementById('shop-releases-badge').textContent = String(all.length);
     shopReleasesListEl.innerHTML = '';
-    if (!all.length) shopReleasesListEl.appendChild(shopEl('p', 'tcg-missing-dex-empty', 'No hay lanzamientos próximos. Añade uno o pulsa «Actualizar con Claude».'));
+    if (!all.length) shopReleasesListEl.appendChild(shopEl('p', 'tcg-missing-dex-empty', 'No hay lanzamientos próximos. Añade uno o pulsa «Actualizar con IA».'));
     all.forEach(function(r) {
       var days = shopDaysUntil(r.d);
       var dt = new Date(r.d + 'T00:00:00');
@@ -10081,8 +10070,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       shopReleasesListEl.appendChild(row);
     });
     document.getElementById('shop-releases-note').textContent = (shopReleasesAuto && shopReleasesAuto.items && shopReleasesAuto.items.length)
-      ? 'Actualizado con Claude ' + huchaRelativeTime(shopReleasesAuto.ts) + '. Revisa siempre la fecha en la tienda donde compres.'
-      : 'Lista de partida de webs de coleccionismo (oct 2026); las fechas pueden cambiar según el país. Pulsa «Actualizar con Claude» para ponerla al día.';
+      ? 'Actualizado con IA ' + huchaRelativeTime(shopReleasesAuto.ts) + '. Revisa siempre la fecha en la tienda donde compres.'
+      : 'Lista de partida de webs de coleccionismo (oct 2026); las fechas pueden cambiar según el país. Pulsa «Actualizar con IA» para ponerla al día.';
     if (typeof pushSyncSoon === 'function') pushSyncSoon();
   }
   // <release-popup>
@@ -10193,7 +10182,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     releasePreordersEl.innerHTML = '';
     var r = releaseCurrent;
     var p = r ? shopPreorders[releaseKey(r)] : null;
-    if (!p) { releasePreorderBtn.textContent = 'Buscar preventas con Claude'; return; }
+    if (!p) { releasePreorderBtn.textContent = 'Buscar preventas con IA'; return; }
     releasePreorderBtn.textContent = 'Volver a buscar';
     if (!p.items.length) {
       releasePreordersEl.appendChild(shopEl('p', 'stats-empty', 'No encontré preventas activas ' + huchaRelativeTime(p.ts) + '. Puede que aún no hayan abierto reservas.'));
@@ -10212,12 +10201,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       a.appendChild(icon);
       releasePreordersEl.appendChild(a);
     });
-    releasePreordersEl.appendChild(shopEl('p', 'backup-desc', 'Buscado con Claude ' + huchaRelativeTime(p.ts) + '. Las reservas cambian rápido: confirma precio y disponibilidad en la tienda.'));
+    releasePreordersEl.appendChild(shopEl('p', 'backup-desc', 'Buscado con IA ' + huchaRelativeTime(p.ts) + '. Las reservas cambian rápido: confirma precio y disponibilidad en la tienda.'));
   }
   function searchReleasePreorders() {
     var r = releaseCurrent;
     if (!r) return;
-    if (!anthropicApiKey) { releasePreorderMsg('Necesitas tu clave de Claude en Ajustes para esto.', true); return; }
     releasePreorderBtn.disabled = true;
     releasePreorderMsg('Buscando preventas\u2026', false);
     var today = new Date().toISOString().slice(0, 10);
@@ -10227,19 +10215,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       'Incluye solo tiendas cuya p\u00e1gina del producto hayas visto con reserva o preventa disponible; no inventes tiendas, enlaces ni precios (si no consta el precio o la entrega, pon cadena vac\u00eda). ' +
       'Responde \u00daNICAMENTE con un array JSON sin texto adicional ni backticks, m\u00e1ximo 10 elementos: [{"s":"nombre de la tienda","u":"URL https directa a la p\u00e1gina del producto","p":"precio con moneda","e":"fecha de entrega o env\u00edo"}]. Si no encuentras ninguna, responde [].';
     var key = releaseKey(r);
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-api-key': anthropicApiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({
-        model: CLAUDE_SCAN_MODEL, max_tokens: 3000, thinking: { type: 'disabled' },
-        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 6 }],
-        messages: [{ role: 'user', content: prompt }]
-      })
-    }).then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    }).then(function(data) {
-      var text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
+    aiRun({ task: 'search', prompt: prompt, maxTokens: 3000 }).then(function(data) {
+      var text = data.text || '';
       var a = text.indexOf('['), e = text.lastIndexOf(']');
       var arr = (a !== -1 && e > a) ? JSON.parse(text.slice(a, e + 1)) : [];
       var seen = {};
@@ -10259,7 +10236,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (releaseCurrent && releaseKey(releaseCurrent) === key) renderReleasePreorders();
       renderShopReleases();
     }).catch(function(err) {
-      releasePreorderMsg('No se pudo consultar a Claude (' + (err && err.message ? err.message : 'error') + ').', true);
+      releasePreorderMsg(err && err.status ? aiErrMsg(err) : 'No se pudo consultar la IA (' + (err && err.message ? err.message : 'error') + ').', true);
     }).then(function() { releasePreorderBtn.disabled = false; });
   }
   releasePreorderBtn.addEventListener('click', searchReleasePreorders);
@@ -10333,25 +10310,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   });
   document.getElementById('shop-releases-claude').addEventListener('click', function() {
     var btn = this;
-    if (!anthropicApiKey) { shopReleasesMsg('Necesitas tu clave de Claude en Ajustes para esto.', true); return; }
     btn.disabled = true;
     shopReleasesMsg('Buscando lanzamientos…', false);
     var today = new Date().toISOString().slice(0, 10);
     var prompt = 'Hoy es ' + today + '. Busca en la web los próximos lanzamientos del TCG de Pokémon (expansiones y productos importantes como Elite Trainer Box, colecciones premium o mazos) con fecha confirmada en los próximos 6 meses para España/Europa; si solo hay fecha de EE. UU. o Japón, úsala. ' +
       'Responde ÚNICAMENTE con un array JSON sin texto adicional ni backticks, con máximo 15 elementos ordenados por fecha: [{"d":"AAAA-MM-DD","n":"nombre del lanzamiento","k":"Expansión" o "Producto"}].';
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-api-key': anthropicApiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({
-        model: CLAUDE_SCAN_MODEL, max_tokens: 3000, thinking: { type: 'disabled' },
-        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }],
-        messages: [{ role: 'user', content: prompt }]
-      })
-    }).then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    }).then(function(data) {
-      var text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
+    aiRun({ task: 'search', prompt: prompt, maxTokens: 3000 }).then(function(data) {
+      var text = data.text || '';
       var a = text.indexOf('['), e = text.lastIndexOf(']');
       var arr = (a !== -1 && e > a) ? JSON.parse(text.slice(a, e + 1)) : [];
       var items = (Array.isArray(arr) ? arr : []).filter(function(r) { return r && /^\d{4}-\d{2}-\d{2}$/.test(r.d) && typeof r.n === 'string' && r.n; })
@@ -10362,33 +10327,31 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       shopReleasesMsg('', false);
       renderShopReleases();
     }).catch(function(err) {
-      shopReleasesMsg(err && err.message === 'empty' ? 'Claude no encontró lanzamientos con fecha. Inténtalo más tarde.' : 'No se pudo consultar a Claude (' + (err && err.message ? err.message : 'error') + ').', true);
+      shopReleasesMsg(err && err.message === 'empty' ? 'La IA no encontró lanzamientos con fecha. Inténtalo más tarde.' : (err && err.status ? aiErrMsg(err) : 'No se pudo consultar la IA (' + (err && err.message ? err.message : 'error') + ').'), true);
     }).then(function() { btn.disabled = false; });
   });
   updateShopSealedBadge();
   renderShopReleases();
 
-  // ----- Avisos por Telegram (Worker propio) -----
+  // ----- Avisos del Worker de precios y lanzamientos (llegan como notificación push de la app) -----
   // La app solo manda al Worker lo necesario para vigilar: tus precios objetivo (id, nombre, objetivo y,
   // en sellados, el enlace de Cardmarket) y las fechas del calendario. La clave va en una cabecera y
   // se guarda solo en este dispositivo. Se sincroniza sola (con retardo y solo si algo cambió).
   var PUSH_CFG_KEY = 'pokecheck_push_cfg_v1';
-  var pushCfg = { url: '', key: '', releases: true, telegram: true };
+  var pushCfg = { url: '', key: '', releases: true };
   try {
     var pushStored = JSON.parse(localStorage.getItem(PUSH_CFG_KEY) || 'null');
-    if (pushStored && typeof pushStored === 'object') pushCfg = { url: String(pushStored.url || ''), key: String(pushStored.key || ''), releases: pushStored.releases !== false, telegram: pushStored.telegram !== false };
+    if (pushStored && typeof pushStored === 'object') pushCfg = { url: String(pushStored.url || ''), key: String(pushStored.key || ''), releases: pushStored.releases !== false };
   } catch (e) {}
   var pushUrlInput = document.getElementById('settings-push-url');
   var pushKeyInput = document.getElementById('settings-push-key');
   var pushReleasesInput = document.getElementById('settings-push-releases');
-  var pushTelegramInput = document.getElementById('settings-push-telegram');
   var pushStatusEl = document.getElementById('push-status');
   var pushLastSent = '';
   var pushTimer = null;
   pushUrlInput.value = pushCfg.url;
   pushKeyInput.value = pushCfg.key;
   pushReleasesInput.checked = pushCfg.releases;
-  pushTelegramInput.checked = pushCfg.telegram;
 
   function pushConfigured() { return !!(pushCfg && pushCfg.url && pushCfg.key); }
   function pushBase() { return pushCfg.url.replace(/\/+$/, ''); }
@@ -10405,7 +10368,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       };
     });
     var releases = pushCfg.releases ? shopReleasesAll().map(function(r) { return { d: r.d, n: r.n }; }) : [];
-    return JSON.stringify({ items: items, releases: releases, telegram: pushCfg.telegram });
+    // telegram:false a propósito: los avisos salen solo por notificación push. Así, aunque alguien tuviera
+    // Telegram vinculado de antes, el Worker deja de usarlo y no se duplican avisos.
+    return JSON.stringify({ items: items, releases: releases, telegram: false });
   }
   function pushRequest(path, method, body) {
     return fetch(pushBase() + path, {
@@ -10429,7 +10394,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (manual) {
         pushMsg('Sincronizado: ' + data.items + ' alerta(s) y ' + data.releases + ' lanzamiento(s). ' +
           (data.push ? 'Push activo en ' + data.push + ' dispositivo(s). ' : '') +
-          (data.linked ? 'Telegram vinculado \u2705' : (data.push ? '' : 'Aún no hay ningún canal: activa las notificaciones push o vincula Telegram (envía /start seguido de tu clave a tu bot).')), false);
+          (data.push ? '' : 'Aún no hay ningún móvil con notificaciones push: pulsa «Activar notificaciones» más arriba.'), false);
       }
     }).catch(function(err) {
       if (manual) pushMsg(err && err.message && err.message.indexOf('Failed to fetch') === -1 ? err.message : 'No se pudo conectar con el Worker. Revisa la URL.', true);
@@ -10441,7 +10406,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     pushTimer = setTimeout(function() { pushSync(false); }, 3000);
   }
   function pushReadForm() {
-    pushCfg = { url: pushUrlInput.value.trim(), key: pushKeyInput.value.trim(), releases: pushReleasesInput.checked, telegram: pushTelegramInput.checked };
+    pushCfg = { url: pushUrlInput.value.trim(), key: pushKeyInput.value.trim(), releases: pushReleasesInput.checked };
     try { localStorage.setItem(PUSH_CFG_KEY, JSON.stringify(pushCfg)); } catch (e) {}
   }
   document.getElementById('push-sync-btn').addEventListener('click', function() {
@@ -10461,7 +10426,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       .catch(function(err) { pushMsg(err && err.message && err.message.indexOf('Failed to fetch') === -1 ? err.message : 'No se pudo conectar con el Worker. Revisa la URL.', true); });
   });
   pushReleasesInput.addEventListener('change', function() { pushReadForm(); pushSyncSoon(); });
-  pushTelegramInput.addEventListener('change', function() { pushReadForm(); pushSyncSoon(); });
 
   // ----- Notificaciones push de la propia app (Web Push) -----
   // Registra sw.js (tiene que estar junto al HTML), pide permiso y suscribe este móvil con la clave
@@ -10581,6 +10545,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     navigator.serviceWorker.addEventListener('message', function(e) {
       var d = e.data;
       if (d && d.type === 'notification-click') pushHandleClick(d.from || '');
+      if (d && d.type === 'push-resubscribe') pushAutoRefresh(true);
     });
   }
   // ----- Notificaciones unificadas (precios + push Worker + chat intercambios) -----
@@ -10668,6 +10633,21 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
   }
   notifUpdateMasterUi();
+
+  // Las notificaciones push son ahora el único canal de avisos, así que se mantiene viva la suscripción:
+  // al abrir la app (como mucho cada 12 h) se vuelve a registrar este móvil en los Workers. Es silencioso y
+  // no pide permisos nuevos; si el navegador renovó la suscripción por su cuenta, se recupera aquí.
+  var PUSH_REFRESH_KEY = 'pokecheck_push_refresh_v1';
+  function pushAutoRefresh(force) {
+    try {
+      if (!webPushSupported() || Notification.permission !== 'granted' || !priceAlertsEnabled) return;
+      var last = parseInt(localStorage.getItem(PUSH_REFRESH_KEY) || '0', 10);
+      if (!force && Date.now() - last < 12 * 3600 * 1000) return;
+      localStorage.setItem(PUSH_REFRESH_KEY, String(Date.now()));
+      pushEnableShared().catch(function() {});
+    } catch (e) {}
+  }
+  pushAutoRefresh(false);
 
   pushWebBtn.addEventListener('click', function() {
     pushReadForm();
@@ -11634,14 +11614,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var rel = team.games >= 3000 ? 'alta' : team.games >= 800 ? 'media' : 'baja';
     h += '<p class="vgc-note">Fiabilidad de los datos: <b>' + rel + '</b> (media de ' + vgcFmt(team.games, 0) + ' partidas por Pokémon). Es una estimación orientativa basada en estadísticas públicas, no una garantía de resultados. Los nombres salen en castellano cuando PokéAPI los tiene. ' +
       '<a href="https://www.pikalytics.com/pokedex/' + vgc.reg.id + '/' + encodeURIComponent(vgcBase(main.name)) + '" target="_blank" rel="noopener">Ver en Pikalytics</a></p></div>';
-    h += '<div class="vgc-card"><p class="vgc-h3">Cómo jugar este equipo</p><p class="vgc-sub" style="margin:0 0 12px">Explicación con IA (Claude): sinergia, orden de salida y qué vigilar, para que sepas cómo arrancar.</p><div id="vgc-ai-out"></div></div>';
+    h += '<div class="vgc-card"><p class="vgc-h3">Cómo jugar este equipo</p><p class="vgc-sub" style="margin:0 0 12px">Explicación con IA: sinergia, orden de salida y qué vigilar, para que sepas cómo arrancar.</p><div id="vgc-ai-out"></div></div>';
     vgc.ctx = { mains: mains, team: team, spr: spr };
     vgcEls.result.innerHTML = h;
     vgcAiInit();
   }
 
   // ---------- Explicación del equipo con IA (Claude) ----------
-  var CLAUDE_VGC_MODEL = CLAUDE_SCAN_MODEL;
   var VGC_AI_PFX = 'vgcai_v1:';
   var VGC_AI_SYSTEM = 'Eres un entrenador veterano de VGC (Pokémon dobles) que enseña a un jugador que está empezando. Respondes siempre en español, con tono cercano y claro, sin jerga innecesaria (si usas un término como "lead", "pivot" o "Trick Room", explícalo en pocas palabras). ' +
     'Basa tu análisis SOLO en los datos del equipo que te paso: no inventes movimientos, objetos ni estadísticas que no aparezcan, y si algo no se puede saber con esos datos, dilo. Formato: usa encabezados con "## " y listas con "- ", frases cortas, nada de tablas, máximo unas 350 palabras. Se juega en dobles: cada jugador lleva 6 Pokémon y elige 4 para cada combate, con 2 en el campo a la vez.';
@@ -11683,57 +11662,31 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
   function vgcAiOut(html) { var el = document.getElementById('vgc-ai-out'); if (el) el.innerHTML = html; }
   function vgcAiShow(text) {
-    vgcAiOut(vgcMd(text) + '<p class="vgc-note">Generado por Claude a partir de los datos de arriba. Es una guía orientativa y puede equivocarse: pruébala en partidas y ajústala.</p>' +
+    vgcAiOut(vgcMd(text) + '<p class="vgc-note">Generado por IA a partir de los datos de arriba. Es una guía orientativa y puede equivocarse: pruébala en partidas y ajústala.</p>' +
       '<button type="button" class="vgc-ai-btn is-ghost" data-vgc-ai="1">Volver a generar</button>');
   }
   function vgcAiInit() {
     var k = vgcAiKey(), cached = null;
     try { cached = k ? localStorage.getItem(k) : null; } catch (e) {}
     if (cached) { vgcAiShow(cached); return; }
-    if (!anthropicApiKey) {
-      vgcAiOut('<p class="vgc-sub" style="margin:0 0 10px">Para usar esta función necesitas tu clave API de Claude. Se guarda solo en este dispositivo.</p><button type="button" class="vgc-ai-btn" data-vgc-settings="1">Añadir clave en Ajustes</button>');
-      return;
-    }
-    vgcAiOut('<button type="button" class="vgc-ai-btn" data-vgc-ai="1">Explicar este equipo con Claude</button>');
+    vgcAiOut('<button type="button" class="vgc-ai-btn" data-vgc-ai="1">Explicar este equipo con IA</button>');
   }
   function vgcAiRun() {
     var c = vgc.ctx, k = vgcAiKey();
     if (!c) return;
-    if (!anthropicApiKey) { vgcAiInit(); return; }
-    vgcAiOut('<p class="vgc-say"><span class="vgc-spin"></span>Claude está analizando el equipo…</p>');
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({ model: CLAUDE_VGC_MODEL, max_tokens: 4000, thinking: { type: 'disabled' }, system: VGC_AI_SYSTEM, messages: [{ role: 'user', content: vgcAiData(c) }] })
-    }).then(function(res) {
-      if (!res.ok) {
-        return res.text().then(function(t) {
-          var e = new Error('HTTP ' + res.status); e.status = res.status;
-          try { e.apiMsg = (JSON.parse(t).error || {}).message || ''; } catch (x) {}
-          throw e;
-        });
-      }
-      return res.json();
-    }).then(function(data) {
+    vgcAiOut('<p class="vgc-say"><span class="vgc-spin"></span>La IA está analizando el equipo…</p>');
+    aiRun({ task: 'text', system: VGC_AI_SYSTEM, prompt: vgcAiData(c), maxTokens: 4000 }).then(function(data) {
       if (vgc.ctx !== c) return;
-      var text = (data.content || []).map(function(b) { return b.text || ''; }).join('').trim();
+      var text = String(data.text || '').trim();
       if (!text) throw new Error('empty');
-      var cut = data.stop_reason === 'max_tokens';
+      var cut = !!data.cut;
       if (!cut) { try { if (k) localStorage.setItem(k, text); } catch (e) {} }
       vgcAiShow(cut ? text + '\n\nLa respuesta se ha cortado por longitud. Pulsa "Volver a generar".' : text);
     }).catch(function(err) {
       if (vgc.ctx !== c) return;
-      var msg = err && err.status === 401 ? 'La clave API no es válida. Revísala en Ajustes.' :
-        err && err.status === 429 ? 'Demasiadas peticiones seguidas. Espera un momento e inténtalo otra vez.' :
-        err && err.status === 400 ? 'La cuenta de la clave no tiene saldo o no puede usar este modelo (error 400).' :
-        err && err.status ? 'Claude ha respondido con un error (HTTP ' + err.status + (err.apiMsg ? ': ' + vgcEsc(err.apiMsg) : '') + ').' :
-        err && err.message === 'empty' ? 'Claude no ha devuelto texto. Pulsa Reintentar.' :
-        'No he podido conectar con Claude. Comprueba la conexión e inténtalo de nuevo.';
+      var msg = err && err.status ? vgcEsc(aiErrMsg(err)) :
+        err && err.message === 'empty' ? 'La IA no ha devuelto texto. Pulsa Reintentar.' :
+        'No he podido conectar con la IA. Comprueba la conexión e inténtalo de nuevo.';
       vgcAiOut('<p class="vgc-sub vgc-warn" style="margin:0 0 10px">' + msg + '</p><button type="button" class="vgc-ai-btn" data-vgc-ai="1">Reintentar</button>');
     });
   }
