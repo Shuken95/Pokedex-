@@ -5973,8 +5973,44 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (!entry || !entry.cardmarketUrl) return Promise.resolve(null);
       return fetchManualCardmarketPrice(entry.cardmarketUrl).then(pickCardmarketPrice);
     }
-    return fetchTcgCardDetail(id, 'en').then(function(detail) {
+    // Si la tienda ya tiene un precio reciente de esta carta, reutilizarlo (misma fuente Cardmarket).
+    try {
+      if (typeof shopInfo === 'function') {
+        var si = shopInfo(id);
+        if (si && typeof si.price === 'number' && si.price > 0) return Promise.resolve(si.price);
+      }
+    } catch (e) {}
+    var meta = tcgOwnedMeta[id];
+    var preferLang = (meta && typeof meta === 'object' && meta.lang) ? meta.lang : '';
+    function fromDetail(detail) {
       return pickCardmarketPrice(detail && detail.pricing && detail.pricing.cardmarket);
+    }
+    // 1) Inglés (suele traer precios Cardmarket EU)
+    // 2) Idioma de la carta (ja, es…) por si la ficha en EN no tiene pricing
+    // 3) Búsqueda en Cardmarket web, igual que la pestaña Tienda (cartas JP a menudo no tienen
+    //    pricing en TCGdex y se quedaban fuera del top de "más valiosas").
+    return fetchTcgCardDetail(id, 'en').then(function(detailEn) {
+      var p = fromDetail(detailEn);
+      if (p != null) return p;
+      var next = (preferLang && preferLang !== 'en')
+        ? fetchTcgCardDetail(id, preferLang).then(fromDetail)
+        : Promise.resolve(null);
+      return next.then(function(p2) {
+        if (p2 != null) return p2;
+        var name = (detailEn && detailEn.name)
+          || formatName(tcgMetaSlug(meta) || '')
+          || '';
+        var num = (detailEn && detailEn.localId)
+          || (meta && typeof meta === 'object' && meta.number)
+          || tcgCardLocalNumber({ id: id });
+        var setId = (detailEn && detailEn.set && detailEn.set.id) || tcgCardSetId({ id: id });
+        if (!name) return null;
+        return ensureSetInfo(setId).then(function(info) {
+          return fetchCardmarketFallback(name, num, info && info.tcgOnline);
+        }).then(function(fb) {
+          return fb ? pickCardmarketPrice(fb.price) : null;
+        }).catch(function() { return null; });
+      });
     });
   }
 
@@ -5986,7 +6022,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var now = Date.now();
     var pending = Array.from(tcgOwned).filter(function(id) {
       var cached = huchaPriceCache[id];
-      return force || !cached || (now - cached.at) > HUCHA_TTL_MS;
+      if (force || !cached) return true;
+      // Sin precio: reintentar cada hora (antes se congelaba 24 h y cartas JP/raras nunca entraban al top).
+      if (cached.price == null && (now - cached.at) > 60 * 60 * 1000) return true;
+      return (now - cached.at) > HUCHA_TTL_MS;
     });
     if (pending.length === 0) { renderHuchaTotal(); return; }
 
