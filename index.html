@@ -4525,8 +4525,30 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   });
   tcgAddNameInput.addEventListener('blur', function() { hideSuggestionsSoon(tcgAddNameSuggestionsEl); });
 
+  var TCG_SHARED_IMAGE_WORKER = 'https://pokedex-avisos.danicrevi95.workers.dev';
   function tcgCardImageUrl(image, quality) {
     return image ? image.replace(/\/+$/, '') + '/' + quality + '.webp' : '';
+  }
+  function tcgSharedImageRequest(path, method, body) {
+    var headers = { 'content-type': 'application/json' };
+    if (typeof pushCfg !== 'undefined' && pushCfg && pushCfg.key) headers['x-sync-key'] = pushCfg.key;
+    return fetch(TCG_SHARED_IMAGE_WORKER + path, { method: method || 'GET', headers: headers, body: body === undefined ? undefined : JSON.stringify(body) });
+  }
+  function publishTcgSharedImage(cardId, image) {
+    if (!cardId || !/^https:\/\//i.test(image)) return;
+    tcgSharedImageRequest('/card-image', 'POST', { id: cardId, url: image }).catch(function() {});
+  }
+  function loadSharedTcgImageOverrides(cards, requestId) {
+    var ids = cards.map(function(c) { return c.id; }).filter(function(id) { return !tcgImageOverrides[id]; });
+    if (!ids.length) return;
+    tcgSharedImageRequest('/card-images?ids=' + encodeURIComponent(ids.slice(0, 100).join(',')), 'GET')
+      .then(function(res) { return res.ok ? res.json() : null; })
+      .then(function(data) {
+        if (!data || requestId !== tcgRequestId || !data.images) return;
+        var changed = false;
+        Object.keys(data.images).forEach(function(id) { if (!tcgImageOverrides[id]) { tcgImageOverrides[id] = data.images[id]; changed = true; } });
+        if (changed) { saveTcgImageOverrides(); refreshTcgGridOrderOnly(); }
+      }).catch(function() {});
   }
 
   // TCGdex no siempre devuelve la imagen en el idioma de la búsqueda, aunque sí la tenga
@@ -4758,6 +4780,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         }
         tcgImageOverrides[card.id] = url;
         saveTcgImageOverrides();
+        publishTcgSharedImage(card.id, url);
         placeholder.remove();
         wrap.classList.remove('tcg-card-no-image');
         img.dataset.triedImgLangFallback = '';
@@ -8234,6 +8257,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     sortCustomTcgCards(customMatches).forEach(function(entry) { tcgGridEl.appendChild(buildCustomTcgCard(entry)); });
     maybeWarmSortData(cards, myRequestId);
     renderTcgCompletion(cards, myRequestId);
+    loadSharedTcgImageOverrides(cards, myRequestId);
   }
 
   // Cuánto costaría, al precio actual, comprar las cartas de esta búsqueda que aún no tienes.
