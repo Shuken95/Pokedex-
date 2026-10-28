@@ -47,14 +47,14 @@
     --shadow-md:0 8px 24px -8px rgba(0,0,0,.14);
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  html,body{margin:0;padding:0;overscroll-behavior-y:none;}
   body{
     background:radial-gradient(ellipse 140% 60% at 50% -10%, var(--bg-radial) 0%, var(--bg) 60%);
     background-color:var(--bg);
     background-attachment:fixed;
     color:var(--text);
     font-family:var(--font);
-    min-height:100vh;
+    min-height:100vh; overscroll-behavior-y:none;
     -webkit-font-smoothing:antialiased;
     transition:background-color .2s ease, color .2s ease;
   }
@@ -1963,14 +1963,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>Copia de seguridad</span>
       </button>
-      <details class="settings-group"><summary>Claude (clave de Anthropic)</summary><div class="settings-group-body">
-      <p class="backup-desc">Clave API de Anthropic (Claude), para identificar cartas al escanearlas con la cámara y para la explicación de equipos en VGC. Se guarda únicamente en este dispositivo. Consíguela en console.anthropic.com.</p>
-      <div class="tcg-add-field">
-        <label for="settings-api-key">Clave API</label>
-        <input id="settings-api-key" type="password" inputmode="text" autocomplete="off" placeholder="sk-ant-...">
-      </div>
-      <p id="settings-api-key-status" class="backup-status" hidden></p>
-      </div></details>
+      <input id="settings-api-key" type="hidden">
+      <p id="settings-api-key-status" hidden></p>
       <details class="settings-group"><summary>Avisos de precios y lanzamientos</summary><div class="settings-group-body">
       <p class="backup-desc">Aviso cuando una carta baja de precio un 10% o más. Importante: solo se comprueba al abrir la app o las Estadísticas — no es un aviso push real con la app cerrada, esta app no tiene servidor propio.</p>
       <button type="button" id="price-alerts-btn" class="backup-action">
@@ -1979,10 +1973,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </button>
       <p class="backup-desc">Avisos con la app cerrada. La conexión del servicio ya viene integrada. Activa las notificaciones en este móvil para recibir avisos aunque la app esté cerrada.</p>
       <input id="settings-push-url" type="hidden" value="https://pokedex-avisos.danicrevi95.workers.dev">
-      <div class="tcg-add-field">
-        <label for="settings-push-key">Clave de sincronización</label>
-        <input id="settings-push-key" type="password" autocomplete="off" placeholder="La misma que pusiste como SYNC_SECRET">
-      </div>
+      <input id="settings-push-key" type="hidden">
       <label class="toggle" style="margin:0 2px 10px">
         <input type="checkbox" id="settings-push-telegram" checked>
         <span class="toggle-track"><span class="toggle-thumb"></span></span>
@@ -9407,7 +9398,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       btn.appendChild(num);
       btn.appendChild(nameEl);
       btn.addEventListener('mousedown', function(e) { e.preventDefault(); }); // evita que el blur cierre el desplegable antes del click
-      btn.addEventListener('click', function() { onSelect(p); dropdownEl.hidden = true; });
+      btn.addEventListener('click', function() { if (document.activeElement && typeof document.activeElement.blur === 'function') document.activeElement.blur(); onSelect(p); dropdownEl.hidden = true; });
 
       dropdownEl.appendChild(btn);
     });
