@@ -1576,6 +1576,28 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   #search{ padding-right:46px; }
   #dex-controls:not(.filters-open) .filter-row,
   #dex-controls:not(.filters-open) .dex-global-row{ display:none; }
+  /* Splash inicial: entrada breve y cuidada de la colección */
+  #app-splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 30%,#d8fff2 0,#8edbcc 28%,#167c86 72%,#092d47 100%);color:#fff;transition:opacity .45s ease,visibility .45s ease}
+  #app-splash.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+  #app-splash:before,#app-splash:after{content:"";position:absolute;border-radius:50%;filter:blur(2px);opacity:.28;border:1px solid rgba(255,255,255,.55)}
+  #app-splash:before{width:72vmin;height:72vmin;transform:translate(-28vmin,-20vmin);box-shadow:0 0 0 22px rgba(255,255,255,.08),0 0 0 44px rgba(255,255,255,.06)}
+  #app-splash:after{width:58vmin;height:58vmin;transform:translate(34vmin,22vmin);box-shadow:0 0 0 18px rgba(255,255,255,.07),0 0 0 36px rgba(255,255,255,.05)}
+  .splash-panel{position:relative;z-index:1;width:min(340px,82vw);text-align:center}
+  .splash-emblem{position:relative;width:112px;height:112px;margin:0 auto 22px;border-radius:34px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(255,255,255,.34),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.55);box-shadow:0 18px 45px rgba(3,35,55,.28),inset 0 1px rgba(255,255,255,.45);animation:splashFloat 2.8s ease-in-out infinite}
+  .splash-emblem:before{content:"";position:absolute;width:58px;height:58px;border:7px solid #fff;border-radius:50%;box-shadow:0 0 0 7px rgba(255,255,255,.18)}
+  .splash-emblem:after{content:"";position:absolute;width:67px;height:7px;background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.16)}
+  .splash-ball-dot{position:relative;z-index:2;width:20px;height:20px;border:4px solid #fff;border-radius:50%;background:#f7d35b;box-shadow:0 0 0 4px rgba(15,83,98,.34)}
+  .splash-kicker{margin:0 0 4px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;opacity:.8}
+  .splash-title{margin:0;font-family:'Fredoka',var(--font);font-size:clamp(34px,11vw,52px);line-height:1;font-weight:700;letter-spacing:-.04em;text-shadow:0 4px 14px rgba(2,35,51,.22)}
+  .splash-subtitle{margin:12px 0 26px;font-size:14px;opacity:.86}
+  .splash-progress{height:5px;width:150px;margin:0 auto;border-radius:99px;background:rgba(255,255,255,.2);overflow:hidden}
+  .splash-progress i{display:block;width:42%;height:100%;border-radius:inherit;background:#fff;animation:splashLoad 1.25s ease-in-out infinite}
+  .splash-foot{margin:16px 0 0;font-size:11px;opacity:.6}
+  @keyframes splashFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+  @keyframes splashLoad{0%{transform:translateX(-160%)}100%{transform:translateX(360%)}}
+  @media(prefers-reduced-motion:reduce){.splash-emblem,.splash-progress i{animation:none}.splash-progress i{width:100%}}
+
+
 
   /* ---------- 2 · Tipografía: mínimos legibles ---------- */
   .poke-meta .poke-num{ font-size:11.5px; }
@@ -1645,6 +1667,17 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 </style>
 </head>
 <body>
+
+<div id="app-splash" aria-label="Cargando Mi Pokédex">
+  <div class="splash-panel">
+    <div class="splash-emblem" aria-hidden="true"><span class="splash-ball-dot"></span></div>
+    <p class="splash-kicker">Tu colección, a tu manera</p>
+    <h1 class="splash-title">Mi Pokédex</h1>
+    <p class="splash-subtitle">Preparando tus Pokémon y tus cartas…</p>
+    <div class="splash-progress" aria-hidden="true"><i></i></div>
+    <p class="splash-foot">Colecciona · descubre · completa</p>
+  </div>
+</div>
 
 <header>
   <div class="header-top">
@@ -11896,6 +11929,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   init(false);
   setTimeout(function() { maybeShowTabTip('home'); }, 900);
+  // El splash acompaña la primera carga sin bloquear la app si una API tarda demasiado.
+  (function() {
+    var splash = document.getElementById('app-splash');
+    if (!splash) return;
+    function leave() { splash.classList.add('is-leaving'); setTimeout(function() { splash.remove(); }, 500); }
+    window.addEventListener('load', function() { setTimeout(leave, 350); }, { once: true });
+    setTimeout(leave, 2400);
+  })();
+
   // Comprueba precios cada vez que se abre la app, no solo al entrar en Estadísticas.
   // Respeta el TTL de 24h de la hucha, así que si ya se comprobó hoy no llama a nada.
   setTimeout(function() { refreshHuchaPrices(false); }, 4000);
