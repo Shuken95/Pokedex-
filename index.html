@@ -559,6 +559,30 @@
   .settings-group>summary::after{ content:'\203A'; transform:rotate(90deg); transition:transform .15s; color:var(--text-dim); font-size:18px; }
   .settings-group[open]>summary::after{ transform:rotate(-90deg); }
   .settings-group-body{ padding:0 14px 12px; }
+  /* Mapamundi de regiones */
+  #pokemon-map{position:relative;min-height:clamp(520px,72vh,760px);padding:22px 14px 28px;border:1px solid var(--border);border-radius:28px;overflow:hidden;background:radial-gradient(circle at 18% 18%,rgba(255,255,255,.55),transparent 28%),linear-gradient(145deg,#bce9f2,#8fcfe1 48%,#65b6d0);box-shadow:inset 0 0 70px rgba(24,91,123,.18),var(--shadow-md)}
+  #pokemon-map:before{content:"";position:absolute;inset:0;opacity:.3;background-image:linear-gradient(30deg,transparent 48%,rgba(255,255,255,.5) 49%,transparent 50%),linear-gradient(150deg,transparent 48%,rgba(255,255,255,.35) 49%,transparent 50%);background-size:92px 70px;pointer-events:none}
+  .pokemon-map-title{position:relative;text-align:center;color:#14506b;text-shadow:0 1px rgba(255,255,255,.6);margin:0 0 14px;font-size:clamp(20px,4vw,30px);font-weight:800}
+  .pokemon-map-subtitle{position:relative;text-align:center;color:#21677c;margin:-8px 0 18px;font-size:13px}
+  .pokemon-map-grid{position:relative;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(6,1fr);gap:8px;min-height:430px;max-width:760px;margin:auto}
+  .region-island{position:relative;border:0;min-width:0;padding:0;background:transparent;cursor:pointer;filter:drop-shadow(0 7px 3px rgba(21,83,102,.2));transition:transform .18s,filter .18s;isolation:isolate}
+  .region-island:before{content:"";position:absolute;inset:5px;background:var(--region-color);clip-path:var(--region-shape);border:1px solid rgba(255,255,255,.7);z-index:-1;transition:filter .18s,transform .18s}
+  .region-island:hover,.region-island:focus-visible{transform:translateY(-5px) scale(1.04);filter:drop-shadow(0 12px 5px rgba(21,83,102,.28))}
+  .region-island:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:14px}
+  .region-island[data-gen="1"]{grid-column:2 / span 3;grid-row:2 / span 2;--region-color:#e98570;--region-shape:polygon(12% 16%,70% 2%,100% 35%,83% 88%,35% 100%,0 58%)}
+  .region-island[data-gen="2"]{grid-column:5 / span 3;grid-row:1 / span 2;--region-color:#dca866;--region-shape:polygon(7% 35%,35% 0,91% 15%,100% 70%,64% 100%,14% 80%)}
+  .region-island[data-gen="3"]{grid-column:8 / span 4;grid-row:2 / span 2;--region-color:#76bd75;--region-shape:polygon(0 30%,35% 4%,87% 16%,100% 63%,70% 100%,18% 88%)}
+  .region-island[data-gen="4"]{grid-column:3 / span 3;grid-row:4 / span 2;--region-color:#8da8d8;--region-shape:polygon(19% 0,85% 14%,100% 64%,60% 100%,8% 75%,0 28%)}
+  .region-island[data-gen="5"]{grid-column:6 / span 3;grid-row:3 / span 2;--region-color:#c58bd0;--region-shape:polygon(0 18%,44% 0,100% 28%,86% 92%,32% 100%,8% 64%)}
+  .region-island[data-gen="6"]{grid-column:9 / span 3;grid-row:4 / span 2;--region-color:#e8b85e;--region-shape:polygon(20% 3%,82% 13%,100% 58%,67% 100%,12% 82%,0 34%)}
+  .region-island[data-gen="7"]{grid-column:1 / span 3;grid-row:5 / span 2;--region-color:#f18d9a;--region-shape:polygon(8% 20%,58% 0,100% 32%,76% 88%,27% 100%,0 58%)}
+  .region-island[data-gen="8"]{grid-column:4 / span 3;grid-row:5 / span 2;--region-color:#9ac48a;--region-shape:polygon(0 40%,28% 4%,88% 0,100% 62%,64% 100%,12% 82%)}
+  .region-island[data-gen="9"]{grid-column:7 / span 3;grid-row:5 / span 2;--region-color:#d79a69;--region-shape:polygon(13% 14%,72% 0,100% 43%,83% 91%,35% 100%,0 58%)}
+  .region-island-label{position:absolute;inset:18% 8% 12%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-shadow:0 2px 3px rgba(0,0,0,.35);font-size:clamp(11px,2vw,16px);font-weight:800;pointer-events:none}
+  .region-island-label small{margin-top:4px;font-size:10px;font-weight:600;opacity:.92}.region-island-progress{width:70%;height:4px;margin-top:7px;border-radius:99px;background:rgba(255,255,255,.45);overflow:hidden}.region-island-progress i{display:block;height:100%;border-radius:99px;background:#fff}
+  .pokemon-map-legend{position:relative;margin:12px auto 0;text-align:center;color:#21677c;font-size:12px}
+  @media(max-width:600px){#pokemon-map{min-height:610px;padding:18px 8px}.pokemon-map-grid{min-height:510px;gap:3px}.region-island-label{font-size:10px}.region-island-label small{font-size:8px}.pokemon-map-subtitle{font-size:12px}}
+  #binder-grid{display:none}
   .push-onboard{position:fixed;inset:0;z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:18px;background:rgba(0,0,0,.28)}
   .push-onboard[hidden]{display:none}
   .push-onboard-card{position:relative;width:min(440px,100%);padding:22px 18px 18px;border:1px solid var(--border);border-radius:18px;background:var(--surface);box-shadow:0 16px 48px rgba(0,0,0,.2);text-align:center}
@@ -2139,6 +2163,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     </div>
 
     <div id="shelf-view" class="view-fade">
+      <div id="pokemon-map"></div>
       <div id="binder-grid"></div>
     </div>
 
@@ -2148,7 +2173,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </div>
       <button id="back-btn" class="back-btn" type="button">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        <span>Estantería</span>
+        <span>Mapa de regiones</span>
       </button>
       <div id="generations"></div>
       <p id="no-results" class="state-msg">No se encontraron resultados.</p>
@@ -2701,6 +2726,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var shelfViewEl = document.getElementById('shelf-view');
   var detailViewEl = document.getElementById('detail-view');
   var binderGridEl = document.getElementById('binder-grid');
+  var pokemonMapEl = document.getElementById('pokemon-map');
   var backBtn = document.getElementById('back-btn');
 
   var tabDexBtn = document.getElementById('tab-dex');
@@ -8450,6 +8476,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var displayName = formatName(card.dataset.name);
     card.setAttribute('aria-label', displayName + ', ' + formatNum(id) + (willOwn ? ', en tu colección' : ', no la tienes'));
     if (willOwn) owned.add(id); else owned.delete(id);
+    updatePokemonMapProgress(Number(card.closest('.gen-section') && card.closest('.gen-section').dataset.gen));
     return true;
   }
 
@@ -8858,6 +8885,54 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     return binder;
   }
 
+  function buildPokemonMap(gens) {
+    if (!pokemonMapEl) return;
+    pokemonMapEl.innerHTML = '';
+    var title = document.createElement('h2');
+    title.className = 'pokemon-map-title';
+    title.textContent = 'Mapa Pokémon';
+    pokemonMapEl.appendChild(title);
+    var subtitle = document.createElement('p');
+    subtitle.className = 'pokemon-map-subtitle';
+    subtitle.textContent = 'Elige una región para abrir su Pokédex';
+    pokemonMapEl.appendChild(subtitle);
+    var grid = document.createElement('div');
+    grid.className = 'pokemon-map-grid';
+    gens.slice(0, 9).forEach(function(gen) {
+      var region = gen.region ? gen.region.charAt(0).toUpperCase() + gen.region.slice(1) : ('Generación ' + gen.id);
+      var got = gen.list.filter(function(p) { return owned.has(Number(p.id)); }).length;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'region-island';
+      button.dataset.gen = gen.id;
+      button.setAttribute('aria-label', 'Abrir Pokédex de ' + region + ', ' + got + ' de ' + gen.list.length + ' registrados');
+      var label = document.createElement('span');
+      label.className = 'region-island-label';
+      label.innerHTML = '<strong>' + region + '</strong><small>Gen. ' + gen.id + ' · ' + got + '/' + gen.list.length + '</small><span class="region-island-progress"><i style="width:' + (gen.list.length ? Math.round(got / gen.list.length * 100) : 0) + '%"></i></span>';
+      button.appendChild(label);
+      button.addEventListener('click', function() { enterDetailMode(gen.id); });
+      grid.appendChild(button);
+    });
+    pokemonMapEl.appendChild(grid);
+    var legend = document.createElement('p');
+    legend.className = 'pokemon-map-legend';
+    legend.textContent = 'Pulsa una región para explorar sus Pokémon';
+    pokemonMapEl.appendChild(legend);
+  }
+
+  function updatePokemonMapProgress(genId) {
+    if (!pokemonMapEl) return;
+    var section = gensContainer.querySelector('.gen-section[data-gen="' + genId + '"]');
+    var button = pokemonMapEl.querySelector('.region-island[data-gen="' + genId + '"]');
+    if (!section || !button) return;
+    var total = section.querySelectorAll('.poke-card').length;
+    var got = section.querySelectorAll('.poke-card.owned').length;
+    var small = button.querySelector('small'), bar = button.querySelector('.region-island-progress i');
+    if (small) small.textContent = 'Gen. ' + genId + ' · ' + got + '/' + total;
+    if (bar) bar.style.width = (total ? Math.round(got / total * 100) : 0) + '%';
+    button.setAttribute('aria-label', 'Abrir Pokédex de ' + (section.querySelector('.gen-region') ? section.querySelector('.gen-region').textContent : 'la región') + ', ' + got + ' de ' + total + ' registrados');
+  }
+
   function buildBinderGrid(gens) {
     binderGridEl.innerHTML = '';
     for (var i = 0; i < gens.length; i += 3) {
@@ -8977,6 +9052,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       totalCount += gen.list.length;
       gensContainer.appendChild(buildSection(gen));
     });
+    buildPokemonMap(gens);
     buildBinderGrid(gens);
     populatePokeSuggestions(gens);
     gensContainer.querySelectorAll('.gen-section').forEach(function(section) {
