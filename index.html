@@ -4766,7 +4766,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       searchImageBtn.className = 'tcg-card-add-image-btn';
       searchImageBtn.setAttribute('role', 'button');
       searchImageBtn.setAttribute('tabindex', '0');
-      searchImageBtn.textContent = 'Buscar imagen';
+      searchImageBtn.textContent = 'Buscar o añadir imagen';
       searchImageBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         // Se busca siempre con el nombre en inglés (el mismo dato que ya usamos para el
@@ -11869,8 +11869,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var splash = document.getElementById('app-splash');
     if (!splash) return;
     function leave() { splash.classList.add('is-leaving'); setTimeout(function() { splash.remove(); }, 500); }
-    window.addEventListener('load', function() { setTimeout(leave, 350); }, { once: true });
-    setTimeout(leave, 2400);
+    window.addEventListener('load', function() { setTimeout(leave, 1700); }, { once: true });
+    setTimeout(leave, 5000);
   })();
 
   // Comprueba precios cada vez que se abre la app, no solo al entrar en Estadísticas.
