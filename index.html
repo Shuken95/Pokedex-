@@ -2730,31 +2730,25 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       probe.onload = function() { tcgExternalImageCache[card.id] = url; saveTcgExternalImageCache(); img.src = url; };
       probe.onerror = probeNext; probe.referrerPolicy = 'no-referrer'; probe.src = url;
     }
-    // Cardmarket's public product id is present in TCGdex pricing metadata. Its CDN
-    // has changed hosts over time, so probe only documented/public URL shapes and cache
-    // the first one that actually returns an image; never show a guessed broken URL.
-    fetchTcgCardDetail(card.id, card._matchLang || 'ja').then(function(detail) {
-      var ids = [];
-      var cm = detail && detail.pricing && detail.pricing.cardmarket;
-      if (cm && cm.idProduct) ids.push(String(cm.idProduct));
-      (detail && detail.variants_detailed || []).forEach(function(v) { if (v.pricing && v.pricing.cardmarket && v.pricing.cardmarket.idProduct) ids.push(String(v.pricing.cardmarket.idProduct)); });
-      ids = ids.filter(function(id, n, all) { return all.indexOf(id) === n; });
-      ids.forEach(function(id) {
-        candidates.push('https://product-images.s3-eu-west-1.amazonaws.com/' + id + '.jpg');
-        candidates.push('https://product-images.s3.amazonaws.com/' + id + '.jpg');
-        candidates.push('https://product-images.s3.us-east-1.amazonaws.com/' + id + '.jpg');
-      });
-      // Último fallback: el proxy cacheado de PokémonTCGAPI devuelve imágenes japonesas
-      // y solo consume créditos la primera vez que se consulta ese nombre.
-      fetch('https://pokedex-avisos.danicrevi95.workers.dev/ptcg-images?name=' + encodeURIComponent(card._searchName || card.name || ''))
-        .then(function(res) { return res.ok ? res.json() : null; })
-        .then(function(data) {
-          var wanted = String(card.localId || '').replace(/^0+/, '') || String(card.localId || '');
-          var rows = data && Array.isArray(data.cards) ? data.cards : [];
-          rows.filter(function(x) { return (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted; })
-            .forEach(function(x) { if (x.image) candidates.push(x.image); });
-        }).catch(function() {}).then(probeNext);
-    }).catch(probeNext);
+    function addJapaneseApiCandidates(data) {
+      var wanted = String(card.localId || '').replace(/^0+/, '') || String(card.localId || '');
+      var rows = data && Array.isArray(data.cards) ? data.cards : [];
+      rows.filter(function(x) { return (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted; })
+        .forEach(function(x) { if (x.image) candidates.push(x.image); });
+    }
+    fetch('https://pokedex-avisos.danicrevi95.workers.dev/ptcg-images?name=' + encodeURIComponent(card._searchName || card.name || ''))
+      .then(function(res) { return res.ok ? res.json() : null; })
+      .then(function(data) { addJapaneseApiCandidates(data); return fetchTcgCardDetail(card.id, card._matchLang || 'ja'); })
+      .then(function(detail) {
+        var ids = [], cm = detail && detail.pricing && detail.pricing.cardmarket;
+        if (cm && cm.idProduct) ids.push(String(cm.idProduct));
+        (detail && detail.variants_detailed || []).forEach(function(v) { if (v.pricing && v.pricing.cardmarket && v.pricing.cardmarket.idProduct) ids.push(String(v.pricing.cardmarket.idProduct)); });
+        ids.filter(function(id, n, all) { return all.indexOf(id) === n; }).forEach(function(id) {
+          candidates.push('https://product-images.s3-eu-west-1.amazonaws.com/' + id + '.jpg');
+          candidates.push('https://product-images.s3.amazonaws.com/' + id + '.jpg');
+          candidates.push('https://product-images.s3.us-east-1.amazonaws.com/' + id + '.jpg');
+        });
+      }).catch(function() {}).then(probeNext);
   }
 
   try {
