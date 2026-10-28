@@ -57,14 +57,6 @@
     min-height:100vh;
     -webkit-font-smoothing:antialiased;
     transition:background-color .2s ease, color .2s ease;
-    -webkit-user-select:none;
-    user-select:none;
-    -webkit-touch-callout:none;
-  }
-  input, textarea, select, [contenteditable="true"]{
-    -webkit-user-select:text;
-    user-select:text;
-    -webkit-touch-callout:default;
   }
   *:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;}
 
@@ -1325,46 +1317,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   .home-card h3{margin:0 0 6px;font-size:14px}
   .home-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:13px;border-top:1px solid var(--border)}
   .home-row span:last-child{font-weight:600;white-space:nowrap}
-  .home-row.is-click{cursor:pointer;-webkit-tap-highlight-color:transparent}
-  .home-row.is-click:active{opacity:.72}
-  .home-val-list{display:flex;flex-direction:column;gap:0}
-  .home-val-row{
-    display:flex;align-items:center;gap:12px;padding:10px 0;
-    border-top:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;
-  }
-  .home-val-row:first-child{border-top:none;padding-top:4px}
-  .home-val-row:active{opacity:.8}
-  .home-val-img{
-    width:44px;height:62px;object-fit:cover;border-radius:6px;background:var(--bg);
-    flex-shrink:0;box-shadow:var(--shadow-sm);
-  }
-  .home-val-img.ph{display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:11px}
-  .home-val-info{flex:1;min-width:0}
-  .home-val-name{font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .home-val-meta{font-size:11.5px;color:var(--text-dim);margin-top:2px}
-  .home-val-price{font-size:14px;font-weight:700;color:var(--accent);flex-shrink:0;white-space:nowrap}
-  .shop-detail-body{padding:4px 14px 18px;overflow-y:auto}
-  .shop-detail-hero{display:flex;gap:14px;align-items:flex-start;margin:0 0 14px}
-  .shop-detail-img{width:88px;height:122px;object-fit:cover;border-radius:10px;background:var(--bg);flex-shrink:0;box-shadow:var(--shadow-md)}
-  .shop-detail-img.ph{display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:12px}
-  .shop-detail-name{margin:0 0 4px;font-size:17px;font-weight:700;line-height:1.2}
-  .shop-detail-meta{margin:0 0 10px;font-size:12.5px;color:var(--text-dim);line-height:1.4}
-  .shop-detail-price{font-size:26px;font-weight:700;color:var(--accent);letter-spacing:-.02em;line-height:1.1}
-  .shop-detail-change{font-size:13px;font-weight:600;margin-top:4px}
-  .shop-detail-change.up{color:#2f9e5b}
-  .shop-detail-change.down{color:var(--danger)}
-  .shop-detail-change.flat{color:var(--text-dim)}
-  .shop-detail-chart{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-md);padding:12px;margin:0 0 14px}
-  .shop-detail-chart-title{font-size:11.5px;font-weight:600;color:var(--text-dim);margin:0 0 8px}
-  .shop-detail-chart svg{display:block;width:100%;height:120px}
-  .shop-detail-chart-empty{font-size:12.5px;color:var(--text-dim);margin:0}
-  .shop-detail-foot{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-dim);margin-top:6px}
-  .shop-detail-cm{
-    display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;
-    background:var(--accent);color:#fff;font-family:var(--font);font-weight:700;font-size:14px;
-    text-decoration:none;border-radius:var(--r-md);padding:13px;cursor:pointer;border:none;
-  }
-  .shop-detail-cm:active{opacity:.85}
   header .mode-tabs .mode-tab{padding-left:2px;padding-right:2px;font-size:12px;white-space:nowrap}
   html[data-style="arcade"] header .mode-tabs .mode-tab{font-size:7px;padding:12px 2px}
   html[data-style="arcade"] .home-value{font-family:var(--px);font-size:24px;color:#ffcb05;text-shadow:3px 3px 0 #0a0a1c}
@@ -1957,17 +1909,21 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>Copia de seguridad</span>
       </button>
-            <details class="settings-group"><summary>Notificaciones</summary><div class="settings-group-body">
-      <p class="backup-desc">Un solo permiso del sistema para todo: bajadas de precio (al abrir la app), lanzamientos, avisos del Worker y mensajes de intercambios. Al activarlas se encienden todas las que se puedan en este dispositivo.</p>
-      <button type="button" id="notif-master-btn" class="backup-action">
+      <details class="settings-group"><summary>Claude (clave de Anthropic)</summary><div class="settings-group-body">
+      <p class="backup-desc">Clave API de Anthropic (Claude), para identificar cartas al escanearlas con la cámara y para la explicación de equipos en VGC. Se guarda únicamente en este dispositivo. Consíguela en console.anthropic.com.</p>
+      <div class="tcg-add-field">
+        <label for="settings-api-key">Clave API</label>
+        <input id="settings-api-key" type="password" inputmode="text" autocomplete="off" placeholder="sk-ant-...">
+      </div>
+      <p id="settings-api-key-status" class="backup-status" hidden></p>
+      </div></details>
+      <details class="settings-group"><summary>Avisos de precios y lanzamientos</summary><div class="settings-group-body">
+      <p class="backup-desc">Aviso cuando una carta baja de precio un 10% o más. Importante: solo se comprueba al abrir la app o las Estadísticas — no es un aviso push real con la app cerrada, esta app no tiene servidor propio.</p>
+      <button type="button" id="price-alerts-btn" class="backup-action">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <span id="notif-master-label">Activar notificaciones</span>
-      </button>
-      <p id="notif-master-status" class="backup-desc" style="margin-top:6px"></p>
-      <button type="button" id="price-alerts-btn" class="backup-action" hidden>
         <span id="price-alerts-label">Avisos de bajada de precio: desactivados</span>
       </button>
-      <p class="backup-desc" style="margin-top:12px">Opciones del Worker de avisos (precios objetivo y lanzamientos con la app cerrada). Pasos en LEEME-avisos.md.</p>
+      <p class="backup-desc">Avisos con la app cerrada, por notificación push de la app y/o por Telegram. Necesitan tu Worker de avisos (pasos en LEEME-avisos.md): la app le envía tus precios objetivo y el calendario, y él vigila los precios y te avisa cuando una carta llega a tu precio o se acerca un lanzamiento.</p>
       <div class="tcg-add-field">
         <label for="settings-push-url">URL del Worker de avisos</label>
         <input id="settings-push-url" type="url" autocomplete="off" placeholder="https://pokedex-avisos.tuusuario.workers.dev">
@@ -1977,15 +1933,21 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <input id="settings-push-key" type="password" autocomplete="off" placeholder="La misma que pusiste como SYNC_SECRET">
       </div>
       <label class="toggle" style="margin:0 2px 10px">
+        <input type="checkbox" id="settings-push-telegram" checked>
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        <span class="toggle-label">Avisar por Telegram (si lo has vinculado)</span>
+      </label>
+      <label class="toggle" style="margin:0 2px 10px">
         <input type="checkbox" id="settings-push-releases" checked>
         <span class="toggle-track"><span class="toggle-thumb"></span></span>
         <span class="toggle-label">Avisarme también de lanzamientos</span>
       </label>
       <button type="button" id="push-sync-btn" class="backup-action">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <span>Guardar y sincronizar Worker</span>
+        <span>Guardar y sincronizar</span>
       </button>
-      <button type="button" id="push-webpush-btn" class="backup-action" hidden>
+      <button type="button" id="push-webpush-btn" class="backup-action">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <span id="push-webpush-label">Notificaciones push en este móvil: desactivadas</span>
       </button>
       <button type="button" id="push-test-btn" class="backup-action">
@@ -1994,8 +1956,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </button>
       <p id="push-status" class="backup-status" hidden></p>
       </div></details>
-      
-<details class="settings-group"><summary>Compartir mi colección</summary><div class="settings-group-body">
+      <details class="settings-group"><summary>Compartir mi colección</summary><div class="settings-group-body">
       <p class="backup-desc">Genera una página HTML con tu colección para enviar a quien quieras. Es una foto fija del momento: no se actualiza sola ni permite editar nada.</p>
       <button type="button" id="share-export-btn" class="backup-action">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
@@ -2152,21 +2113,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   </div>
 </div>
 
-
-<div id="shop-detail-popup" class="tcg-lang-popup" hidden>
-  <div id="shop-detail-backdrop" class="tcg-lang-backdrop"></div>
-  <div class="tcg-lang-sheet vb-sheet">
-    <div class="tcg-lang-sheet-handle"></div>
-    <div class="tcg-lang-sheet-header">
-      <span>Detalle de precio</span>
-      <button id="shop-detail-close" type="button" class="tcg-lang-sheet-close" aria-label="Cerrar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
-    </div>
-    <div class="shop-detail-body" id="shop-detail-body"></div>
-  </div>
-</div>
-
 <main>
   <div id="home-view"></div>
   <div id="dex-view" hidden>
@@ -2305,7 +2251,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div id="shop-sealed-form" class="shop-form" hidden>
-        <p class="tcg-missing-dex-empty">ETB, cajas de sobres, mazos… Pega el enlace de su ficha en Cardmarket para que el precio se lea solo; sin enlace, se busca con IA al pulsar Actualizar. Aparecen en la lista de arriba, en el filtro «Sellados».</p>
+        <p class="tcg-missing-dex-empty">ETB, cajas de sobres, mazos… Pega el enlace de su ficha en Cardmarket para que el precio se lea solo; sin enlace, se busca con Claude si tienes clave en Ajustes. Aparecen en la lista de arriba, en el filtro «Sellados».</p>
         <input type="text" id="shop-sealed-name" placeholder="Nombre (ej. ETB 30 Aniversario)" autocomplete="off" data-testid="shop-sealed-name">
         <input type="url" id="shop-sealed-url" placeholder="Enlace de Cardmarket (opcional)" autocomplete="off" data-testid="shop-sealed-url">
         <input type="url" id="shop-sealed-img" placeholder="URL de una imagen (opcional)" autocomplete="off">
@@ -2325,7 +2271,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <div id="shop-releases-list" data-testid="shop-releases-list"></div>
         <p id="shop-releases-note" class="tcg-missing-dex-empty"></p>
         <div class="shop-suggest-actions">
-          <button type="button" id="shop-releases-claude" class="shop-refresh-btn" data-testid="shop-releases-claude">Actualizar con IA</button>
+          <button type="button" id="shop-releases-claude" class="shop-refresh-btn" data-testid="shop-releases-claude">Actualizar con Claude</button>
           <button type="button" id="shop-releases-add-toggle" class="shop-chip" data-testid="shop-releases-add-toggle">+ Añadir fecha</button>
         </div>
         <div id="shop-releases-form" class="shop-form" hidden>
@@ -2422,9 +2368,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       <input type="text" id="release-query" class="release-query" autocomplete="off" placeholder="Qué buscar" aria-label="Qué buscar en las tiendas">
       <p id="release-popup-jp" class="backup-desc" hidden>Edición japonesa: en las tiendas españolas suele llegar más tarde o solo por importación. eBay y Cardmarket suelen ser lo más práctico.</p>
       <div class="release-group">Preventas activas</div>
-      <p class="backup-desc">La app no puede leer las webs de las tiendas, así que usa una IA para buscar en internet quién tiene reserva abierta (incluye tiendas que no están en la lista de abajo). Puede equivocarse o quedarse atrás: comprueba siempre el enlace.</p>
+      <p class="backup-desc">La app no puede leer las webs de las tiendas, así que usa a Claude para buscar en internet quién tiene reserva abierta (incluye tiendas que no están en la lista de abajo). Puede equivocarse o quedarse atrás: comprueba siempre el enlace.</p>
       <div class="shop-suggest-actions">
-        <button type="button" id="release-preorder-btn" class="shop-refresh-btn">Buscar preventas con IA</button>
+        <button type="button" id="release-preorder-btn" class="shop-refresh-btn">Buscar preventas con Claude</button>
       </div>
       <p id="release-preorder-status" class="tcg-add-status" hidden></p>
       <div id="release-preorders" class="cardmarket-list"></div>
@@ -2474,10 +2420,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var TCG_LANG_KEY = 'pokecheck_tcg_lang_v1';
   var TCG_FILTERS_KEY = 'pokecheck_tcg_filters_v1';
   var THEME_KEY = 'pokecheck_theme_v1';
-  var TCG_IMAGE_OVERRIDE_KEY = 'pokecheck_tcg_image_override_v7';
+  var TCG_IMAGE_OVERRIDE_KEY = 'pokecheck_tcg_image_override_v1';
   var TCG_SHOP_USERNAME_KEY = 'pokecheck_tcg_shop_username_v1';
   var SWIPE_HINT_KEY = 'pokecheck_swipe_hint_seen_v1';
   var TABTIPS_KEY = 'pokecheck_tabtips_seen_v1';
+  var ANTHROPIC_KEY_KEY = 'pokecheck_anthropic_key_v1';
   var PRICE_ALERTS_KEY = 'pokecheck_price_alerts_v1';
   var TCG_HUCHA_CACHE_KEY = 'pokecheck_tcg_hucha_cache_v1';
   var TCG_HUCHA_HISTORY_KEY = 'pokecheck_tcg_hucha_history_v1';
@@ -2713,10 +2660,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!tcgImageOverrides || typeof tcgImageOverrides !== 'object') tcgImageOverrides = {};
   } catch (e) { tcgImageOverrides = {}; }
 
-  // IA integrada de serie (Groq, plan gratuito). OJO: esta clave va dentro del HTML y cualquiera que abra la app
-  // puede verla y usarla. Es válida para probar; antes de repartir la app a más gente conviene revocarla en
-  // console.groq.com y volver a que la clave viva en un Worker.
-  var GROQ_API_KEY = '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';
+  var anthropicApiKey = '';
+  try { anthropicApiKey = localStorage.getItem(ANTHROPIC_KEY_KEY) || ''; } catch (e) { anthropicApiKey = ''; }
 
   // Aviso de bajada de precio: IMPORTANTE, no es push real en segundo plano (esta app no
   // tiene backend). Solo comprueba precios cuando se abre la app o las Estadísticas, y si
@@ -2870,6 +2815,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var settingsPopup = document.getElementById('settings-popup');
   var settingsBackdrop = document.getElementById('settings-backdrop');
   var settingsClose = document.getElementById('settings-close');
+  var settingsApiKeyInput = document.getElementById('settings-api-key');
+  var settingsApiKeyStatus = document.getElementById('settings-api-key-status');
   var priceAlertsBtn = document.getElementById('price-alerts-btn');
   var priceAlertsLabelEl = document.getElementById('price-alerts-label');
   var shareExportBtn = document.getElementById('share-export-btn');
@@ -2993,7 +2940,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   // Idiomas de TCGdex que PokeAPI puede traducir automáticamente (nombre real, no el inglés)
   var TCG_TO_POKEAPI_LANG = {
-    'ja': ['ja-hrkt', 'ja-Hrkt', 'ja'],
+    'ja': ['ja-Hrkt', 'ja'],
     'en': ['en'],
     'fr': ['fr'],
     'de': ['de'],
@@ -3206,6 +3153,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   function openSettingsPopup() {
+    settingsApiKeyInput.value = anthropicApiKey;
     settingsPopup.hidden = false;
     requestAnimationFrame(function() { settingsPopup.classList.add('is-open'); });
   }
@@ -4093,7 +4041,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       shopFollow: shopFollow,
       shopTargets: shopTargets,
       shopReleasesUser: shopReleasesUser,
-      customSections: customSections,
       shopStoresCustom: shopStoresCustom
     };
     var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -4143,11 +4090,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (data.tcgImageOverrides && typeof data.tcgImageOverrides === 'object') { tcgImageOverrides = data.tcgImageOverrides; saveTcgImageOverrides(); }
       if (data.shopFollow && typeof data.shopFollow === 'object') { shopFollow = data.shopFollow; shopSave(); }
       if (data.shopTargets && typeof data.shopTargets === 'object') { shopTargets = data.shopTargets; shopAlerted = {}; shopSave(); }
-      if (Array.isArray(data.customSections)) {
-        customSections = data.customSections.filter(function(d) { return d && typeof d.id === 'string' && typeof d.label === 'string' && (d.mode === 'set' || d.mode === 'names'); });
-        saveCustomSections();
-        renderAllCustomSections();
-      }
       if (Array.isArray(data.shopReleasesUser)) { shopReleasesUser = data.shopReleasesUser; saveShopReleasesUser(); renderShopReleases(); }
       if (Array.isArray(data.shopStoresCustom)) { shopStoresCustom = data.shopStoresCustom.filter(shopStoreValid); saveShopStoresCustom(); renderReleaseCustom(); }
       saveOwned();
@@ -4197,7 +4139,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   settingsBtn.addEventListener('click', openSettingsPopup);
   settingsBackdrop.addEventListener('click', closeSettingsPopup);
   settingsClose.addEventListener('click', closeSettingsPopup);
-
+  settingsApiKeyInput.addEventListener('change', function() {
+    anthropicApiKey = settingsApiKeyInput.value.trim();
+    try { localStorage.setItem(ANTHROPIC_KEY_KEY, anthropicApiKey); } catch (e) {}
+    settingsApiKeyStatus.hidden = false;
+    settingsApiKeyStatus.textContent = anthropicApiKey ? 'Clave guardada en este dispositivo.' : 'Clave eliminada.';
+    setTimeout(function() { settingsApiKeyStatus.hidden = true; }, 2500);
+  });
 
   function updatePriceAlertsBtn() {
     priceAlertsLabelEl.textContent = 'Avisos de bajada de precio: ' + (priceAlertsEnabled ? 'activados' : 'desactivados');
@@ -4537,339 +4485,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   tcgAddNameInput.addEventListener('blur', function() { hideSuggestionsSoon(tcgAddNameSuggestionsEl); });
 
   function tcgCardImageUrl(image, quality) {
-    if (!image) return '';
-    // URL completa de otro origen (TCGPlayer, Cardmarket, override…): usarla tal cual.
-    if (/^https?:\/\//i.test(image) && image.indexOf('assets.tcgdex.net') === -1) return image;
-    if (/\.(webp|png|jpe?g)(\?|$)/i.test(image)) return image;
     return image + '/' + quality + '.webp';
-  }
-
-  function tcgTcgplayerImageUrl(productId, quality) {
-    if (!productId) return '';
-    if (quality === 'high') return 'https://tcgplayer-cdn.tcgplayer.com/product/' + productId + '_in_1000x1000.jpg';
-    return 'https://product-images.tcgplayer.com/fit-in/437x437/' + productId + '.jpg';
-  }
-
-  function tcgExtractThirdPartyIds(detail) {
-    var out = { tcgplayer: null, cardmarket: null };
-    var variants = (detail && detail.variants_detailed) || [];
-    for (var i = 0; i < variants.length; i++) {
-      var tp = variants[i] && variants[i].thirdParty;
-      if (!tp) continue;
-      if (tp.tcgplayer && !out.tcgplayer) out.tcgplayer = tp.tcgplayer;
-      if (tp.cardmarket && !out.cardmarket) out.cardmarket = tp.cardmarket;
-    }
-    if (detail && detail.thirdParty) {
-      if (detail.thirdParty.tcgplayer && !out.tcgplayer) out.tcgplayer = detail.thirdParty.tcgplayer;
-      if (detail.thirdParty.cardmarket && !out.cardmarket) out.cardmarket = detail.thirdParty.cardmarket;
-    }
-    return out;
-  }
-
-  // Caché en memoria de resoluciones en curso / fallidas (evita martillar la API).
-  var tcgImageResolveCache = {};
-  var tcgImageResolveFail = {};
-
-  // Busca una URL de imagen usable para una carta sin escaneo en TCGdex.
-  // Orden: override → image de la ficha → TCGPlayer (thirdParty) → Cardmarket → null.
-  // Si encuentra algo, lo guarda en tcgImageOverrides para no repetir la búsqueda.
-  function resolveTcgCardImage(card, opts) {
-    opts = opts || {};
-    var id = card && card.id;
-    if (!id) return Promise.resolve(null);
-    if (tcgImageOverrides[id]) return Promise.resolve(tcgImageOverrides[id]);
-    if (tcgImageResolveFail[id] && !opts.force) return Promise.resolve(null);
-    if (tcgImageResolveCache[id] && !opts.force) return tcgImageResolveCache[id];
-
-    var quality = opts.quality || 'low';
-    if (card.image) {
-      var direct = tcgCardImageUrl(card.image, quality);
-      if (direct) return Promise.resolve(direct);
-    }
-
-    var langs = [];
-    function addLang(l) { if (l && langs.indexOf(l) === -1) langs.push(l); }
-    // Solo idiomas de la propia carta / filtro activo. Cruzar a en/es con el mismo id
-    // provocaba artes de otro Pokémon (Piloswine en Psyduck, etc.).
-    addLang(opts.lang);
-    addLang(card._matchLang);
-    if (typeof tcgLang === 'string' && tcgLang !== 'all') addLang(tcgLang);
-    if (langs.length === 0) addLang('en');
-
-    function expectedNames() {
-      var names = [];
-      function add(n) {
-        n = String(n || '').trim();
-        if (n && names.indexOf(n) === -1) names.push(n);
-      }
-      add(opts.englishName);
-      add(card.name);
-      add(opts.localizedName);
-      return names;
-    }
-
-    // Solo aceptamos la imagen si el nombre de la ficha corresponde a la especie buscada.
-    // Evita que un id compartido o una ruta del CDN en otro idioma meta un Delibird en Parasect, etc.
-    function detailMatchesSpecies(detail) {
-      if (!detail || !detail.name) return false;
-      var names = expectedNames();
-      if (names.length === 0) return true; // sin referencia, no podemos validar
-      for (var i = 0; i < names.length; i++) {
-        if (tcgNameMatches(detail.name, names[i]) || tcgNameMatches(names[i], detail.name)) return true;
-        if (String(detail.name).toLowerCase() === String(names[i]).toLowerCase()) return true;
-      }
-      return false;
-    }
-
-    function fromDetail(detail) {
-      if (!detail) return null;
-      if (!detailMatchesSpecies(detail)) return null;
-      if (detail.image) return tcgCardImageUrl(detail.image, quality);
-      var tp = tcgExtractThirdPartyIds(detail);
-      if (tp.tcgplayer) return tcgTcgplayerImageUrl(tp.tcgplayer, quality);
-      return null;
-    }
-
-    // Guarda el id de Cardmarket encontrado en la ficha para el fallback de imagen.
-    var foundCmProductId = null;
-    function rememberCm(detail) {
-      if (!detailMatchesSpecies(detail)) return;
-      var tp = tcgExtractThirdPartyIds(detail);
-      if (tp.cardmarket && !foundCmProductId) foundCmProductId = tp.cardmarket;
-    }
-
-    // Prueba si una URL de imagen responde (el CDN de TCGdex a menudo tiene el escaneo
-    // aunque la API no rellene el campo "image").
-    function probeUrl(url) {
-      return new Promise(function(resolve) {
-        if (!url) return resolve(null);
-        var img = new Image();
-        var done = false;
-        var timer = setTimeout(function() {
-          if (!done) { done = true; resolve(null); }
-        }, 4500);
-        img.onload = function() {
-          if (!done) { done = true; clearTimeout(timer); resolve(url); }
-        };
-        img.onerror = function() {
-          if (!done) { done = true; clearTimeout(timer); resolve(null); }
-        };
-        try { img.referrerPolicy = 'no-referrer'; } catch (e) {}
-        img.src = url;
-      });
-    }
-
-    function probeList(urls, i) {
-      i = i || 0;
-      if (i >= urls.length) return Promise.resolve(null);
-      return probeUrl(urls[i]).then(function(ok) {
-        return ok || probeList(urls, i + 1);
-      });
-    }
-
-    // Construye candidatos del CDN: assets.tcgdex.net/{lang}/{serie}/{set}/{localId}/low.webp
-    function assetCandidates(lang, serieId, setId, localId) {
-      var out = [], seen = {};
-      function add(u) { if (u && !seen[u]) { seen[u] = 1; out.push(u); } }
-      if (!lang || !serieId || !setId || !localId) return out;
-      var ids = [String(localId)];
-      var n = parseInt(localId, 10);
-      if (!isNaN(n)) {
-        ids.push(String(n));
-        ids.push(('000' + n).slice(-3));
-      }
-      ids.forEach(function(lid) {
-        var base = 'https://assets.tcgdex.net/' + lang + '/' + serieId + '/' + setId + '/' + lid;
-        add(base + '/low.webp');
-        add(base + '/high.webp');
-        add(base + '/low.png');
-      });
-      return out;
-    }
-
-    function tryAssetCdn(detail, setInfo, onlyLangs) {
-      var localId = (detail && detail.localId) || card.localId
-        || (id.indexOf('-') !== -1 ? id.split('-').slice(1).join('-') : '');
-      var setId = (detail && detail.set && detail.set.id)
-        || (card.set && card.set.id)
-        || (id.indexOf('-') !== -1 ? id.slice(0, id.indexOf('-')) : null);
-      var serieId = (setInfo && setInfo.serieId)
-        || (detail && detail.set && detail.set.serie && detail.set.serie.id)
-        || (setInfo && setInfo.serie && setInfo.serie.id)
-        || null;
-      if (!serieId || !setId || !localId) return Promise.resolve(null);
-      var useLangs = onlyLangs && onlyLangs.length ? onlyLangs : langs;
-      var urls = [];
-      useLangs.forEach(function(lang) {
-        assetCandidates(lang, serieId, setId, localId).forEach(function(u) { urls.push(u); });
-      });
-      var serieAlt = String(serieId).toLowerCase();
-      var setAlt = String(setId).toLowerCase();
-      if (serieAlt !== serieId || setAlt !== setId) {
-        useLangs.forEach(function(lang) {
-          assetCandidates(lang, serieAlt, setAlt, localId).forEach(function(u) { urls.push(u); });
-        });
-      }
-      return probeList(urls);
-    }
-
-    function loadSetMeta(setId, preferLang) {
-      if (!setId) return Promise.resolve(null);
-      var order = [];
-      function add(l) { if (l && order.indexOf(l) === -1) order.push(l); }
-      add(preferLang); add('ja'); add('en');
-      // Probar id tal cual y en minúsculas (SM9 vs sm9).
-      var ids = [String(setId)];
-      var low = String(setId).toLowerCase();
-      if (low !== String(setId)) ids.push(low);
-      function fetchOne(lang, sid) {
-        return tcgFetchJson('https://api.tcgdex.net/v2/' + encodeURIComponent(lang) + '/sets/' + encodeURIComponent(sid))
-          .then(function(set) {
-            if (!set) return null;
-            return {
-              name: set.name || null,
-              tcgOnline: set.tcgOnline || null,
-              serieId: (set.serie && set.serie.id) || null,
-              serie: set.serie || null
-            };
-          })
-          .catch(function() { return null; });
-      }
-      function nextLang(li) {
-        if (li >= order.length) return Promise.resolve(null);
-        function nextId(ii) {
-          if (ii >= ids.length) return nextLang(li + 1);
-          return fetchOne(order[li], ids[ii]).then(function(info) {
-            return info || nextId(ii + 1);
-          });
-        }
-        return nextId(0);
-      }
-      return nextLang(0);
-    }
-
-    function tryLang(i) {
-      if (i >= langs.length) return tryAssetThenMarket(null, null);
-      return fetchTcgCardDetail(id, langs[i]).then(function(detail) {
-        // Si la ficha en este idioma es otro Pokémon (colisión de ids), ignorarla.
-        if (detail && !detailMatchesSpecies(detail)) detail = null;
-        if (detail) rememberCm(detail);
-        var url = fromDetail(detail);
-        if (url) return url;
-        // CDN siempre con los datos de la carta original, no de una ficha cruzada.
-        var setId = (card.set && card.set.id)
-          || (detail && detail.set && detail.set.id)
-          || (id.indexOf('-') !== -1 ? id.slice(0, id.indexOf('-')) : null);
-        return loadSetMeta(setId, langs[i]).then(function(setInfo) {
-          return tryAssetCdn(card, setInfo, [langs[i]]).then(function(assetUrl) {
-            if (assetUrl) return assetUrl;
-            if (i + 1 < langs.length) return tryLang(i + 1);
-            return tryAssetThenMarket(card, setInfo);
-          });
-        });
-      }).catch(function() { return tryLang(i + 1); });
-    }
-
-    function tryAssetThenMarket(detail, setInfo) {
-      // Último intento CDN solo en el idioma de la carta, nunca en otros.
-      var cardLang = opts.lang || card._matchLang || (typeof tcgLang === 'string' && tcgLang !== 'all' ? tcgLang : null) || 'ja';
-      var setId = (detail && detail.set && detail.set.id)
-        || (card.set && card.set.id)
-        || (id.indexOf('-') !== -1 ? id.slice(0, id.indexOf('-')) : null);
-      var chain = setInfo ? Promise.resolve(setInfo) : loadSetMeta(setId, cardLang);
-      return chain.then(function(info) {
-        return tryAssetCdn(detail || card, info, [cardLang]).then(function(assetUrl) {
-          if (assetUrl) return assetUrl;
-          return tryCardmarket(info);
-        });
-      });
-    }
-
-    function tryCardmarket(setInfo) {
-      // Preferimos hueco vacío antes que un arte EN aleatorio de la misma especie
-      // (el usuario lo pidió explícitamente: mejor sin imagen que una que no toca).
-      return Promise.resolve(null);
-    }
-
-
-    var promise = tryLang(0).then(function(url) {
-      if (url) {
-        tcgImageOverrides[id] = url;
-        try { saveTcgImageOverrides(); } catch (e) {}
-      } else {
-        tcgImageResolveFail[id] = Date.now();
-      }
-      delete tcgImageResolveCache[id];
-      return url;
-    }, function() {
-      tcgImageResolveFail[id] = Date.now();
-      delete tcgImageResolveCache[id];
-      return null;
-    });
-    tcgImageResolveCache[id] = promise;
-    return promise;
-  }
-
-  // Aplica una URL resuelta al <img> de una carta en la rejilla (sustituye el placeholder).
-  function applyResolvedCardImage(wrap, card, url, englishName, setLabel) {
-    if (!wrap || !url) return;
-    wrap.classList.remove('tcg-card-no-image');
-    wrap.dataset.hasImage = 'true';
-    var imgWrap = wrap.querySelector('.tcg-card-img-wrap');
-    if (!imgWrap) return;
-    var oldPh = imgWrap.querySelector('.tcg-card-no-image-label');
-    if (oldPh) oldPh.remove();
-    var img = imgWrap.querySelector('img');
-    if (!img) {
-      img = document.createElement('img');
-      img.loading = 'lazy';
-      img.alt = (card && card.name) || '';
-      img.draggable = false;
-      img.referrerPolicy = 'no-referrer';
-      imgWrap.insertBefore(img, imgWrap.firstChild);
-    }
-    img.src = url;
-    wrap._openLightbox = function() {
-      openTcgLightbox(url, card.name, card, englishName, setLabel);
-    };
-    try { refreshTcgCardVisibility(wrap); } catch (e) {}
-  }
-
-  // Añadir / cambiar / quitar la foto manual de una carta (override por URL).
-  function promptEditCardImage(card, wrap, englishName, setLabel) {
-    if (!card || !card.id) return;
-    var current = tcgImageOverrides[card.id] || '';
-    var url = window.prompt(
-      'URL de la imagen para esta carta.\n' +
-      '• Pega una nueva URL para cambiarla.\n' +
-      '• Deja vacío y acepta para quitar la foto personalizada.',
-      current
-    );
-    if (url === null) return; // canceló
-    url = String(url).trim();
-    delete tcgImageResolveFail[card.id];
-    delete tcgImageResolveCache[card.id];
-    if (!url) {
-      delete tcgImageOverrides[card.id];
-      try { saveTcgImageOverrides(); } catch (e) {}
-      // Quitar foto actual y volver a intentar auto o dejar placeholder
-      if (wrap) {
-        var imgWrap = wrap.querySelector('.tcg-card-img-wrap');
-        if (imgWrap) {
-          var img = imgWrap.querySelector('img');
-          if (img) img.remove();
-        }
-        wrap.classList.add('tcg-card-no-image');
-        wrap.dataset.hasImage = 'false';
-        // Disparar re-render suave: si el wrap expone auto-resolve, usarlo
-        if (typeof wrap._autoResolveImage === 'function') wrap._autoResolveImage(true);
-        else if (typeof wrap._showNoImage === 'function') wrap._showNoImage('Sin imagen aún');
-      }
-      return;
-    }
-    tcgImageOverrides[card.id] = url;
-    try { saveTcgImageOverrides(); } catch (e) {}
-    if (wrap) applyResolvedCardImage(wrap, card, url, englishName, setLabel);
   }
 
   function tcgCardShouldBeHidden(wrap) {
@@ -5019,16 +4635,18 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     img.loading = 'lazy';
     img.alt = card.name;
     img.draggable = false;
-    img.referrerPolicy = 'no-referrer';
-    var initialSrc = tcgImageOverrides[card.id] || (card.image ? tcgCardImageUrl(card.image, 'low') : '');
-    var resolvingImage = false;
-
-    function showNoImagePlaceholder(statusText) {
+    img.src = tcgImageOverrides[card.id] || tcgCardImageUrl(card.image, 'low');
+    img.addEventListener('load', function() {
+      wrap.dataset.hasImage = 'true';
+      refreshTcgCardVisibility(wrap);
+    });
+    function showNoImagePlaceholder() {
+      // No ocultamos la carta: TCGdex a veces tiene el texto/nombre traducido
+      // pero todav\u00eda no ha subido el escaneo de la carta en ese idioma.
+      // Mostramos el nombre y el n\u00famero de la carta para que se sepa cu\u00e1l es.
       wrap.classList.add('tcg-card-no-image');
       wrap.dataset.hasImage = 'false';
-      if (img.parentNode) img.remove();
-      var existing = imgWrap.querySelector('.tcg-card-no-image-label');
-      if (existing) existing.remove();
+      img.remove();
       var placeholder = document.createElement('span');
       placeholder.className = 'tcg-card-no-image-label';
 
@@ -5045,7 +4663,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       numberLine.textContent = localNum ? '#' + localNum : card.id;
 
       var noteLine = document.createElement('em');
-      noteLine.textContent = statusText || 'Sin imagen aún';
+      noteLine.textContent = 'Sin imagen a\u00fan';
 
       var searchImageBtn = document.createElement('span');
       searchImageBtn.className = 'tcg-card-add-image-btn';
@@ -5054,42 +4672,34 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       searchImageBtn.textContent = 'Buscar imagen';
       searchImageBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        e.preventDefault();
-        var species = englishName || nameLine.textContent || '';
-        var setCode = (card.set && card.set.id) || (card.id && card.id.indexOf('-') !== -1 ? card.id.split('-')[0] : '') || '';
-        var num = numberLine.textContent || '';
-        var q = [species, setCode, num, 'pokemon tcg card'].filter(Boolean).join(' ');
-        var url = 'https://www.google.com/search?udm=2&q=' + encodeURIComponent(q);
-        // window.open falla a menudo en WebView Android (content://); usar <a> temporal.
-        var a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() { try { a.remove(); } catch (err) {} }, 500);
+        // Se busca siempre con el nombre en inglés (el mismo dato que ya usamos para el
+        // enlace de Cardmarket), no con el nombre traducido: para promos exclusivas de
+        // Japón buscar con el nombre japonés da muchos menos resultados útiles.
+        var q = [nameLine.textContent, setLine.textContent, numberLine.textContent, 'pokemon card'].filter(Boolean).join(' ');
+        window.open('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(q), '_blank', 'noopener');
       });
 
       var addImageBtn = document.createElement('span');
       addImageBtn.className = 'tcg-card-add-image-btn';
       addImageBtn.setAttribute('role', 'button');
       addImageBtn.setAttribute('tabindex', '0');
-      addImageBtn.textContent = tcgImageOverrides[card.id] ? 'Cambiar imagen' : 'Añadir imagen';
+      addImageBtn.textContent = 'Añadir imagen';
       addImageBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        promptEditCardImage(card, wrap, englishName, setLabel);
-      });
-
-      var retryBtn = document.createElement('span');
-      retryBtn.className = 'tcg-card-add-image-btn';
-      retryBtn.setAttribute('role', 'button');
-      retryBtn.setAttribute('tabindex', '0');
-      retryBtn.textContent = 'Reintentar auto';
-      retryBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        delete tcgImageResolveFail[card.id];
-        autoResolveImage(true);
+        var url = window.prompt('URL de la imagen para esta carta:', tcgImageOverrides[card.id] || '');
+        if (url === null) return;
+        url = url.trim();
+        if (!url) {
+          if (tcgImageOverrides[card.id]) { delete tcgImageOverrides[card.id]; saveTcgImageOverrides(); }
+          return;
+        }
+        tcgImageOverrides[card.id] = url;
+        saveTcgImageOverrides();
+        placeholder.remove();
+        wrap.classList.remove('tcg-card-no-image');
+        img.dataset.triedImgLangFallback = '';
+        img.src = url;
+        imgWrap.insertBefore(img, imgWrap.firstChild);
       });
 
       placeholder.appendChild(nameLine);
@@ -5098,63 +4708,37 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       placeholder.appendChild(noteLine);
       placeholder.appendChild(searchImageBtn);
       placeholder.appendChild(addImageBtn);
-      placeholder.appendChild(retryBtn);
-      imgWrap.appendChild(placeholder);
+      imgWrap.insertBefore(placeholder, imgWrap.firstChild);
       refreshTcgCardVisibility(wrap);
-    }
 
-    function autoResolveImage(force) {
-      if (resolvingImage && !force) return;
-      resolvingImage = true;
-      showNoImagePlaceholder('Buscando imagen…');
-      resolveTcgCardImage(card, {
-        englishName: englishName || (tcgLastResults && tcgLastResults.englishName) || '',
-        localizedName: (tcgLastResults && tcgLastResults.name) || card.name || '',
-        lang: card._matchLang || (typeof tcgLang === 'string' && tcgLang !== 'all' ? tcgLang : ''),
-        force: !!force,
-        quality: 'low'
-      }).then(function(url) {
-        resolvingImage = false;
-        if (url) {
-          applyResolvedCardImage(wrap, card, url, englishName, setLabel);
-        } else {
-          showNoImagePlaceholder('Sin imagen aún');
-        }
-      }).catch(function() {
-        resolvingImage = false;
-        showNoImagePlaceholder('Sin imagen aún');
-      });
+      // El nombre del set que tenemos de entrada puede ser solo el id crudo (ej. "pmcg5") si la
+      // carta llegó sin el objeto "set". En cuanto tengamos su nombre real en inglés (mismo dato
+      // que usamos para el enlace de Cardmarket), lo actualizamos aquí también.
+      var setIdForLabel = tcgCardSetId(card);
+      if (setIdForLabel) {
+        ensureSetInfo(setIdForLabel).then(function(info) {
+          if (!info || !info.name) return;
+          setLine.textContent = info.name;
+        });
+      }
     }
-    wrap._autoResolveImage = autoResolveImage;
-    wrap._showNoImage = showNoImagePlaceholder;
-
-    img.addEventListener('load', function() {
-      wrap.dataset.hasImage = 'true';
-      refreshTcgCardVisibility(wrap);
-    });
     img.addEventListener('error', function() {
-      // Si la URL manual no carga, quitar override roto y ofrecer cambiarla.
-      if (tcgImageOverrides[card.id] && img.src && img.src.indexOf(String(tcgImageOverrides[card.id]).slice(0, 40)) !== -1) {
-        delete tcgImageOverrides[card.id];
-        try { saveTcgImageOverrides(); } catch (e) {}
-        showNoImagePlaceholder('URL no válida — cambia la imagen');
+      // Antes de rendirnos, probamos una vez a pedir la MISMA carta (mismo id) en inglés,
+      // por si TCGdex tiene el escaneo ahí aunque falte en el idioma actual. Solo se usa
+      // para la imagen: nombre, set, número y el enlace de Cardmarket siguen siendo los
+      // del idioma original, no se tocan.
+      if (tcgLang !== 'en' && !img.dataset.triedImgLangFallback) {
+        img.dataset.triedImgLangFallback = 'true';
+        tcgFetchJson('https://api.tcgdex.net/v2/en/cards/' + encodeURIComponent(card.id))
+          .then(function(altCard) {
+            if (!altCard || !altCard.image) throw new Error('sin imagen alternativa');
+            img.src = tcgCardImageUrl(altCard.image, 'low');
+          })
+          .catch(showNoImagePlaceholder);
         return;
       }
-      // La URL de TCGdex falló (404 frecuente en JP/KR/ZH): resolución automática.
-      if (!img.dataset.triedAutoResolve) {
-        img.dataset.triedAutoResolve = 'true';
-        autoResolveImage(false);
-        return;
-      }
-      showNoImagePlaceholder('Sin imagen aún');
+      showNoImagePlaceholder();
     });
-
-    if (initialSrc) {
-      img.src = initialSrc;
-    } else {
-      // Sin campo image en la ficha: no esperar a un error de <img>, resolver al momento.
-      autoResolveImage(false);
-    }
 
     var check = document.createElement('span');
     check.className = 'tcg-check';
@@ -5166,13 +4750,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     zoomBtn.setAttribute('aria-label', 'Ver en grande');
     zoomBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6M8 11h6"/></svg>';
     wrap._openLightbox = function() {
-      var hi = tcgImageOverrides[card.id] || (card.image ? tcgCardImageUrl(card.image, 'high') : '');
-      if (hi) openTcgLightbox(hi, card.name, card, englishName, setLabel);
-      else {
-        resolveTcgCardImage(card, { englishName: englishName, lang: card._matchLang, quality: 'high' }).then(function(url) {
-          if (url) openTcgLightbox(url, card.name, card, englishName, setLabel);
-        });
-      }
+      openTcgLightbox(tcgImageOverrides[card.id] || tcgCardImageUrl(card.image, 'high'), card.name, card, englishName, setLabel);
     };
     zoomBtn.addEventListener('click', function(e) {
       e.stopPropagation();
@@ -5208,9 +4786,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       renderTcgSavedSection();
     });
 
-    // Solo montamos el <img> si ya hay URL; si no, autoResolveImage pinta el placeholder
-    // y luego applyResolvedCardImage insertará la foto cuando la encuentre.
-    if (initialSrc) imgWrap.appendChild(img);
+    imgWrap.appendChild(img);
     if (card._matchLang) {
       var langBadge = document.createElement('span');
       langBadge.className = 'tcg-card-lang-badge';
@@ -5218,22 +4794,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       langBadge.title = tcgLangEntry(card._matchLang)[1];
       imgWrap.appendChild(langBadge);
     }
-    var editImgBtn = document.createElement('span');
-    editImgBtn.className = 'tcg-edit-image-btn';
-    editImgBtn.setAttribute('role', 'button');
-    editImgBtn.setAttribute('aria-label', 'Cambiar imagen de la carta');
-    editImgBtn.title = 'Cambiar imagen';
-    editImgBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
-    editImgBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      promptEditCardImage(card, wrap, englishName, setLabel);
-    });
-
     imgWrap.appendChild(check);
     imgWrap.appendChild(zoomBtn);
     imgWrap.appendChild(cardmarketLinkBtn);
     imgWrap.appendChild(bookmarkBtn);
-    imgWrap.appendChild(editImgBtn);
 
     var setEl = document.createElement('span');
     setEl.className = 'tcg-card-set';
@@ -5716,6 +5280,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // enlace de Cardmarket: la IA solo rellena nombre/set/número/idioma, el usuario revisa y
   // confirma con el botón normal de "Añadir a mi colección". No se añade nada sin repasar.
 
+  var CLAUDE_SCAN_MODEL = 'claude-sonnet-5';
   var CLAUDE_SCAN_PROMPT = 'Esta es una foto de una carta del juego de cartas coleccionables de Pok\u00e9mon, en cualquier idioma (incluido japon\u00e9s). Identif\u00edcala y responde \u00daNICAMENTE con un objeto JSON sin texto adicional ni backticks, con esta forma exacta: {"name": "nombre del Pok\u00e9mon en ingl\u00e9s", "set": "nombre de la expansi\u00f3n o set si se distingue, si no cadena vac\u00eda", "number": "n\u00famero impreso en la carta tal cual aparece (ej. 025/078), si no cadena vac\u00eda", "lang": "c\u00f3digo de idioma de la carta: en, ja, es, es-mx, fr, de, it, pt, pt-br, pt-pt, nl, pl, ru, ko, zh-tw, zh-cn, id o th; cadena vac\u00eda si no est\u00e1s seguro"}. Si no reconoces la carta con confianza, deja "name" como cadena vac\u00eda.';
 
   // Redimensiona/comprime la foto en el propio navegador antes de enviarla: una foto de
@@ -5744,69 +5309,34 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     return TCG_LANGS.some(function(l) { return l[0] === code && l[0] !== 'all'; });
   }
 
-  // ---------- IA: Groq (plan gratuito), llamado directamente desde la app ----------
-  // aiRun() devuelve { text, cut }; los errores llevan .status (y .apiMsg si Groq mandó un mensaje).
-  //   o.task: 'scan' (foto), 'search' (con búsqueda web) o 'text' (solo texto)
-  //   o.prompt, o.system, o.image (JPEG en base64), o.maxTokens
-  // Cada tarea usa un modelo distinto porque en el plan gratuito cada modelo tiene su propio cupo diario.
-  // Si Groq retira alguno, basta con cambiar el ID aquí (lista actual en console.groq.com/docs/models).
-  var GROQ_MODELS = { scan: 'qwen/qwen3.8-27b', text: 'openai/gpt-oss-20b', search: 'openai/gpt-oss-120b' };
-  function aiError(status, apiMsg) {
-    var e = new Error('HTTP ' + status);
-    e.status = status;
-    if (apiMsg) e.apiMsg = apiMsg;
-    return e;
-  }
-  function aiErrMsg(err) {
-    var st = err && err.status;
-    if (!st) return 'No he podido conectar con la IA. Comprueba la conexión e inténtalo de nuevo.';
-    if (st === 429) return 'Se ha agotado el cupo gratuito de la IA por ahora (es limitado por minuto y por día). Espera un poco e inténtalo otra vez.';
-    if (st === 413) return 'La consulta es demasiado grande para el plan gratuito de la IA. Inténtalo con menos elementos.';
-    if (st === 401 || st === 403) return 'La clave de la IA no es válida o ha sido revocada.';
-    if (st === 404 || st === 400) return 'La IA no ha aceptado la petición (el modelo gratuito puede haber cambiado): HTTP ' + st + (err.apiMsg ? ' · ' + err.apiMsg : '') + '.';
-    return 'La IA ha respondido con un error (HTTP ' + st + (err.apiMsg ? ': ' + err.apiMsg : '') + ').';
-  }
-  function aiRun(o) {
-    var task = o.task === 'scan' || o.task === 'search' ? o.task : 'text';
-    var model = GROQ_MODELS[task];
-    // El plan gratuito admite ~8.000 tokens por minuto en total por petición: se acota la salida.
-    var asked = Math.max(1, Math.floor(o.maxTokens || 1000));
-    var maxTokens = task === 'scan' ? 1200 : task === 'search' ? Math.min(asked, 2500) : Math.min(asked, 3000);
-    var messages = [];
-    if (o.system) messages.push({ role: 'system', content: o.system });
-    messages.push({
-      role: 'user',
-      content: task === 'scan'
-        ? [{ type: 'text', text: o.prompt }, { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + o.image } }]
-        : o.prompt
-    });
-    var body = { model: model, messages: messages, max_completion_tokens: maxTokens, temperature: 0.3 };
-    if (task === 'scan') body.response_format = { type: 'json_object' };
-    if (task === 'search') { body.tools = [{ type: 'browser_search' }]; body.tool_choice = 'required'; }
-    if (model.indexOf('openai/gpt-oss') === 0) body.reasoning_effort = 'low';
-    return fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + GROQ_API_KEY },
-      body: JSON.stringify(body)
-    }).then(function(res) {
-      return res.json().catch(function() { return {}; }).then(function(d) {
-        if (!res.ok) throw aiError(res.status, d && d.error && d.error.message ? String(d.error.message).slice(0, 160) : '');
-        var ch = d && d.choices && d.choices[0];
-        var text = String((ch && ch.message && ch.message.content) || '').replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
-        return { text: text, cut: !!(ch && ch.finish_reason === 'length') };
-      });
-    });
-  }
-
   function callClaudeCardScan(base64Image) {
-    return aiRun({ task: 'scan', prompt: CLAUDE_SCAN_PROMPT, image: base64Image, maxTokens: 300 }).then(function(r) {
-      var text = String(r.text || '').trim();
+    return fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': anthropicApiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: CLAUDE_SCAN_MODEL,
+        max_tokens: 300,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64Image } },
+            { type: 'text', text: CLAUDE_SCAN_PROMPT }
+          ]
+        }]
+      })
+    }).then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(data) {
+      var text = (data.content || []).map(function(b) { return b.text || ''; }).join('').trim();
       text = text.replace(/^```json\s*|^```\s*|```\s*$/g, '').trim();
       var parsed;
-      try { parsed = JSON.parse(text); } catch (e) {
-        var a = text.indexOf('{'), z = text.lastIndexOf('}');
-        try { parsed = (a !== -1 && z > a) ? JSON.parse(text.slice(a, z + 1)) : null; } catch (e2) { return null; }
-      }
+      try { parsed = JSON.parse(text); } catch (e) { return null; }
       return (parsed && parsed.name) ? parsed : null;
     });
   }
@@ -5974,15 +5504,24 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         tcgAddAnalyzeBtn.disabled = false;
         tcgScanPreview.hidden = true;
         tcgScanPreview.classList.remove('is-scanning');
+        var isAuthError = err && /HTTP 401/.test(err.message || '');
         showTcgAddForm(
           {},
-          (err && err.status ? aiErrMsg(err) : 'No se pudo consultar la IA.') + ' Rellena los datos a mano.',
+          isAuthError
+            ? 'La clave API no es válida. Revísala en Ajustes.'
+            : 'No se pudo consultar la IA. Rellena los datos a mano.',
           true
         );
       });
   }
 
   tcgAddScanBtn.addEventListener('click', function() {
+    if (!anthropicApiKey) {
+      tcgAddLinkStatus.hidden = false;
+      tcgAddLinkStatus.className = 'tcg-add-status is-error';
+      tcgAddLinkStatus.textContent = 'Añade tu clave API de Claude en Ajustes para poder escanear cartas.';
+      return;
+    }
     tcgScanFileInput.value = '';
     tcgScanFileInput.click();
   });
@@ -6149,16 +5688,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       tcgLightboxPriceBodyEl.innerHTML = '<p class="tcg-lightbox-price-note">No hay datos de precio disponibles para esta carta.</p>';
       return;
     }
-    var avg30 = formatEuro(typeof cm.avg30 === 'number' ? cm.avg30 : null);
     var avg = formatEuro(cm.avg);
     var low = formatEuro(cm.low);
     var trend = formatEuro(cm.trend);
-    if (!avg30 && !avg && !low && !trend) {
+    if (!avg && !low && !trend) {
       tcgLightboxPriceBodyEl.innerHTML = '<p class="tcg-lightbox-price-note">No hay datos de precio disponibles para esta carta.</p>';
       return;
     }
     var cells = [
-      ['Media 30d', avg30 || avg],
+      ['Medio', avg],
       ['M\u00ednimo', low],
       ['Tendencia', trend]
     ];
@@ -6181,7 +5719,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgLightboxPriceBodyEl.appendChild(grid);
     var note = document.createElement('p');
     note.className = 'tcg-lightbox-price-note';
-    note.textContent = 'Valor de referencia: media de ventas a 30 d\u00edas (Cardmarket). Puede variar seg\u00fan estado, variante y vendedor.';
+    note.textContent = 'Precio de venta habitual (no foil), en euros. Puede variar seg\u00fan estado y vendedor.';
     tcgLightboxPriceBodyEl.appendChild(note);
   }
 
@@ -6342,28 +5880,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var PRICE_DROP_THRESHOLD = 0.10; // avisar si una carta baja un 10% o más desde la última vez que se consultó
   var HUCHA_HISTORY_MAX = 180; // ~medio año de puntos diarios, de sobra para la gráfica
 
-  // Media de 30 días (ventas reales): la más realista para valorar la colección.
-  // Orden: avg30 → avg → tendencia → mínimo.
+  // Se usa el precio de tendencia; si una carta no lo tiene (pasa a veces) se cae a los
+  // otros dos para no dejarla fuera del total sin más.
   function pickCardmarketPrice(cm) {
     if (!cm) return null;
-    if (typeof cm.avg30 === 'number') return cm.avg30;
-    if (typeof cm.avg === 'number') return cm.avg;
     if (typeof cm.trend === 'number') return cm.trend;
+    if (typeof cm.avg === 'number') return cm.avg;
     if (typeof cm.low === 'number') return cm.low;
-    return null;
-  }
-
-  // Algunas fichas traen el pricing solo dentro de variants_detailed[].pricing.cardmarket
-  function pickCardmarketPriceFromDetail(detail) {
-    if (!detail) return null;
-    var direct = pickCardmarketPrice(detail.pricing && detail.pricing.cardmarket);
-    if (direct != null) return direct;
-    var variants = detail.variants_detailed || [];
-    for (var i = 0; i < variants.length; i++) {
-      var p = variants[i] && variants[i].pricing && variants[i].pricing.cardmarket;
-      var v = pickCardmarketPrice(p);
-      if (v != null) return v;
-    }
     return null;
   }
 
@@ -6373,44 +5896,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (!entry || !entry.cardmarketUrl) return Promise.resolve(null);
       return fetchManualCardmarketPrice(entry.cardmarketUrl).then(pickCardmarketPrice);
     }
-    // Si la tienda ya tiene un precio reciente de esta carta, reutilizarlo (misma fuente Cardmarket).
-    try {
-      if (typeof shopInfo === 'function') {
-        var si = shopInfo(id);
-        if (si && typeof si.price === 'number' && si.price > 0) return Promise.resolve(si.price);
-      }
-    } catch (e) {}
-    var meta = tcgOwnedMeta[id];
-    var preferLang = (meta && typeof meta === 'object' && meta.lang) ? meta.lang : '';
-    function fromDetail(detail) {
-      return pickCardmarketPriceFromDetail(detail);
-    }
-    // 1) Inglés (suele traer precios Cardmarket EU)
-    // 2) Idioma de la carta (ja, es…) por si la ficha en EN no tiene pricing
-    // 3) Búsqueda en Cardmarket web, igual que la pestaña Tienda (cartas JP a menudo no tienen
-    //    pricing en TCGdex y se quedaban fuera del top de "más valiosas").
-    return fetchTcgCardDetail(id, 'en').then(function(detailEn) {
-      var p = fromDetail(detailEn);
-      if (p != null) return p;
-      var next = (preferLang && preferLang !== 'en')
-        ? fetchTcgCardDetail(id, preferLang).then(fromDetail)
-        : Promise.resolve(null);
-      return next.then(function(p2) {
-        if (p2 != null) return p2;
-        var name = (detailEn && detailEn.name)
-          || formatName(tcgMetaSlug(meta) || '')
-          || '';
-        var num = (detailEn && detailEn.localId)
-          || (meta && typeof meta === 'object' && meta.number)
-          || tcgCardLocalNumber({ id: id });
-        var setId = (detailEn && detailEn.set && detailEn.set.id) || tcgCardSetId({ id: id });
-        if (!name) return null;
-        return ensureSetInfo(setId).then(function(info) {
-          return fetchCardmarketFallback(name, num, info && info.tcgOnline);
-        }).then(function(fb) {
-          return fb ? pickCardmarketPrice(fb.price) : null;
-        }).catch(function() { return null; });
-      });
+    return fetchTcgCardDetail(id, 'en').then(function(detail) {
+      return pickCardmarketPrice(detail && detail.pricing && detail.pricing.cardmarket);
     });
   }
 
@@ -6422,10 +5909,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var now = Date.now();
     var pending = Array.from(tcgOwned).filter(function(id) {
       var cached = huchaPriceCache[id];
-      if (force || !cached) return true;
-      // Sin precio: reintentar cada hora (antes se congelaba 24 h y cartas JP/raras nunca entraban al top).
-      if (cached.price == null && (now - cached.at) > 60 * 60 * 1000) return true;
-      return (now - cached.at) > HUCHA_TTL_MS;
+      return force || !cached || (now - cached.at) > HUCHA_TTL_MS;
     });
     if (pending.length === 0) { renderHuchaTotal(); return; }
 
@@ -6482,7 +5966,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       title = drops.length + ' cartas han bajado de precio';
       body = drops.slice(0, 5).map(function(d) { return d.name + ' ' + Math.round(d.pct * 100) + '%'; }).join(', ') + (drops.length > 5 ? '\u2026' : '');
     }
-    appNotify(title, body, 'pokedex-precio');
+    try { new Notification(title, { body: body }); } catch (e) {}
   }
 
   function computeHuchaTotal() {
@@ -7075,6 +6559,47 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       });
     });
   }
+  // ---- Suscripción push compartida (intercambios + avisos) ----
+  // Un móvil solo tiene UNA suscripción push por service worker. Los dos Workers usan el mismo par
+  // VAPID, así que se reutiliza la misma suscripción y se registra en ambos. Antes cada botón la
+  // borraba y creaba otra nueva, y el otro Worker se quedaba con un endpoint muerto.
+  window.pokeSharedPushSub = function(reg, keyBytes) {
+    return reg.pushManager.getSubscription().then(function(old) {
+      if (old) {
+        var cur = old.options && old.options.applicationServerKey ? new Uint8Array(old.options.applicationServerKey) : null;
+        var same = !cur || (cur.length === keyBytes.length && cur.every(function(b, i) { return b === keyBytes[i]; }));
+        if (same) return old;
+        return old.unsubscribe().then(function() { return null; });
+      }
+      return null;
+    }).then(function(sub) {
+      return sub || reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes });
+    });
+  };
+  // Registra la suscripción actual en todos los Workers configurados (idempotente).
+  window.pokeSyncPushSubEverywhere = function(sub) {
+    var jobs = [];
+    if (typeof window.pokeTradeSyncSub === 'function') jobs.push(window.pokeTradeSyncSub(sub));
+    if (typeof window.pokeAvisosSyncSub === 'function') jobs.push(window.pokeAvisosSyncSub(sub));
+    return Promise.all(jobs.map(function(j) { return Promise.resolve(j).catch(function() {}); }));
+  };
+  window.pokeTradeSyncSub = function(sub) {
+    if (!sub || !tradeRegistered()) return Promise.resolve();
+    return tradeApi('/push-subscribe', 'POST', { subscription: sub.toJSON() });
+  };
+  // Al abrir la app: si ya hay permiso y suscripción, vuelve a registrarla en los Workers
+  // (por si el móvil la renovó o se activó desde el otro apartado).
+  setTimeout(function() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+    navigator.serviceWorker.getRegistration().then(function(reg) { return reg ? reg.pushManager.getSubscription() : null; })
+      .then(function(sub) { if (sub) return window.pokeSyncPushSubEverywhere(sub); }).catch(function() {});
+  }, 9000);
+  navigator.serviceWorker && navigator.serviceWorker.addEventListener && navigator.serviceWorker.addEventListener('message', function(ev) {
+    if (!ev.data || ev.data.type !== 'push-resubscribe') return;
+    navigator.serviceWorker.getRegistration().then(function(reg) { return reg ? reg.pushManager.getSubscription() : null; })
+      .then(function(sub) { if (sub) return window.pokeSyncPushSubEverywhere(sub); }).catch(function() {});
+  });
   function tradeRegisterCall(base, token, name, zone, contact, invite, pos) {
     return fetch(base.replace(/\/+$/, '') + '/register', {
       method: 'POST', headers: { 'content-type': 'application/json' },
@@ -7558,24 +7083,52 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       }).catch(function(e) { tradeShowMsg(msg, e.message, true); });
     }));
         tradeRootEl.appendChild(shopEl('div', 'trade-h', 'Notificaciones'));
-    tradeRootEl.appendChild(shopEl('p', 'backup-desc', 'Las notificaciones se activan en Ajustes \u2192 Notificaciones (un solo permiso para precios, lanzamientos y mensajes). Aqu\u00ed puedes activar o probar solo el chat. En iPhone: a\u00f1ade la app a la pantalla de inicio.'));
+    tradeRootEl.appendChild(shopEl('p', 'backup-desc', 'Te avisamos en el m\u00f3vil cuando alguien te escriba un mensaje, aunque la app est\u00e9 cerrada. En iPhone hay que a\u00f1adir la app a la pantalla de inicio y abrirla desde ah\u00ed.'));
     var pushMsgEl = tradeMsgEl();
     var pushActions = shopEl('div', 'trade-actions');
     function tradePushSupported() {
       return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
     }
-    function tradeEnablePush() {
-      return pushEnableShared().then(function(r) { if (r.trade !== 'ok') throw new Error(r.trade === 'skip' ? 'Crea tu perfil para recibir mensajes.' : r.trade); });
+    function tradeB64ToBytes(b64) {
+      var str = atob((b64 + '='.repeat((4 - b64.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/'));
+      var out = new Uint8Array(str.length);
+      for (var i = 0; i < str.length; i++) out[i] = str.charCodeAt(i);
+      return out;
     }
-    function tradeDisablePush() { return pushDisableShared(); }
+    function tradeEnablePush() {
+      if (!tradePushSupported()) return Promise.reject(new Error('Este navegador no admite notificaciones push. En iPhone, a\u00f1ade la app a la pantalla de inicio.'));
+      return Notification.requestPermission().then(function(perm) {
+        if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
+        return navigator.serviceWorker.register('sw.js');
+      }).then(function() { return navigator.serviceWorker.ready; })
+      .then(function(reg) {
+        return tradeApi('/push-key', 'GET').then(function(d) {
+          if (!d || !d.key) throw new Error('El servidor no tiene push configurado.');
+          return window.pokeSharedPushSub(reg, tradeB64ToBytes(d.key));
+        });
+      }).then(function(sub) {
+        return tradeApi('/push-subscribe', 'POST', { subscription: sub.toJSON() }).then(function(r) {
+          if (typeof window.pokeAvisosSyncSub === 'function') window.pokeAvisosSyncSub(sub).catch(function() {});
+          return r;
+        });
+      });
+    }
+    function tradeDisablePush() {
+      if (!tradePushSupported()) return Promise.resolve();
+      return navigator.serviceWorker.getRegistration().then(function(reg) {
+        if (!reg) return null;
+        return reg.pushManager.getSubscription();
+      }).then(function(sub) {
+        if (!sub) return null;
+        // Solo se da de baja en el Worker de intercambios: la suscripción del móvil la comparten
+        // también los avisos de precio, así que no se borra aquí.
+        return tradeApi('/push-unsubscribe', 'POST', { endpoint: sub.endpoint });
+      });
+    }
     pushActions.appendChild(tradeButton('Activar notificaciones de mensajes', 'shop-refresh-btn', function() {
       tradeShowMsg(pushMsgEl, 'Activando\u2026', false);
-      var go = (typeof notifEnableAll === 'function')
-        ? notifEnableAll()
-        : tradeEnablePush().then(function() { return ['trade-ok']; });
-      go.then(function() {
+      tradeEnablePush().then(function() {
         tradeShowMsg(pushMsgEl, 'Notificaciones activadas en este dispositivo.', false);
-        try { notifUpdateMasterUi(); } catch (e) {}
       }).catch(function(e) {
         tradeShowMsg(pushMsgEl, e && e.message ? e.message : 'No se pudo activar.', true);
       });
@@ -7954,44 +7507,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   //  2) category=Pokemon descarta cartas de Entrenador/Energía (así se descarta
   //     Lucky Helmet, que sí empieza por ラッキー pero es un objeto, no un Pokémon).
   function tcgNameSearchUrl(langCode, term) {
-    // *term* = contiene el nombre (incluye "Misty's Psyduck" / "カスミのコダック").
-    // El filtrado fino (no confudir Mew con Mewtwo) lo hace tcgNameMatches.
     return 'https://api.tcgdex.net/v2/' + encodeURIComponent(langCode) + '/cards?name=' +
-      encodeURIComponent('*' + term + '*') + '&category=Pokemon';
+      encodeURIComponent(term) + '*&category=Pokemon';
   }
 
   // Igual que arriba pero para comprobar si el nombre de una carta ya obtenida
   // (ej. desde su ficha completa) corresponde de verdad al Pokémon buscado.
   function tcgNameMatches(cardName, term) {
     if (!cardName || !term) return false;
-    var c = cardName.toLowerCase().trim();
-    var t = term.toLowerCase().trim();
-
-    // 1) Prefijo: "Psyduck", "Psyduck ex", "ミュウex"
-    if (c.indexOf(t) === 0) {
-      var rest = c.slice(t.length).trim();
-      if (!rest) return true;
-      if (/^(ex|gx|v|vmax|vstar|δ|\(delta[^)]*\)|&|and\b|\s|\/)/i.test(rest)) return true;
-      // "Mew"+"two" / "ミュウ"+"ツー" = otra especie
-      return false;
-    }
-
-    // 2) Nombre de entrenador + especie: "Misty's Psyduck", "カスミのコダック"
-    // El término debe aparecer como token completo, no como prefijo de otra especie.
-    var idx = 0;
-    while ((idx = c.indexOf(t, idx)) !== -1) {
-      var before = idx === 0 ? '' : c.charAt(idx - 1);
-      var afterStr = c.slice(idx + t.length);
-      var after = afterStr.charAt(0);
-      // Antes: inicio, espacio, apóstrofe, の, - 
-      var beforeOk = idx === 0 || /[\s\-'\u2019の]/.test(before) || c.slice(Math.max(0, idx - 2), idx) === "'s";
-      // Después: fin, espacio, sufijo de variante — NO una letra que alargue el nombre (mew+t…)
-      var afterOk = !after || /[\s\-'\u2019\/]/.test(after) ||
-        /^(ex|gx|v|vmax|vstar|δ)/i.test(afterStr.trim());
-      if (beforeOk && afterOk) return true;
-      idx += 1;
-    }
-    return false;
+    return cardName.toLowerCase().trim().indexOf(term.toLowerCase().trim()) === 0;
   }
 
   // Devuelve el listado {id, name, display} del Pokédex para un slug dado (ej. "charmander")
@@ -8303,8 +7827,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!pokeapiCodes) return Promise.resolve(null);
 
     var cacheKey = speciesSlug(englishName) + '|' + tcgLangCode;
-    // Solo cachear aciertos: un fallo de red no debe bloquear búsquedas futuras.
-    if (speciesNameCache[cacheKey]) {
+    if (speciesNameCache[cacheKey] !== undefined) {
       return Promise.resolve(speciesNameCache[cacheKey]);
     }
 
@@ -8312,16 +7835,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       .then(function(names) {
         var found = null;
         for (var i = 0; i < pokeapiCodes.length && !found; i++) {
-          var want = String(pokeapiCodes[i] || '').toLowerCase();
-          var entry = names.find(function(n) {
-            return n.language && n.language.name && String(n.language.name).toLowerCase() === want;
-          });
-          if (entry && entry.name) found = entry.name;
+          var entry = names.find(function(n) { return n.language && n.language.name === pokeapiCodes[i]; });
+          if (entry) found = entry.name;
         }
-        if (found) speciesNameCache[cacheKey] = found;
+        speciesNameCache[cacheKey] = found;
         return found;
       })
       .catch(function() {
+        speciesNameCache[cacheKey] = null;
         return null;
       });
   }
@@ -8395,30 +7916,17 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         tcgStatusEl.textContent = 'Buscando \u201c' + localizedName + '\u201d en ' + tcgLangLabel(tcgLang) + '\u2026';
         Promise.all([
           tcgFetchJson(tcgNameSearchUrl(tcgLang, localizedName)).catch(function() { return []; }),
-          tcgFetchJson(tcgNameSearchUrl(tcgLang, name)).catch(function() { return []; }),
           tcgFetchJson(tcgNameSearchUrl('en', name)).catch(function() { return []; })
         ]).then(function(results) {
           if (myRequestId !== tcgRequestId) return;
           var byNameMatches = Array.isArray(results[0]) ? results[0] : [];
-          var byEnOnLang = Array.isArray(results[1]) ? results[1] : [];
-          var enMatches = Array.isArray(results[2]) ? results[2] : [];
+          var enMatches = Array.isArray(results[1]) ? results[1] : [];
 
           var found = {};
           var merged = [];
-          function addCard(c) {
-            if (!c || !c.id || found[c.id]) return;
-            // Filtrar falsos positivos del buscador (Mew ⊂ Mewtwo, ミュウ ⊂ ミュウツー).
-            if (c.name && localizedName && !tcgNameMatches(c.name, localizedName) &&
-                !(name && tcgNameMatches(c.name, name))) {
-              // Si el nombre local no casa, aún aceptar si el id viene de la búsqueda EN exacta
-              // y el nombre empieza por el término inglés (Mewtwo ex, etc.).
-              return;
-            }
-            found[c.id] = true;
-            merged.push(c);
-          }
-          byNameMatches.forEach(addCard);
-          byEnOnLang.forEach(addCard);
+          byNameMatches.forEach(function(c) {
+            if (!found[c.id]) { found[c.id] = true; merged.push(c); }
+          });
 
           var missing = enMatches.filter(function(m) { return !found[m.id]; });
 
@@ -8455,45 +7963,29 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         return;
       }
 
-      // No se pudo traducir el nombre: buscamos en el idioma pedido con el término en inglés
-      // (a veces TCGdex indexa romaji) y también por ids de la ficha en inglés.
-      tcgStatusEl.textContent = 'Buscando ediciones en ' + tcgLangLabel(tcgLang) + '\u2026';
-      Promise.all([
-        tcgFetchJson(tcgNameSearchUrl(tcgLang, name)).catch(function() { return []; }),
-        tcgFetchJson(tcgNameSearchUrl('en', name)).catch(function() { return []; })
-      ]).then(function(pair) {
+      // No se pudo traducir el nombre: buscamos en inglés y comprobamos carta a carta
+      tcgStatusEl.textContent = 'No se pudo traducir el nombre autom\u00e1ticamente. Buscando ediciones en ' + tcgLangLabel(tcgLang) + '\u2026';
+      tcgFetchJson(tcgNameSearchUrl('en', name)).then(function(matches) {
         if (myRequestId !== tcgRequestId) return;
-        var langMatches = Array.isArray(pair[0]) ? pair[0] : [];
-        var matches = Array.isArray(pair[1]) ? pair[1] : [];
-        var found = {};
-        var merged = [];
-        langMatches.forEach(function(c) {
-          if (c && c.id && !found[c.id]) { found[c.id] = true; merged.push(c); }
-        });
-        if (matches.length === 0 && merged.length === 0) {
+        if (!Array.isArray(matches) || matches.length === 0) {
           tcgGridEl.innerHTML = '';
           tcgStatusEl.textContent = 'No se encontraron cartas para \u201c' + name + '\u201d.';
           return;
         }
-        var detailUrls = matches.filter(function(m) { return m && m.id && !found[m.id]; }).map(function(m) {
+        var detailUrls = matches.map(function(m) {
           return 'https://api.tcgdex.net/v2/' + encodeURIComponent(tcgLang) + '/cards/' + encodeURIComponent(m.id);
         });
-        if (detailUrls.length === 0) {
-          renderTcgResults(merged, myRequestId, name, merged.length, name);
-          return;
-        }
         Promise.allSettled(detailUrls.map(function(url) { return tcgFetchJson(url); }))
           .then(function(results) {
             if (myRequestId !== tcgRequestId) return;
+            var localized = [];
             results.forEach(function(r) {
               if (r.status === 'fulfilled' && r.value && r.value.name &&
-                  (!r.value.category || r.value.category === 'Pokemon') && !found[r.value.id] &&
-                  (tcgNameMatches(r.value.name, name) || (name && r.value.name.toLowerCase().indexOf(String(name).toLowerCase()) === 0))) {
-                found[r.value.id] = true;
-                merged.push({ id: r.value.id, localId: r.value.localId, name: r.value.name, image: r.value.image || null, set: r.value.set });
+                  (!r.value.category || r.value.category === 'Pokemon')) {
+                localized.push({ id: r.value.id, localId: r.value.localId, name: r.value.name, image: r.value.image || null, set: r.value.set });
               }
             });
-            renderTcgResults(merged, myRequestId, name, Math.max(merged.length, matches.length), name);
+            renderTcgResults(localized, myRequestId, name, matches.length, name);
           });
       }).catch(function() {
         if (myRequestId !== tcgRequestId) return;
@@ -8503,6 +7995,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
   }
 
+  // Busca el Pokémon en todos los idiomas de TCGdex a la vez y fusiona los
+  // resultados por id de carta (una misma carta comparte id entre idiomas).
   function runTcgSearchAllLanguages(name, myRequestId) {
     tcgStatusEl.textContent = 'Buscando \u201c' + name + '\u201d en todos los idiomas\u2026';
     tcgStatusEl.style.display = 'block';
@@ -8572,7 +8066,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (pending.length === 0) return Promise.resolve();
     return Promise.all(pending.map(function(c) {
       return fetchTcgCardDetail(c.id, 'en').then(function(detail) {
-        tcgPriceHints[c.id] = pickCardmarketPrice(detail && detail.pricing && detail.pricing.cardmarket);
+        var cm = detail && detail.pricing && detail.pricing.cardmarket;
+        var val = null;
+        if (cm) {
+          if (typeof cm.avg === 'number') val = cm.avg;
+          else if (typeof cm.trend === 'number') val = cm.trend;
+          else if (typeof cm.low === 'number') val = cm.low;
+        }
+        tcgPriceHints[c.id] = val;
       });
     }));
   }
@@ -8646,16 +8147,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function renderTcgResults(cards, myRequestId, name, totalMatched, englishName) {
     if (myRequestId !== tcgRequestId) return;
     tcgCompletionEl.hidden = true;
-    // Descarta cartas de otra especie que el buscador/API hayan colado (Mew⊂Mewtwo, ids cruzados…).
-    if (name || englishName) {
-      cards = (cards || []).filter(function(c) {
-        if (!c || !c.name) return true;
-        if (name && tcgNameMatches(c.name, name)) return true;
-        if (englishName && tcgNameMatches(c.name, englishName)) return true;
-        // Nombres en otro alfabeto: si no casan con el término local ni el inglés, fuera.
-        return false;
-      });
-    }
     if (tcgViewingOwnedOnly) {
       cards = cards.filter(function(c) { return tcgOwned.has(c.id); });
       totalMatched = cards.length;
@@ -9775,13 +9266,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       btn.appendChild(num);
       btn.appendChild(nameEl);
       btn.addEventListener('mousedown', function(e) { e.preventDefault(); }); // evita que el blur cierre el desplegable antes del click
-      btn.addEventListener('click', function() {
-        onSelect(p);
-        dropdownEl.hidden = true;
-        // el mousedown evita el blur para que no se cierre el desplegable; ahora que ya se eligió, quitamos el foco para que baje el teclado
-        var ae = document.activeElement;
-        if (ae && ae !== document.body && typeof ae.blur === 'function') ae.blur();
-      });
+      btn.addEventListener('click', function() { onSelect(p); dropdownEl.hidden = true; });
 
       dropdownEl.appendChild(btn);
     });
@@ -10059,14 +9544,31 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         ' | n\u00ba ' + (it.localId || '?') + (it.anniv ? ' | edici\u00f3n en castellano' : '');
     }).join('\n');
     var prompt = 'Busca en cardmarket.com el precio actual en euros de estas cartas del TCG de Pok\u00e9mon. ' +
-      'Usa la media de 30 d\u00edas de Cardmarket (avg30); si la carta indica edici\u00f3n en castellano, prioriza el precio de las ofertas en espa\u00f1ol (desde). ' +
+      'Usa el "Price Trend" (Tendencia) de la ficha; si la carta indica edici\u00f3n en castellano, prioriza el precio de las ofertas en espa\u00f1ol (desde). ' +
       'Responde \u00daNICAMENTE con un array JSON sin texto adicional ni backticks, con esta forma: ' +
       '[{"key":"la key indicada","price":n\u00famero o null,"url":"url de la ficha de Cardmarket o cadena vac\u00eda"}].\n\nCartas:\n' + lines;
-    return aiRun({ task: 'search', prompt: prompt, maxTokens: 2000 }).then(function(r) {
-      var text = r.text || '';
-      var s0 = text.indexOf('['), e0 = text.lastIndexOf(']');
-      if (s0 === -1 || e0 <= s0) return [];
-      try { var arr = JSON.parse(text.slice(s0, e0 + 1)); return Array.isArray(arr) ? arr : []; } catch (err) { return []; }
+    return fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': anthropicApiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: CLAUDE_SCAN_MODEL,
+        max_tokens: 2000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 6 }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    }).then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(data) {
+      var text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
+      var s = text.indexOf('['), e = text.lastIndexOf(']');
+      if (s === -1 || e <= s) return [];
+      try { var arr = JSON.parse(text.slice(s, e + 1)); return Array.isArray(arr) ? arr : []; } catch (err) { return []; }
     }).catch(function() { return []; });
   }
 
@@ -10100,14 +9602,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var workers = [];
     for (var w = 0; w < 3; w++) workers.push(next());
     Promise.all(workers).then(function() {
-      // El cupo gratuito de la IA es pequeño: solo se usa si pulsas Actualizar y con una sola tanda.
-      // (Para que busque sola al abrir la app, quita «!force» de la condición.)
-      if (missing.length === 0 || !force) return;
-      var todo = missing.slice(0, SHOP_CLAUDE_BATCH);
-      skipped = missing.slice(SHOP_CLAUDE_BATCH).map(function(it) { return it.id; });
+      if (!anthropicApiKey || missing.length === 0) return;
+      var todo = missing.slice(0, SHOP_CLAUDE_MAX);
+      skipped = missing.slice(SHOP_CLAUDE_MAX).map(function(it) { return it.id; });
       var batches = [];
       for (var b = 0; b < todo.length; b += SHOP_CLAUDE_BATCH) batches.push(todo.slice(b, b + SHOP_CLAUDE_BATCH));
-      shopRefreshLabel.textContent = 'IA\u2026';
+      shopRefreshLabel.textContent = 'Claude\u2026';
       return batches.reduce(function(chain, batch) {
         return chain.then(function() {
           return shopClaudeLookup(batch).then(function(results) {
@@ -10115,13 +9615,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
               if (!r || !r.key) return;
               var price = typeof r.price === 'number' ? r.price : parseFloat(String(r.price || '').replace(',', '.'));
               var url = (typeof r.url === 'string' && r.url.indexOf('cardmarket.com') !== -1) ? r.url : null;
-              if (!isNaN(price)) shopRecord(r.key, price, 'IA', url);
+              if (!isNaN(price)) shopRecord(r.key, price, 'Claude', url);
             });
           });
         });
       }, Promise.resolve());
     }).then(function() {
-      // Las que no le tocaron a la IA en esta tanda se reintentan la próxima vez que se abra.
+      // Las que no le tocaron a Claude en esta tanda se reintentan la próxima vez que se abra.
       pending.forEach(function(it) { if (skipped.indexOf(it.id) === -1) shopRecord(it.id, null); });
       shopRefreshing = false;
       try { localStorage.setItem(SHOP_LAST_REFRESH_KEY, String(Date.now())); } catch (e) {}
@@ -10170,11 +9670,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       shopStatsEl.appendChild(shopEl('span', 'shop-down', '\u25bc ' + downs + ' bajan'));
     }
     shopNoteEl.textContent = 'Precios de Cardmarket (tendencia, EUR). Se refrescan solos cada 24 h al abrir la app.' +
-      ' Las cartas sin precio se buscan con IA al pulsar Actualizar.';
+      (anthropicApiKey ? ' Las cartas sin precio se buscan con Claude.' : ' A\u00f1ade tu clave de Claude en Ajustes para buscar las que no tengan precio.');
     shopRefreshBtn.disabled = shopRefreshing;
     shopRefreshBtn.classList.toggle('is-busy', shopRefreshing);
     if (shopRefreshing) {
-      if (shopRefreshLabel.textContent !== 'IA\u2026' || shopProgress.done < shopProgress.total) shopRefreshLabel.textContent = shopProgress.done + '/' + shopProgress.total;
+      if (shopRefreshLabel.textContent !== 'Claude\u2026' || shopProgress.done < shopProgress.total) shopRefreshLabel.textContent = shopProgress.done + '/' + shopProgress.total;
     } else shopRefreshLabel.textContent = 'Actualizar';
     renderHome();
   }
@@ -10215,7 +9715,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
     var main = shopEl('div', 'shop-row-main');
     var nameEl = shopEl('div', 'shop-row-name', item.name);
-    if (info.src === 'Claude' || info.src === 'IA') nameEl.appendChild(shopEl('span', 'shop-tag', info.src));
+    if (info.src === 'Claude') nameEl.appendChild(shopEl('span', 'shop-tag', 'Claude'));
     main.appendChild(nameEl);
     var target = shopTargetOf(item.id);
     var meta = [item.sealed ? 'Sellado' : (item.anniv ? '30 Aniversario \u00b7 ES' : item.setName), item.localId ? '#' + item.localId : '', item.sealed ? '' : (item.saved ? 'Guardada' : 'Seguida'), ''].filter(Boolean).join(' \u00b7 ');
@@ -10509,7 +10009,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (typeof priceAlertsEnabled !== 'undefined' && priceAlertsEnabled && 'Notification' in window && Notification.permission === 'granted') {
         var title = fresh.length === 1 ? fresh[0].name + ' ha llegado a tu precio' : fresh.length + ' cartas han llegado a tu precio';
         var body = fresh.slice(0, 5).map(function(f) { return f.name + ' ' + formatEuro(f.price); }).join(', ') + (fresh.length > 5 ? '\u2026' : '');
-        appNotify(title, body, 'pokedex-objetivo');
+        try { new Notification(title, { body: body }); } catch (e) {}
       }
     }
     renderShopAlerts(items);
@@ -10606,7 +10106,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var all = shopReleasesAll();
     document.getElementById('shop-releases-badge').textContent = String(all.length);
     shopReleasesListEl.innerHTML = '';
-    if (!all.length) shopReleasesListEl.appendChild(shopEl('p', 'tcg-missing-dex-empty', 'No hay lanzamientos próximos. Añade uno o pulsa «Actualizar con IA».'));
+    if (!all.length) shopReleasesListEl.appendChild(shopEl('p', 'tcg-missing-dex-empty', 'No hay lanzamientos próximos. Añade uno o pulsa «Actualizar con Claude».'));
     all.forEach(function(r) {
       var days = shopDaysUntil(r.d);
       var dt = new Date(r.d + 'T00:00:00');
@@ -10640,8 +10140,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       shopReleasesListEl.appendChild(row);
     });
     document.getElementById('shop-releases-note').textContent = (shopReleasesAuto && shopReleasesAuto.items && shopReleasesAuto.items.length)
-      ? 'Actualizado con IA ' + huchaRelativeTime(shopReleasesAuto.ts) + '. Revisa siempre la fecha en la tienda donde compres.'
-      : 'Lista de partida de webs de coleccionismo (oct 2026); las fechas pueden cambiar según el país. Pulsa «Actualizar con IA» para ponerla al día.';
+      ? 'Actualizado con Claude ' + huchaRelativeTime(shopReleasesAuto.ts) + '. Revisa siempre la fecha en la tienda donde compres.'
+      : 'Lista de partida de webs de coleccionismo (oct 2026); las fechas pueden cambiar según el país. Pulsa «Actualizar con Claude» para ponerla al día.';
     if (typeof pushSyncSoon === 'function') pushSyncSoon();
   }
   // <release-popup>
@@ -10752,7 +10252,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     releasePreordersEl.innerHTML = '';
     var r = releaseCurrent;
     var p = r ? shopPreorders[releaseKey(r)] : null;
-    if (!p) { releasePreorderBtn.textContent = 'Buscar preventas con IA'; return; }
+    if (!p) { releasePreorderBtn.textContent = 'Buscar preventas con Claude'; return; }
     releasePreorderBtn.textContent = 'Volver a buscar';
     if (!p.items.length) {
       releasePreordersEl.appendChild(shopEl('p', 'stats-empty', 'No encontré preventas activas ' + huchaRelativeTime(p.ts) + '. Puede que aún no hayan abierto reservas.'));
@@ -10771,11 +10271,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       a.appendChild(icon);
       releasePreordersEl.appendChild(a);
     });
-    releasePreordersEl.appendChild(shopEl('p', 'backup-desc', 'Buscado con IA ' + huchaRelativeTime(p.ts) + '. Las reservas cambian rápido: confirma precio y disponibilidad en la tienda.'));
+    releasePreordersEl.appendChild(shopEl('p', 'backup-desc', 'Buscado con Claude ' + huchaRelativeTime(p.ts) + '. Las reservas cambian rápido: confirma precio y disponibilidad en la tienda.'));
   }
   function searchReleasePreorders() {
     var r = releaseCurrent;
     if (!r) return;
+    if (!anthropicApiKey) { releasePreorderMsg('Necesitas tu clave de Claude en Ajustes para esto.', true); return; }
     releasePreorderBtn.disabled = true;
     releasePreorderMsg('Buscando preventas\u2026', false);
     var today = new Date().toISOString().slice(0, 10);
@@ -10785,8 +10286,19 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       'Incluye solo tiendas cuya p\u00e1gina del producto hayas visto con reserva o preventa disponible; no inventes tiendas, enlaces ni precios (si no consta el precio o la entrega, pon cadena vac\u00eda). ' +
       'Responde \u00daNICAMENTE con un array JSON sin texto adicional ni backticks, m\u00e1ximo 10 elementos: [{"s":"nombre de la tienda","u":"URL https directa a la p\u00e1gina del producto","p":"precio con moneda","e":"fecha de entrega o env\u00edo"}]. Si no encuentras ninguna, responde [].';
     var key = releaseKey(r);
-    aiRun({ task: 'search', prompt: prompt, maxTokens: 3000 }).then(function(data) {
-      var text = data.text || '';
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': anthropicApiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: CLAUDE_SCAN_MODEL, max_tokens: 3000, thinking: { type: 'disabled' },
+        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 6 }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    }).then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(data) {
+      var text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
       var a = text.indexOf('['), e = text.lastIndexOf(']');
       var arr = (a !== -1 && e > a) ? JSON.parse(text.slice(a, e + 1)) : [];
       var seen = {};
@@ -10806,7 +10318,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (releaseCurrent && releaseKey(releaseCurrent) === key) renderReleasePreorders();
       renderShopReleases();
     }).catch(function(err) {
-      releasePreorderMsg(err && err.status ? aiErrMsg(err) : 'No se pudo consultar la IA (' + (err && err.message ? err.message : 'error') + ').', true);
+      releasePreorderMsg('No se pudo consultar a Claude (' + (err && err.message ? err.message : 'error') + ').', true);
     }).then(function() { releasePreorderBtn.disabled = false; });
   }
   releasePreorderBtn.addEventListener('click', searchReleasePreorders);
@@ -10880,13 +10392,25 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   });
   document.getElementById('shop-releases-claude').addEventListener('click', function() {
     var btn = this;
+    if (!anthropicApiKey) { shopReleasesMsg('Necesitas tu clave de Claude en Ajustes para esto.', true); return; }
     btn.disabled = true;
     shopReleasesMsg('Buscando lanzamientos…', false);
     var today = new Date().toISOString().slice(0, 10);
     var prompt = 'Hoy es ' + today + '. Busca en la web los próximos lanzamientos del TCG de Pokémon (expansiones y productos importantes como Elite Trainer Box, colecciones premium o mazos) con fecha confirmada en los próximos 6 meses para España/Europa; si solo hay fecha de EE. UU. o Japón, úsala. ' +
       'Responde ÚNICAMENTE con un array JSON sin texto adicional ni backticks, con máximo 15 elementos ordenados por fecha: [{"d":"AAAA-MM-DD","n":"nombre del lanzamiento","k":"Expansión" o "Producto"}].';
-    aiRun({ task: 'search', prompt: prompt, maxTokens: 3000 }).then(function(data) {
-      var text = data.text || '';
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': anthropicApiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: CLAUDE_SCAN_MODEL, max_tokens: 3000, thinking: { type: 'disabled' },
+        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    }).then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(data) {
+      var text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
       var a = text.indexOf('['), e = text.lastIndexOf(']');
       var arr = (a !== -1 && e > a) ? JSON.parse(text.slice(a, e + 1)) : [];
       var items = (Array.isArray(arr) ? arr : []).filter(function(r) { return r && /^\d{4}-\d{2}-\d{2}$/.test(r.d) && typeof r.n === 'string' && r.n; })
@@ -10897,31 +10421,33 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       shopReleasesMsg('', false);
       renderShopReleases();
     }).catch(function(err) {
-      shopReleasesMsg(err && err.message === 'empty' ? 'La IA no encontró lanzamientos con fecha. Inténtalo más tarde.' : (err && err.status ? aiErrMsg(err) : 'No se pudo consultar la IA (' + (err && err.message ? err.message : 'error') + ').'), true);
+      shopReleasesMsg(err && err.message === 'empty' ? 'Claude no encontró lanzamientos con fecha. Inténtalo más tarde.' : 'No se pudo consultar a Claude (' + (err && err.message ? err.message : 'error') + ').', true);
     }).then(function() { btn.disabled = false; });
   });
   updateShopSealedBadge();
   renderShopReleases();
 
-  // ----- Avisos del Worker de precios y lanzamientos (llegan como notificación push de la app) -----
+  // ----- Avisos por Telegram (Worker propio) -----
   // La app solo manda al Worker lo necesario para vigilar: tus precios objetivo (id, nombre, objetivo y,
   // en sellados, el enlace de Cardmarket) y las fechas del calendario. La clave va en una cabecera y
   // se guarda solo en este dispositivo. Se sincroniza sola (con retardo y solo si algo cambió).
   var PUSH_CFG_KEY = 'pokecheck_push_cfg_v1';
-  var pushCfg = { url: '', key: '', releases: true };
+  var pushCfg = { url: '', key: '', releases: true, telegram: true };
   try {
     var pushStored = JSON.parse(localStorage.getItem(PUSH_CFG_KEY) || 'null');
-    if (pushStored && typeof pushStored === 'object') pushCfg = { url: String(pushStored.url || ''), key: String(pushStored.key || ''), releases: pushStored.releases !== false };
+    if (pushStored && typeof pushStored === 'object') pushCfg = { url: String(pushStored.url || ''), key: String(pushStored.key || ''), releases: pushStored.releases !== false, telegram: pushStored.telegram !== false };
   } catch (e) {}
   var pushUrlInput = document.getElementById('settings-push-url');
   var pushKeyInput = document.getElementById('settings-push-key');
   var pushReleasesInput = document.getElementById('settings-push-releases');
+  var pushTelegramInput = document.getElementById('settings-push-telegram');
   var pushStatusEl = document.getElementById('push-status');
   var pushLastSent = '';
   var pushTimer = null;
   pushUrlInput.value = pushCfg.url;
   pushKeyInput.value = pushCfg.key;
   pushReleasesInput.checked = pushCfg.releases;
+  pushTelegramInput.checked = pushCfg.telegram;
 
   function pushConfigured() { return !!(pushCfg && pushCfg.url && pushCfg.key); }
   function pushBase() { return pushCfg.url.replace(/\/+$/, ''); }
@@ -10938,9 +10464,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       };
     });
     var releases = pushCfg.releases ? shopReleasesAll().map(function(r) { return { d: r.d, n: r.n }; }) : [];
-    // telegram:false a propósito: los avisos salen solo por notificación push. Así, aunque alguien tuviera
-    // Telegram vinculado de antes, el Worker deja de usarlo y no se duplican avisos.
-    return JSON.stringify({ items: items, releases: releases, telegram: false });
+    return JSON.stringify({ items: items, releases: releases, telegram: pushCfg.telegram });
   }
   function pushRequest(path, method, body) {
     return fetch(pushBase() + path, {
@@ -10964,7 +10488,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (manual) {
         pushMsg('Sincronizado: ' + data.items + ' alerta(s) y ' + data.releases + ' lanzamiento(s). ' +
           (data.push ? 'Push activo en ' + data.push + ' dispositivo(s). ' : '') +
-          (data.push ? '' : 'Aún no hay ningún móvil con notificaciones push: pulsa «Activar notificaciones» más arriba.'), false);
+          (data.linked ? 'Telegram vinculado \u2705' : (data.push ? '' : 'Aún no hay ningún canal: activa las notificaciones push o vincula Telegram (envía /start seguido de tu clave a tu bot).')), false);
       }
     }).catch(function(err) {
       if (manual) pushMsg(err && err.message && err.message.indexOf('Failed to fetch') === -1 ? err.message : 'No se pudo conectar con el Worker. Revisa la URL.', true);
@@ -10976,7 +10500,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     pushTimer = setTimeout(function() { pushSync(false); }, 3000);
   }
   function pushReadForm() {
-    pushCfg = { url: pushUrlInput.value.trim(), key: pushKeyInput.value.trim(), releases: pushReleasesInput.checked };
+    pushCfg = { url: pushUrlInput.value.trim(), key: pushKeyInput.value.trim(), releases: pushReleasesInput.checked, telegram: pushTelegramInput.checked };
     try { localStorage.setItem(PUSH_CFG_KEY, JSON.stringify(pushCfg)); } catch (e) {}
   }
   document.getElementById('push-sync-btn').addEventListener('click', function() {
@@ -10996,6 +10520,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       .catch(function(err) { pushMsg(err && err.message && err.message.indexOf('Failed to fetch') === -1 ? err.message : 'No se pudo conectar con el Worker. Revisa la URL.', true); });
   });
   pushReleasesInput.addEventListener('change', function() { pushReadForm(); pushSyncSoon(); });
+  pushTelegramInput.addEventListener('change', function() { pushReadForm(); pushSyncSoon(); });
 
   // ----- Notificaciones push de la propia app (Web Push) -----
   // Registra sw.js (tiene que estar junto al HTML), pide permiso y suscribe este móvil con la clave
@@ -11025,200 +10550,35 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function pushNetErr(err) {
     return err && err.message && err.message.indexOf('Failed to fetch') === -1 ? err.message : 'No se pudo conectar con el Worker. Revisa la URL.';
   }
-  // Un navegador solo admite UNA suscripción push por service worker. Por eso la app se suscribe una
-  // sola vez y registra esa misma suscripción en cada servidor (Worker de avisos y de intercambios).
-  // Para que ambos puedan escribirle, los dos Workers deben usar las mismas claves VAPID.
-  function pushNormKey(k) { return String(k || '').replace(/=+$/, ''); }
-  function pushBytesToB64(buf) {
-    var u8 = new Uint8Array(buf), bin = '';
-    for (var i = 0; i < u8.length; i++) bin += String.fromCharCode(u8[i]);
-    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-  }
-  function pushEnsureSubscription(reg, keyB64) {
-    return reg.pushManager.getSubscription().then(function(old) {
-      if (old && old.options && old.options.applicationServerKey && pushBytesToB64(old.options.applicationServerKey) === pushNormKey(keyB64)) return old;
-      return (old ? old.unsubscribe() : Promise.resolve()).then(function() {
-        return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: pushB64ToBytes(pushNormKey(keyB64)) });
-      });
-    });
-  }
-  // Devuelve { worker, trade } con 'ok', 'skip' o un texto de error para cada servidor.
-  function pushEnableShared() {
-    if (!webPushSupported()) return Promise.reject(new Error('Este navegador no admite notificaciones push. En iPhone, a\u00f1ade antes la app a la pantalla de inicio.'));
-    var useWorker = typeof pushConfigured === 'function' && pushConfigured();
-    var useTrade = typeof tradeRegistered === 'function' && tradeRegistered();
-    var out = { worker: 'skip', trade: 'skip' };
-    if (!useWorker && !useTrade) return Promise.resolve(out);
+  function pushEnableWeb() {
     return Notification.requestPermission().then(function(perm) {
       if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
       return navigator.serviceWorker.register('sw.js');
-    }).then(function() { return navigator.serviceWorker.ready; }).then(function(reg) {
-      var keys = {}, errs = {}, jobs = [];
-      if (useWorker) jobs.push(pushRequest('/push-key', 'GET').then(function(d) { keys.worker = d && d.key; }).catch(function(e) { errs.worker = pushNetErr(e); }));
-      if (useTrade) jobs.push(tradeApi('/push-key', 'GET').then(function(d) { keys.trade = d && d.key; }).catch(function(e) { errs.trade = e && e.message ? e.message : 'error'; }));
-      return Promise.all(jobs).then(function() {
-        if (useWorker && !keys.worker) out.worker = errs.worker || 'El Worker de avisos no tiene push configurado.';
-        if (useTrade && !keys.trade) out.trade = errs.trade || 'El servidor de intercambios no tiene push configurado.';
-        var chosen = keys.trade || keys.worker;
-        if (!chosen) return out;
-        return pushEnsureSubscription(reg, chosen).then(function(sub) {
-          var json = sub.toJSON(), regs = [];
-          if (keys.trade) regs.push(tradeApi('/push-subscribe', 'POST', { subscription: json }).then(function() { out.trade = 'ok'; }).catch(function(e) { out.trade = e && e.message ? e.message : 'error'; }));
-          if (keys.worker) {
-            if (pushNormKey(keys.worker) !== pushNormKey(chosen)) out.worker = 'su clave VAPID es distinta a la del servidor de intercambios; usa las mismas claves en los dos Workers (mira LEEME-avisos.md).';
-            else regs.push(pushRequest('/subscribe', 'POST', JSON.stringify({ subscription: json })).then(function() { out.worker = 'ok'; }).catch(function(e) { out.worker = pushNetErr(e); }));
-          }
-          return Promise.all(regs).then(function() { return out; });
-        });
+    }).then(function() {
+      return navigator.serviceWorker.ready;
+    }).then(function(reg) {
+      return pushRequest('/push-key', 'GET').then(function(d) {
+        if (!d || !d.key) throw new Error('El Worker no tiene push configurado.');
+        return window.pokeSharedPushSub(reg, pushB64ToBytes(d.key));
+      });
+    }).then(function(sub) {
+      return pushRequest('/subscribe', 'POST', JSON.stringify({ subscription: sub.toJSON() })).then(function(r) {
+        if (typeof window.pokeTradeSyncSub === 'function') window.pokeTradeSyncSub(sub).catch(function() {});
+        return r;
       });
     });
   }
-  function pushDisableShared() {
+  function pushDisableWeb() {
     return pushCurrentSub().then(function(sub) {
       if (!sub) return null;
       var endpoint = sub.endpoint;
       return sub.unsubscribe().then(function() {
-        var jobs = [];
-        if (typeof pushConfigured === 'function' && pushConfigured()) jobs.push(pushRequest('/unsubscribe', 'POST', JSON.stringify({ endpoint: endpoint })).catch(function() {}));
-        if (typeof tradeRegistered === 'function' && tradeRegistered()) jobs.push(tradeApi('/push-unsubscribe', 'POST', { endpoint: endpoint }).catch(function() {}));
-        return Promise.all(jobs);
+        // Al quitar la suscripción del móvil deja de valer para los dos Workers: avisa también al de intercambios.
+        try { if (typeof tradeRegistered === 'function' && tradeRegistered()) tradeApi('/push-unsubscribe', 'POST', { endpoint: endpoint }).catch(function() {}); } catch (e) {}
+        return pushRequest('/unsubscribe', 'POST', JSON.stringify({ endpoint: endpoint }));
       });
     });
   }
-  function pushEnableWeb() {
-    return pushEnableShared().then(function(r) { if (r.worker !== 'ok') throw new Error(r.worker === 'skip' ? 'Configura la URL y la clave del Worker.' : r.worker); });
-  }
-  function pushDisableWeb() { return pushDisableShared(); }
-
-  // Aviso local con la app abierta: en Android, Chrome no admite "new Notification()", hay que pasar por el service worker.
-  function appNotify(title, body, tag) {
-    if (!('Notification' in window) || Notification.permission !== 'granted') return;
-    var opts = { body: body, tag: tag || 'pokedex', icon: './icon-192.png' };
-    var fallback = function() { try { new Notification(title, opts); } catch (e) {} };
-    if (!('serviceWorker' in navigator)) { fallback(); return; }
-    navigator.serviceWorker.getRegistration().then(function(reg) {
-      if (reg && reg.showNotification) return reg.showNotification(title, opts);
-      fallback();
-    }).catch(fallback);
-  }
-
-  // Al tocar un aviso: el service worker avisa a la app abierta, o abre la app con #trade.
-  function pushHandleClick(fromId) {
-    if (typeof switchMode !== 'function') return;
-    switchMode('trade');
-    if (!fromId || typeof tradeRegistered !== 'function' || !tradeRegistered()) return;
-    tradeApi('/chat/' + encodeURIComponent(fromId) + '?after=999999999', 'GET').then(function(d) {
-      openTradeChat(fromId, (d && d.name) || 'Conversaci\u00f3n', 'chats');
-    }).catch(function() {});
-  }
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('message', function(e) {
-      var d = e.data;
-      if (d && d.type === 'notification-click') pushHandleClick(d.from || '');
-      if (d && d.type === 'push-resubscribe') pushAutoRefresh(true);
-    });
-  }
-  // ----- Notificaciones unificadas (precios + push Worker + chat intercambios) -----
-  var notifMasterBtn = document.getElementById('notif-master-btn');
-  var notifMasterLabel = document.getElementById('notif-master-label');
-  var notifMasterStatus = document.getElementById('notif-master-status');
-
-  function notifUpdateMasterUi(detail) {
-    var perm = ('Notification' in window) ? Notification.permission : 'denied';
-    var on = perm === 'granted' && priceAlertsEnabled;
-    if (notifMasterLabel) {
-      notifMasterLabel.textContent = on ? 'Notificaciones activadas (tocar para desactivar)' : 'Activar notificaciones';
-    }
-    if (notifMasterStatus) {
-      if (detail) {
-        notifMasterStatus.textContent = detail;
-      } else if (perm === 'denied') {
-        notifMasterStatus.textContent = 'Permiso bloqueado en el sistema. Act\u00edvalo en ajustes del navegador o del m\u00f3vil.';
-      } else if (on) {
-        notifMasterStatus.textContent = 'Activas: bajadas de precio al abrir la app, lanzamientos (si el Worker est\u00e1 configurado) y mensajes de intercambios.';
-      } else {
-        notifMasterStatus.textContent = 'Al activar se pide un solo permiso y se encienden todos los avisos disponibles.';
-      }
-    }
-    try { updatePriceAlertsBtn(); } catch (e) {}
-    try { pushRefreshWebLabel(); } catch (e) {}
-  }
-
-  function notifEnableAll() {
-    if (!('Notification' in window)) {
-      return Promise.reject(new Error('Este navegador no admite notificaciones.'));
-    }
-    return Notification.requestPermission().then(function(perm) {
-      if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
-      priceAlertsEnabled = true;
-      try { localStorage.setItem(PRICE_ALERTS_KEY, 'on'); } catch (e) {}
-
-      try { pushReadForm(); } catch (e) {}
-      // Un solo paso: una suscripción compartida, registrada en el Worker de avisos y en el de intercambios.
-      return pushEnableShared().then(function(r) {
-        try { pushSync(false); } catch (e) {}
-        function tag(name, v) { return v === 'ok' ? name + '-ok' : v === 'skip' ? name + '-skip' : name + ': ' + v; }
-        return [tag('worker', r.worker), tag('trade', r.trade)];
-      });
-    });
-  }
-
-  function notifDisableAll() {
-    priceAlertsEnabled = false;
-    try { localStorage.setItem(PRICE_ALERTS_KEY, 'off'); } catch (e) {}
-    return pushDisableShared().catch(function() {});
-  }
-
-  if (notifMasterBtn) {
-    notifMasterBtn.addEventListener('click', function() {
-      var perm = ('Notification' in window) ? Notification.permission : 'denied';
-      var on = perm === 'granted' && priceAlertsEnabled;
-      notifMasterBtn.disabled = true;
-      if (on) {
-        notifUpdateMasterUi('Desactivando\u2026');
-        notifDisableAll().then(function() {
-          notifUpdateMasterUi('Notificaciones desactivadas en este dispositivo.');
-        }).catch(function(err) {
-          notifUpdateMasterUi(err && err.message ? err.message : 'Error al desactivar.');
-        }).then(function() { notifMasterBtn.disabled = false; });
-      } else {
-        notifUpdateMasterUi('Activando\u2026');
-        notifEnableAll().then(function(results) {
-          var parts = [];
-          parts.push('Permiso concedido.');
-          parts.push('Avisos de precio al abrir la app: s\u00ed.');
-          (results || []).forEach(function(r) {
-            if (r === 'worker-ok') parts.push('Push del Worker de avisos: s\u00ed.');
-            else if (r === 'worker-skip') parts.push('Worker de avisos: configura URL y clave m\u00e1s abajo si quieres avisos con la app cerrada.');
-            else if (r === 'trade-ok') parts.push('Mensajes de intercambios: s\u00ed.');
-            else if (r === 'trade-skip') parts.push('Intercambios: crea tu perfil para recibir mensajes push.');
-            else if (typeof r === 'string' && r.indexOf('worker:') === 0) parts.push('Worker: ' + r.slice(7));
-            else if (typeof r === 'string' && r.indexOf('trade:') === 0) parts.push('Chat: ' + r.slice(6));
-          });
-          notifUpdateMasterUi(parts.join(' '));
-        }).catch(function(err) {
-          notifUpdateMasterUi(err && err.message ? err.message : 'No se pudieron activar.');
-        }).then(function() { notifMasterBtn.disabled = false; });
-      }
-    });
-  }
-  notifUpdateMasterUi();
-
-  // Las notificaciones push son ahora el único canal de avisos, así que se mantiene viva la suscripción:
-  // al abrir la app (como mucho cada 12 h) se vuelve a registrar este móvil en los Workers. Es silencioso y
-  // no pide permisos nuevos; si el navegador renovó la suscripción por su cuenta, se recupera aquí.
-  var PUSH_REFRESH_KEY = 'pokecheck_push_refresh_v1';
-  function pushAutoRefresh(force) {
-    try {
-      if (!webPushSupported() || Notification.permission !== 'granted' || !priceAlertsEnabled) return;
-      var last = parseInt(localStorage.getItem(PUSH_REFRESH_KEY) || '0', 10);
-      if (!force && Date.now() - last < 12 * 3600 * 1000) return;
-      localStorage.setItem(PUSH_REFRESH_KEY, String(Date.now()));
-      pushEnableShared().catch(function() {});
-    } catch (e) {}
-  }
-  pushAutoRefresh(false);
-
   pushWebBtn.addEventListener('click', function() {
     pushReadForm();
     if (!webPushSupported()) { pushMsg('Este navegador no admite notificaciones push. En iPhone, a\u00f1ade antes la app a la pantalla de inicio.', true); return; }
@@ -11234,8 +10594,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         pushSync(false);
       });
     }).catch(function(err) { pushMsg(pushNetErr(err), true); })
-      .then(function() { pushRefreshWebLabel(); notifUpdateMasterUi(); });
+      .then(pushRefreshWebLabel);
   });
+  window.pokeAvisosSyncSub = function(sub) {
+    if (!sub || !pushConfigured()) return Promise.resolve();
+    return pushRequest('/subscribe', 'POST', JSON.stringify({ subscription: sub.toJSON() }));
+  };
   pushRefreshWebLabel();
   setTimeout(function() { pushSync(false); }, 8000);
 
@@ -11245,72 +10609,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   tabTradeBtn.addEventListener('click', function() { switchMode('trade'); });
 
   // ---------- Pantalla de inicio: Mi colecci\u00f3n ----------
-  // ---------- Ficha de precio desde Colección (seguidas / alertas) ----------
-  var shopDetailPopupEl = document.getElementById('shop-detail-popup');
-  var shopDetailBodyEl = document.getElementById('shop-detail-body');
-  function shopDetailChart(history) {
-    var pts = (history || []).slice(-60);
-    if (pts.length < 2) return '<p class="shop-detail-chart-empty">Aún no hay historial suficiente. Se irá llenando al actualizar precios.</p>';
-    var vals = pts.map(function(p) { return p.p; });
-    var min = Math.min.apply(null, vals), max = Math.max.apply(null, vals), range = max - min || 1;
-    var w = 320, h = 120, pad = 8, step = (w - pad * 2) / (pts.length - 1);
-    var coords = vals.map(function(v, i) {
-      return (pad + i * step).toFixed(1) + ',' + (h - pad - ((v - min) / range) * (h - pad * 2)).toFixed(1);
-    });
-    var up = vals[vals.length - 1] >= vals[0];
-    var color = up ? '#2f9e5b' : '#d9485f';
-    var first = pts[0].d.split('-').reverse().join('/').slice(0, 5);
-    var last = pts[pts.length - 1].d.split('-').reverse().join('/').slice(0, 5);
-    return '<div class="shop-detail-chart"><p class="shop-detail-chart-title">Evolución del precio (Cardmarket)</p>' +
-      '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
-      '<polygon points="' + pad + ',' + h + ' ' + coords.join(' ') + ' ' + (w - pad) + ',' + h + '" fill="' + color + '" fill-opacity=".12"/>' +
-      '<polyline points="' + coords.join(' ') + '" fill="none" stroke="' + color + '" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>' +
-      '<div class="shop-detail-foot"><span>' + first + ' · ' + formatEuro(vals[0]) + '</span><span>' + last + ' · ' + formatEuro(vals[vals.length - 1]) + '</span></div></div>';
-  }
-  function openShopDetail(id) {
-    if (!shopDetailPopupEl || !shopDetailBodyEl) return;
-    var item = null;
-    try {
-      var list = shopTrackedItems();
-      for (var i = 0; i < list.length; i++) if (list[i].id === id) { item = list[i]; break; }
-    } catch (e) {}
-    if (!item) {
-      shopDetailBodyEl.innerHTML = '<p class="home-sub">No se encontró esta carta entre tus seguidas.</p>';
-    } else {
-      var info = shopInfo(item.id);
-      var ch = shopFmtChange(info);
-      var target = shopTargetOf(item.id);
-      var imgHtml = item.image
-        ? '<img class="shop-detail-img" src="' + shareEscapeHtml(item.image) + '" alt="" referrerpolicy="no-referrer">'
-        : '<div class="shop-detail-img ph">Sin foto</div>';
-      var metaParts = [item.sealed ? 'Sellado' : item.setName, item.localId ? '#' + item.localId : '', item.saved ? 'Guardada' : 'Seguida'].filter(Boolean);
-      if (target != null) metaParts.push('Alerta ≤ ' + formatEuro(target));
-      var cmUrl = shopCardmarketUrl(item);
-      shopDetailBodyEl.innerHTML =
-        '<div class="shop-detail-hero">' + imgHtml +
-        '<div><h2 class="shop-detail-name">' + shareEscapeHtml(item.name) + '</h2>' +
-        '<p class="shop-detail-meta">' + shareEscapeHtml(metaParts.join(' · ')) + '</p>' +
-        '<div class="shop-detail-price">' + (info.price != null ? formatEuro(info.price) : 'Sin precio') + '</div>' +
-        '<div class="shop-detail-change ' + ch.cls + '">' + shareEscapeHtml(ch.text) +
-        (info.prev != null ? ' · antes ' + formatEuro(info.prev) : '') + '</div></div></div>' +
-        shopDetailChart(info.history) +
-        '<a class="shop-detail-cm" href="' + shareEscapeHtml(cmUrl) + '" target="_blank" rel="noopener">Ver en Cardmarket</a>';
-    }
-    shopDetailPopupEl.hidden = false;
-    requestAnimationFrame(function() { shopDetailPopupEl.classList.add('is-open'); });
-  }
-  function closeShopDetail() {
-    if (!shopDetailPopupEl) return;
-    shopDetailPopupEl.classList.remove('is-open');
-    setTimeout(function() { shopDetailPopupEl.hidden = true; }, 250);
-  }
-  (function() {
-    var bd = document.getElementById('shop-detail-backdrop');
-    var cl = document.getElementById('shop-detail-close');
-    if (bd) bd.addEventListener('click', closeShopDetail);
-    if (cl) cl.addEventListener('click', closeShopDetail);
-  })();
-
   function renderHome() {
     if (!homeViewEl || homeViewEl.hidden) return;
     var esc = shareEscapeHtml;
@@ -11352,28 +10650,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       (stats.ownedCount ? '<p class="home-hint">Toca para ver el desglose por carta \u203a</p>' : '') +
       '<button type="button" class="home-refresh" id="home-refresh">Actualizar precios</button></section>';
 
-    // cartas por valor (con id e imagen para el top visual)
-    function homeOwnedImage(id) {
-      try {
-        if (tcgImageOverrides[id]) return tcgImageOverrides[id];
-        if (id.indexOf('custom-') === 0 && tcgCustom[id] && tcgCustom[id].image) return tcgCustom[id].image;
-        var info = tcgOwnedCardInfo(id);
-        if (info && info.image) return tcgCardImageUrl(info.image, 'low');
-        var saved = tcgSavedMeta[id];
-        if (saved && saved.image) return tcgCardImageUrl(saved.image, 'low');
-      } catch (e) {}
-      return '';
-    }
+    // cartas por valor
     var priced = [];
     tcgOwned.forEach(function(id) {
       var c = huchaPriceCache[id];
       if (c && typeof c.price === 'number') {
         var meta = tcgOwnedMeta[id];
-        var custom = id.indexOf('custom-') === 0 ? tcgCustom[id] : null;
-        var name = (custom && custom.displayName) ? custom.displayName : (meta ? formatName(tcgMetaSlug(meta) || '') : id);
-        if (!name) name = id;
-        var setName = tcgMetaSetName(meta) || (custom && custom.setName) || '';
-        priced.push({ id: id, name: name, setName: setName, price: c.price, image: homeOwnedImage(id) });
+        priced.push({ name: meta ? formatName(tcgMetaSlug(meta) || '') : id, price: c.price });
       }
     });
     priced.sort(function(a, b) { return b.price - a.price; });
@@ -11387,51 +10670,34 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         var inf = shopInfo(it.id);
         if (inf.diff != null && inf.diff > 0.004) ups++;
         if (inf.diff != null && inf.diff < -0.004) downs++;
-        if (inf.pct != null && Math.abs(inf.diff) >= 0.005) movers.push({ id: it.id, name: it.name, pct: inf.pct, price: inf.price, image: it.image });
+        if (inf.pct != null && Math.abs(inf.diff) >= 0.005) movers.push({ name: it.name, pct: inf.pct, price: inf.price });
       });
     } catch (e) {}
     movers.sort(function(a, b) { return Math.abs(b.pct) - Math.abs(a.pct); });
 
     var tile = function(go, big, label) { return '<button type="button" class="home-tile" data-go="' + go + '"><span>' + label + '</span><b>' + big + '</b></button>'; };
     html += '<div class="home-grid">' +
-      tile('dex', esc(overallCountEl.textContent || '-'), 'Pokémon en tu Pokédex') +
-      tile('tcg', stats.ownedCount, 'cartas en tu colección') +
-      tile('tcg', priced.length ? formatEuro(stats.total / priced.length) : '—', 'valor medio por carta') +
-      tile('shop', followed, 'seguidas · ▲' + ups + ' ▼' + downs) + '</div>';
+      tile('dex', esc(overallCountEl.textContent || '-'), 'Pok\u00e9mon en tu Pok\u00e9dex') +
+      tile('tcg', stats.ownedCount, 'cartas en tu colecci\u00f3n') +
+      tile('tcg', priced.length ? formatEuro(stats.total / priced.length) : '\u2014', 'valor medio por carta') +
+      tile('shop', followed, 'seguidas \u00b7 \u25b2' + ups + ' \u25bc' + downs) + '</div>';
 
-    var shopRow = function(id, name, right, cls) {
-      return '<div class="home-row is-click" data-shop-detail="' + esc(id) + '" role="button" tabindex="0">' +
-        '<span>' + esc(name) + '</span><span class="' + (cls || '') + '">' + right + '</span></div>';
-    };
+    var row = function(name, right, cls) { return '<div class="home-row"><span>' + esc(name) + '</span><span class="' + (cls || '') + '">' + right + '</span></div>'; };
     html += '<section class="home-card"><h3>Cambios en tus seguidas</h3>' + (movers.length ?
       movers.slice(0, 5).map(function(m) {
-        return shopRow(m.id, m.name, (m.pct > 0 ? '+' : '') + (m.pct * 100).toFixed(1).replace('.', ',') + '% · ' + formatEuro(m.price), m.pct > 0 ? 'up' : 'down');
-      }).join('') : '<p class="home-sub">Cuando cambie el precio de las cartas que sigues en la tienda, lo verás aquí. Toca una carta para ver su gráfico y enlace a Cardmarket.</p>') + '</section>';
+        return row(m.name, (m.pct > 0 ? '+' : '') + (m.pct * 100).toFixed(1).replace('.', ',') + '% \u00b7 ' + formatEuro(m.price), m.pct > 0 ? 'up' : 'down');
+      }).join('') : '<p class="home-sub">Cuando cambie el precio de las cartas que sigues en la tienda, lo ver\u00e1s aqu\u00ed.</p>') + '</section>';
     try {
       var hitItems = shopAlertItems(shopTrackedItems());
       if (hitItems.length) html += '<section class="home-card"><h3>' + ICO.bell + ' En tu precio</h3>' +
-        hitItems.slice(0, 5).map(function(it) {
-          return shopRow(it.id, it.name, formatEuro(shopInfo(it.id).price) + ' (≤ ' + formatEuro(shopTargetOf(it.id)) + ')', 'down');
-        }).join('') + '</section>';
+        hitItems.slice(0, 5).map(function(it) { return row(it.name, formatEuro(shopInfo(it.id).price) + ' (\u2264 ' + formatEuro(shopTargetOf(it.id)) + ')', 'down'); }).join('') + '</section>';
     } catch (e) {}
-    if (priced.length) {
-      html += '<section class="home-card"><h3>Tus cartas más valiosas</h3><div class="home-val-list">' +
-        priced.slice(0, 3).map(function(p, i) {
-          var img = p.image
-            ? '<img class="home-val-img" src="' + esc(p.image) + '" alt="" loading="lazy" referrerpolicy="no-referrer">'
-            : '<div class="home-val-img ph">#' + (i + 1) + '</div>';
-          var meta = p.setName ? esc(p.setName) : ('#' + (i + 1) + ' por valor');
-          return '<div class="home-val-row" data-go="tcg" role="button" tabindex="0">' + img +
-            '<div class="home-val-info"><div class="home-val-name">' + esc(p.name) + '</div><div class="home-val-meta">' + meta + '</div></div>' +
-            '<div class="home-val-price">' + formatEuro(p.price) + '</div></div>';
-        }).join('') + '</div></section>';
-    }
+    if (priced.length) html += '<section class="home-card"><h3>Tus cartas m\u00e1s valiosas</h3>' +
+      priced.slice(0, 3).map(function(p) { return row(p.name, formatEuro(p.price)); }).join('') + '</section>';
     homeViewEl.innerHTML = html;
     if (typeof renderValueBreakdown === 'function' && valuePopupEl && !valuePopupEl.hidden) renderValueBreakdown();
   }
   homeViewEl.addEventListener('click', function(e) {
-    var shopHit = e.target.closest && e.target.closest('[data-shop-detail]');
-    if (shopHit) { openShopDetail(shopHit.getAttribute('data-shop-detail')); return; }
     var go = e.target.closest && e.target.closest('[data-go]');
     if (go) { switchMode(go.getAttribute('data-go')); return; }
     if (e.target.closest && e.target.closest('#home-refresh')) { huchaRefreshBtn.click(); shopRefresh(false); return; }
@@ -11941,13 +11207,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         if (g.some(function(n) { return vgcSpecies(n) === key; })) g.forEach(function(n) { add(n, 0.3); });
       });
     });
-    var cap = 11 + mains.length;
+    var cap = 8 + mains.length;
     var list = Object.keys(w).sort(function(a, b) { return w[b] - w[a]; }).slice(0, cap);
-    // Mezcla ligera del meta top para no rellenar siempre con los mismos del ranking.
-    var topMix = idx.top.slice(0, 20).slice();
-    var mixRnd = vgcMulberry(vgcDaySeed() ^ 0xA5A5A5A5);
-    topMix.sort(function() { return mixRnd() - 0.5; });
-    topMix.forEach(function(t) { if (list.length < cap && list.indexOf(t.name) < 0 && keys.indexOf(vgcSpecies(t.name)) < 0) list.push(t.name); });
+    idx.top.slice(0, 14).forEach(function(t) { if (list.length < cap && list.indexOf(t.name) < 0 && keys.indexOf(vgcSpecies(t.name)) < 0) list.push(t.name); });
     return list;
   }
   function vgcBuildSets(mons, nm) {
@@ -12018,32 +11280,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       pen: pen
     };
   }
-  // Semilla del día + un contador de "otra sugerencia" para que el equipo no sea siempre el mismo.
-  function vgcDaySeed() {
-    var d = new Date();
-    return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
-  }
-  function vgcMulberry(seed) {
-    var s = seed >>> 0;
-    return function() {
-      s = (s + 0x6D2B79F5) >>> 0;
-      var t = Math.imul(s ^ (s >>> 15), 1 | s);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-  function vgcHashStr(str) {
-    var h = 2166136261;
-    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
-    return h >>> 0;
-  }
-  // Devuelve varios equipos buenos (no solo el óptimo) y elige uno de forma estable pero variable.
-  function vgcBestTeam(mains, cands, pickOffset) {
-    var all = [], need = Math.min(6 - mains.length, cands.length);
+  function vgcBestTeam(mains, cands) {
+    var best = null, need = Math.min(6 - mains.length, cands.length);
     var mk = mains.map(function(m) { return vgcSpecies(m.name); });
     function rec(start, chosen) {
       if (chosen.length === need) {
-        all.push(vgcScoreTeam(mains.concat(chosen), mains.length));
+        var t = vgcScoreTeam(mains.concat(chosen), mains.length);
+        if (!best || t.score > best.score) best = t;
         return;
       }
       for (var i = start; i < cands.length; i++) {
@@ -12054,29 +11297,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       }
     }
     rec(0, []);
-    if (!all.length) return null;
-    all.sort(function(a, b) { return b.score - a.score; });
-    var topScore = all[0].score;
-    // Candidatos competitivos: cerca del mejor, o al menos los 6 mejores distintos por composición.
-    var seen = {}, pool = [];
-    all.forEach(function(t) {
-      if (pool.length >= 8) return;
-      if (t.score < topScore - 12 && pool.length >= 3) return;
-      var key = t.sets.map(function(s) { return vgcBase(s.mon.name); }).sort().join('|');
-      if (seen[key]) return;
-      seen[key] = 1;
-      pool.push(t);
-    });
-    var seedStr = mains.map(function(m) { return vgcBase(m.name); }).join('+') + '|' + vgcDaySeed() + '|' + (pickOffset || 0);
-    var rnd = vgcMulberry(vgcHashStr(seedStr) ^ (vgcDaySeed() * 2654435761));
-    // Sesgo hacia puntuaciones altas, pero no siempre el primero.
-    var weights = pool.map(function(t, i) { return Math.max(1, (t.score - (topScore - 15)) * (pool.length - i)); });
-    var sum = weights.reduce(function(a, b) { return a + b; }, 0), r = rnd() * sum, acc = 0, pick = 0;
-    for (var w = 0; w < weights.length; w++) { acc += weights[w]; if (r <= acc) { pick = w; break; } }
-    var chosen = pool[pick];
-    chosen.alts = pool;
-    chosen.altIndex = pick;
-    return chosen;
+    return best;
   }
 
   // ---------- Nombres en castellano (PokéAPI, caché permanente) ----------
@@ -12180,28 +11401,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     }).join('');
     vgcRenderTop(!vgc.last);
   }
-  function vgcPickTopTeams(all) {
-    if (!all || !all.length) return [];
-    // Rotación diaria entre los equipos del meta: si hay más de 5, cada día enseña una ventana distinta.
-    var n = all.length, show = Math.min(5, n);
-    if (n <= show) return all.slice();
-    var start = vgcDaySeed() % n;
-    var out = [], i;
-    for (i = 0; i < show; i++) out.push(all[(start + i) % n]);
-    return out;
-  }
   function vgcRenderTop(open) {
     var el = document.getElementById('vgc-top');
     if (!el || !vgc.index) return;
-    var allTeams = vgc.index.teams || [];
-    // Índices originales para que "Ver sets" siga apuntando al equipo correcto.
-    var teams = vgcPickTopTeams(allTeams);
+    var teams = (vgc.index.teams || []).slice(0, 5);
     if (!teams.length) { el.innerHTML = ''; return; }
-    var h = '<details class="vgc-card vgc-top-card"' + (open ? ' open' : '') + '><summary><p class="vgc-h3">Equipos del meta</p></summary>' +
-      '<p class="vgc-sub" style="margin:8px 0 4px">Equipos reales de torneos recientes. La selección rota cada día para que no veas siempre los mismos. Toca un Pokémon para ver su set y un equipo recomendado.</p>';
+    var h = '<details class="vgc-card vgc-top-card"' + (open ? ' open' : '') + '><summary><p class="vgc-h3">Top 5 equipos del meta</p></summary>' +
+      '<p class="vgc-sub" style="margin:8px 0 4px">Equipos reales de torneos recientes, ordenados por resultados. Toca un Pokémon para ver su set y un equipo recomendado.</p>';
     teams.forEach(function(t, i) {
-      var realIdx = allTeams.indexOf(t);
-      if (realIdx < 0) realIdx = i;
       var who = t.player || t.event || 'Equipo de torneo';
       var meta = [t.record ? 'Récord ' + t.record : '', t.player ? t.event : ''].filter(Boolean).join(' · ');
       h += '<div class="vgc-team"><div class="vgc-team-head"><span class="vgc-team-rank">' + (i + 1) + '</span><div><p class="vgc-team-who">' + vgcEsc(who) + '</p>' +
@@ -12209,8 +11416,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         t.mons.map(function(n) {
           return '<button type="button" class="vgc-chip" data-vgc-pick="' + vgcEsc(n) + '">' + vgcSprite(n) + vgcEsc(vgcBase(n)) + (/-Mega/.test(n) ? ' <small>Mega</small>' : '') + '</button>';
         }).join('') + '</div>' +
-        '<button type="button" class="vgc-ai-btn is-ghost" data-vgc-sets="' + realIdx + '">' + (vgc.teamHtml && vgc.teamHtml[realIdx] ? 'Ocultar sets completos' : 'Ver sets completos (ataques y puntos)') + '</button>' +
-        '<div id="vgc-team-sets-' + realIdx + '">' + ((vgc.teamHtml && vgc.teamHtml[realIdx]) || '') + '</div></div>';
+        '<button type="button" class="vgc-ai-btn is-ghost" data-vgc-sets="' + i + '">' + (vgc.teamHtml && vgc.teamHtml[i] ? 'Ocultar sets completos' : 'Ver sets completos (ataques y puntos)') + '</button>' +
+        '<div id="vgc-team-sets-' + i + '">' + ((vgc.teamHtml && vgc.teamHtml[i]) || '') + '</div></div>';
     });
     h += '<p class="vgc-note">Datos de Pikalytics (resultados de torneos). Úsalo como referencia de lo que se lleva ahora, no como receta cerrada.</p></details>';
     el.innerHTML = h;
@@ -12341,19 +11548,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var rel = team.games >= 3000 ? 'alta' : team.games >= 800 ? 'media' : 'baja';
     h += '<p class="vgc-note">Fiabilidad de los datos: <b>' + rel + '</b> (media de ' + vgcFmt(team.games, 0) + ' partidas por Pokémon). Es una estimación orientativa basada en estadísticas públicas, no una garantía de resultados. Los nombres salen en castellano cuando PokéAPI los tiene. ' +
       '<a href="https://www.pikalytics.com/pokedex/' + vgc.reg.id + '/' + encodeURIComponent(vgcBase(main.name)) + '" target="_blank" rel="noopener">Ver en Pikalytics</a></p></div>';
-    var altN = (vgc.teamAlts && vgc.teamAlts.length > 1) ? vgc.teamAlts.length : 0;
-    if (altN > 1) {
-      h += '<div class="vgc-card" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">' +
-        '<p class="vgc-sub" style="margin:0">Sugerencia ' + ((team.altIndex || 0) + 1) + ' de ' + altN + ' combinaciones buenas (cambia cada día y al pulsar el botón).</p>' +
-        '<button type="button" class="vgc-ai-btn is-ghost" style="width:auto;margin:0" data-vgc-reroll="1">Otra sugerencia</button></div>';
-    }
-    h += '<div class="vgc-card"><p class="vgc-h3">Cómo jugar este equipo</p><p class="vgc-sub" style="margin:0 0 12px">Explicación con IA: sinergia, orden de salida y qué vigilar, para que sepas cómo arrancar.</p><div id="vgc-ai-out"></div></div>';
+    h += '<div class="vgc-card"><p class="vgc-h3">Cómo jugar este equipo</p><p class="vgc-sub" style="margin:0 0 12px">Explicación con IA (Claude): sinergia, orden de salida y qué vigilar, para que sepas cómo arrancar.</p><div id="vgc-ai-out"></div></div>';
     vgc.ctx = { mains: mains, team: team, spr: spr };
     vgcEls.result.innerHTML = h;
     vgcAiInit();
   }
 
   // ---------- Explicación del equipo con IA (Claude) ----------
+  var CLAUDE_VGC_MODEL = CLAUDE_SCAN_MODEL;
   var VGC_AI_PFX = 'vgcai_v1:';
   var VGC_AI_SYSTEM = 'Eres un entrenador veterano de VGC (Pokémon dobles) que enseña a un jugador que está empezando. Respondes siempre en español, con tono cercano y claro, sin jerga innecesaria (si usas un término como "lead", "pivot" o "Trick Room", explícalo en pocas palabras). ' +
     'Basa tu análisis SOLO en los datos del equipo que te paso: no inventes movimientos, objetos ni estadísticas que no aparezcan, y si algo no se puede saber con esos datos, dilo. Formato: usa encabezados con "## " y listas con "- ", frases cortas, nada de tablas, máximo unas 350 palabras. Se juega en dobles: cada jugador lleva 6 Pokémon y elige 4 para cada combate, con 2 en el campo a la vez.';
@@ -12395,31 +11597,57 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
   function vgcAiOut(html) { var el = document.getElementById('vgc-ai-out'); if (el) el.innerHTML = html; }
   function vgcAiShow(text) {
-    vgcAiOut(vgcMd(text) + '<p class="vgc-note">Generado por IA a partir de los datos de arriba. Es una guía orientativa y puede equivocarse: pruébala en partidas y ajústala.</p>' +
+    vgcAiOut(vgcMd(text) + '<p class="vgc-note">Generado por Claude a partir de los datos de arriba. Es una guía orientativa y puede equivocarse: pruébala en partidas y ajústala.</p>' +
       '<button type="button" class="vgc-ai-btn is-ghost" data-vgc-ai="1">Volver a generar</button>');
   }
   function vgcAiInit() {
     var k = vgcAiKey(), cached = null;
     try { cached = k ? localStorage.getItem(k) : null; } catch (e) {}
     if (cached) { vgcAiShow(cached); return; }
-    vgcAiOut('<button type="button" class="vgc-ai-btn" data-vgc-ai="1">Explicar este equipo con IA</button>');
+    if (!anthropicApiKey) {
+      vgcAiOut('<p class="vgc-sub" style="margin:0 0 10px">Para usar esta función necesitas tu clave API de Claude. Se guarda solo en este dispositivo.</p><button type="button" class="vgc-ai-btn" data-vgc-settings="1">Añadir clave en Ajustes</button>');
+      return;
+    }
+    vgcAiOut('<button type="button" class="vgc-ai-btn" data-vgc-ai="1">Explicar este equipo con Claude</button>');
   }
   function vgcAiRun() {
     var c = vgc.ctx, k = vgcAiKey();
     if (!c) return;
-    vgcAiOut('<p class="vgc-say"><span class="vgc-spin"></span>La IA está analizando el equipo…</p>');
-    aiRun({ task: 'text', system: VGC_AI_SYSTEM, prompt: vgcAiData(c), maxTokens: 4000 }).then(function(data) {
+    if (!anthropicApiKey) { vgcAiInit(); return; }
+    vgcAiOut('<p class="vgc-say"><span class="vgc-spin"></span>Claude está analizando el equipo…</p>');
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': anthropicApiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({ model: CLAUDE_VGC_MODEL, max_tokens: 4000, thinking: { type: 'disabled' }, system: VGC_AI_SYSTEM, messages: [{ role: 'user', content: vgcAiData(c) }] })
+    }).then(function(res) {
+      if (!res.ok) {
+        return res.text().then(function(t) {
+          var e = new Error('HTTP ' + res.status); e.status = res.status;
+          try { e.apiMsg = (JSON.parse(t).error || {}).message || ''; } catch (x) {}
+          throw e;
+        });
+      }
+      return res.json();
+    }).then(function(data) {
       if (vgc.ctx !== c) return;
-      var text = String(data.text || '').trim();
+      var text = (data.content || []).map(function(b) { return b.text || ''; }).join('').trim();
       if (!text) throw new Error('empty');
-      var cut = !!data.cut;
+      var cut = data.stop_reason === 'max_tokens';
       if (!cut) { try { if (k) localStorage.setItem(k, text); } catch (e) {} }
       vgcAiShow(cut ? text + '\n\nLa respuesta se ha cortado por longitud. Pulsa "Volver a generar".' : text);
     }).catch(function(err) {
       if (vgc.ctx !== c) return;
-      var msg = err && err.status ? vgcEsc(aiErrMsg(err)) :
-        err && err.message === 'empty' ? 'La IA no ha devuelto texto. Pulsa Reintentar.' :
-        'No he podido conectar con la IA. Comprueba la conexión e inténtalo de nuevo.';
+      var msg = err && err.status === 401 ? 'La clave API no es válida. Revísala en Ajustes.' :
+        err && err.status === 429 ? 'Demasiadas peticiones seguidas. Espera un momento e inténtalo otra vez.' :
+        err && err.status === 400 ? 'La cuenta de la clave no tiene saldo o no puede usar este modelo (error 400).' :
+        err && err.status ? 'Claude ha respondido con un error (HTTP ' + err.status + (err.apiMsg ? ': ' + vgcEsc(err.apiMsg) : '') + ').' :
+        err && err.message === 'empty' ? 'Claude no ha devuelto texto. Pulsa Reintentar.' :
+        'No he podido conectar con Claude. Comprueba la conexión e inténtalo de nuevo.';
       vgcAiOut('<p class="vgc-sub vgc-warn" style="margin:0 0 10px">' + msg + '</p><button type="button" class="vgc-ai-btn" data-vgc-ai="1">Reintentar</button>');
     });
   }
@@ -12457,7 +11685,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
           vgcSay('No hay datos de <b>' + vgcEsc(bad.map(vgcBase).join(', ')) + '</b> en la regulación ' + vgcEsc(vgc.reg.code) + '. Es probable que no sea legal o que casi no se use. Quítalo de tu base con la × o prueba con otro.');
           return;
         }
-        vgc.lastMains = mains;
         var pool = vgcPool(mains), done = 0;
         vgcSay('<span class="vgc-spin"></span>Analizando compañeros… 0/' + pool.length);
         return vgcLoadMany(pool, 4, function() {
@@ -12465,17 +11692,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
           if (token === vgc.token) vgcSay('<span class="vgc-spin"></span>Analizando compañeros… ' + done + '/' + pool.length);
         }).then(function(mons) {
           if (token !== vgc.token) return;
-          var team = vgcBestTeam(mains, mons.filter(Boolean), vgc.roll || 0);
+          var team = vgcBestTeam(mains, mons.filter(Boolean));
           if (!team) { vgcSay('No he encontrado datos suficientes de compañeros para ' + vgcEsc(picks.map(vgcBase).join(' + ')) + '.'); return; }
-          vgc.teamAlts = team.alts || [team];
-          vgc.teamAltIndex = team.altIndex || 0;
-          // Precarga repartos de todos los candidatos para poder cambiar de sugerencia al instante.
-          var monNames = {};
-          vgc.teamAlts.forEach(function(t) { t.sets.forEach(function(s) { monNames[s.mon.name] = 1; }); });
           vgcSay('<span class="vgc-spin"></span>Buscando repartos de puntos y traduciendo…');
-          return Promise.all([vgcLoadSpreads(Object.keys(monNames)), vgcEsPrefetch(team.sets)]).then(function(res) {
+          return Promise.all([vgcLoadSpreads(team.sets.map(function(s) { return s.mon.name; })), vgcEsPrefetch(team.sets)]).then(function(res) {
             if (token !== vgc.token) return;
-            vgc.teamSpr = res[0];
             vgcRender(mains, team, res[0]);
           });
         });
@@ -12492,7 +11713,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (vgc.picks.length >= 5) { vgc.baseMsg = 'Ya tienes 5 Pokémon fijos. Quita uno con la × para añadir otro.'; vgcRenderBase(); return; }
       vgc.picks.push(name);
     }
-    vgc.roll = 0;
     vgcEls.search.value = '';
     vgcEls.sugg.hidden = true;
     vgcAnalyze();
@@ -12527,21 +11747,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (ts) { vgcTeamSetsToggle(parseInt(ts.getAttribute('data-vgc-sets'), 10)); return; }
     var b = e.target.closest ? e.target.closest('[data-vgc-pick]') : null;
     if (b) { vgcPick(b.getAttribute('data-vgc-pick')); window.scrollTo(0, 0); return; }
-    var reroll = e.target.closest ? e.target.closest('[data-vgc-reroll]') : null;
-    if (reroll) {
-      var mainsR = vgc.lastMains || (vgc.ctx && vgc.ctx.mains);
-      if (vgc.teamAlts && vgc.teamAlts.length > 1 && mainsR) {
-        vgc.teamAltIndex = ((vgc.teamAltIndex || 0) + 1) % vgc.teamAlts.length;
-        var nxt = vgc.teamAlts[vgc.teamAltIndex];
-        nxt.altIndex = vgc.teamAltIndex;
-        nxt.alts = vgc.teamAlts;
-        vgcRender(mainsR, nxt, vgc.teamSpr || {});
-      } else {
-        vgc.roll = (vgc.roll || 0) + 1;
-        vgcAnalyze();
-      }
-      return;
-    }
     var ai = e.target.closest ? e.target.closest('[data-vgc-ai]') : null;
     if (ai) { var kk = vgcAiKey(); try { if (kk && ai.textContent.indexOf('generar') >= 0) localStorage.removeItem(kk); } catch (x) {} vgcAiRun(); return; }
     if (e.target.closest && e.target.closest('[data-vgc-settings]')) settingsBtn.click();
@@ -12566,11 +11771,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   setTimeout(function() { refreshHuchaPrices(false); }, 4000);
   // Tienda: mismo criterio de 24h, al abrir la app.
   renderShopAlerts();
-  var hashTrade = /^#trade(?:\/([A-Za-z0-9-]{4,20}))?$/.exec(location.hash);
-  if (hashTrade) {
-    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
-    setTimeout(function() { pushHandleClick(hashTrade[1] || ''); }, 400);
-  }
   setTimeout(function() { shopRefresh(false); }, 6000);
 })();
 </script>

@@ -41,11 +41,8 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(req)
         .then((res) => {
-          // Solo se guardan respuestas correctas: una 404/500 no debe quedarse en la caché sin conexión.
-          if (res.ok) {
-            const copy = res.clone();
-            caches.open(SHELL_CACHE).then((cache) => cache.put(req, copy));
-          }
+          const copy = res.clone();
+          caches.open(SHELL_CACHE).then((cache) => cache.put(req, copy));
           return res;
         })
         .catch(() => caches.match(req))
@@ -69,7 +66,7 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-// ---- Notificaciones push (mensajes de intercambios, bajadas de precio y lanzamientos) ----
+// ---- Notificaciones push (mensajes de intercambios y avisos) ----
 self.addEventListener('push', (event) => {
   let data = { title: 'Pokédex', body: 'Tienes un aviso nuevo', tag: 'pokedex', url: './' };
   try {
@@ -89,35 +86,34 @@ self.addEventListener('push', (event) => {
       body: data.body || '',
       tag: data.tag || 'pokedex',
       renotify: true,
-      data: { url: data.url || './', from: data.from || null },
+      data: { url: data.url || (data.data && data.data.url) || './', from: data.from || (data.data && data.data.from) || null },
       icon: './icon-192.png',
       badge: './icon-192.png'
     })
   );
 });
 
-// Si el navegador renueva o invalida la suscripción push, se avisa a la app abierta para que registre la nueva
-// (el service worker no tiene el token del usuario). Si la app está cerrada, lo recupera sola al abrirse.
+// Si el navegador renueva/invalida la suscripción, crea otra con la misma clave VAPID y avisa a la
+// app abierta para que la registre en los Workers (la app también lo hace sola al abrirse).
 self.addEventListener('pushsubscriptionchange', (event) => {
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
-      list.forEach((client) => client.postMessage({ type: 'push-resubscribe' }));
-    })
-  );
+  event.waitUntil((async () => {
+    try {
+      const key = event.oldSubscription && event.oldSubscription.options && event.oldSubscription.options.applicationServerKey;
+      if (key) await self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key });
+    } catch (e) {}
+    const all = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const c of all) { try { c.postMessage({ type: 'push-resubscribe' }); } catch (e) {} }
+  })());
 });
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const data = event.notification.data || {};
-  // La URL del aviso puede ser relativa o solo un "#trade": se resuelve contra el alcance de la app
-  // (si no, openWindow la resolvería contra sw.js y abriría ese archivo). Con "from" se abre el chat.
-  const hash = data.from && /^#trade$/.test(data.url || '') ? '#trade/' + data.from : '';
-  const target = new URL(hash || data.url || './', self.registration.scope).href;
+  const target = (event.notification.data && event.notification.data.url) || './';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       for (const client of list) {
         if ('focus' in client) {
-          client.postMessage({ type: 'notification-click', url: target, from: data.from || null });
+          client.postMessage({ type: 'notification-click', url: target, from: event.notification.data && event.notification.data.from });
           return client.focus();
         }
       }
