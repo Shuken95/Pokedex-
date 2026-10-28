@@ -559,6 +559,13 @@
   .settings-group>summary::after{ content:'\203A'; transform:rotate(90deg); transition:transform .15s; color:var(--text-dim); font-size:18px; }
   .settings-group[open]>summary::after{ transform:rotate(-90deg); }
   .settings-group-body{ padding:0 14px 12px; }
+  .push-onboard{position:fixed;inset:0;z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:18px;background:rgba(0,0,0,.28)}
+  .push-onboard[hidden]{display:none}
+  .push-onboard-card{position:relative;width:min(440px,100%);padding:22px 18px 18px;border:1px solid var(--border);border-radius:18px;background:var(--surface);box-shadow:0 16px 48px rgba(0,0,0,.2);text-align:center}
+  .push-onboard-card h2{margin:5px 0 8px;font-size:21px}
+  .push-onboard-card p{margin:7px 0 14px;color:var(--text-dim);line-height:1.45}
+  .push-onboard-icon{font-size:30px}.push-onboard-note{font-size:12px;margin-bottom:0!important}
+  .push-onboard-card .tcg-lang-sheet-close{position:absolute;right:8px;top:8px}
   /* ---- Pestaña Cambios ---- */
   .trade-root{ padding:4px 2px 24px; }
   .trade-tab-badge{ position:absolute; top:0; left:calc(50% + 6px); min-width:16px; height:16px; border-radius:8px; background:#e5484d; color:#fff; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; padding:0 4px; box-sizing:border-box; }
@@ -1884,6 +1891,17 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   </div>
 </div>
 
+<div id="push-onboard" class="push-onboard" hidden role="dialog" aria-labelledby="push-onboard-title">
+  <div class="push-onboard-card">
+    <button id="push-onboard-close" class="tcg-lang-sheet-close" type="button" aria-label="Más tarde">×</button>
+    <div class="push-onboard-icon">🔔</div>
+    <h2 id="push-onboard-title">¿Quieres recibir avisos?</h2>
+    <p>Te avisaremos cuando recibas un mensaje de intercambio, incluso con la app cerrada.</p>
+    <button id="push-onboard-btn" class="backup-action" type="button">Activar notificaciones</button>
+    <p class="push-onboard-note">Puedes cambiarlo más tarde desde Ajustes.</p>
+  </div>
+</div>
+
 <div id="settings-popup" class="tcg-lang-popup" hidden>
   <div id="settings-backdrop" class="tcg-lang-backdrop"></div>
   <div class="tcg-lang-sheet" role="dialog" aria-modal="true" aria-label="Ajustes">
@@ -1923,11 +1941,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <span id="price-alerts-label">Avisos de bajada de precio: desactivados</span>
       </button>
-      <p class="backup-desc">Avisos con la app cerrada, por notificación push de la app y/o por Telegram. Necesitan tu Worker de avisos (pasos en LEEME-avisos.md): la app le envía tus precios objetivo y el calendario, y él vigila los precios y te avisa cuando una carta llega a tu precio o se acerca un lanzamiento.</p>
-      <div class="tcg-add-field">
-        <label for="settings-push-url">URL del Worker de avisos</label>
-        <input id="settings-push-url" type="url" autocomplete="off" placeholder="https://pokedex-avisos.tuusuario.workers.dev">
-      </div>
+      <p class="backup-desc">Avisos con la app cerrada. La conexión del servicio ya viene integrada. Activa las notificaciones en este móvil para recibir avisos aunque la app esté cerrada.</p>
+      <input id="settings-push-url" type="hidden" value="https://pokedex-avisos.danicrevi95.workers.dev">
       <div class="tcg-add-field">
         <label for="settings-push-key">Clave de sincronización</label>
         <input id="settings-push-key" type="password" autocomplete="off" placeholder="La misma que pusiste como SYNC_SECRET">
@@ -10432,10 +10447,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // en sellados, el enlace de Cardmarket) y las fechas del calendario. La clave va en una cabecera y
   // se guarda solo en este dispositivo. Se sincroniza sola (con retardo y solo si algo cambió).
   var PUSH_CFG_KEY = 'pokecheck_push_cfg_v1';
-  var pushCfg = { url: '', key: '', releases: true, telegram: true };
+  var PUSH_DEFAULT_URL = 'https://pokedex-avisos.danicrevi95.workers.dev';
+  var pushCfg = { url: PUSH_DEFAULT_URL, key: '', releases: true, telegram: true };
   try {
     var pushStored = JSON.parse(localStorage.getItem(PUSH_CFG_KEY) || 'null');
-    if (pushStored && typeof pushStored === 'object') pushCfg = { url: String(pushStored.url || ''), key: String(pushStored.key || ''), releases: pushStored.releases !== false, telegram: pushStored.telegram !== false };
+    if (pushStored && typeof pushStored === 'object') pushCfg = { url: String(pushStored.url || PUSH_DEFAULT_URL), key: String(pushStored.key || ''), releases: pushStored.releases !== false, telegram: pushStored.telegram !== false };
   } catch (e) {}
   var pushUrlInput = document.getElementById('settings-push-url');
   var pushKeyInput = document.getElementById('settings-push-key');
@@ -10511,7 +10527,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   });
   document.getElementById('push-test-btn').addEventListener('click', function() {
     pushReadForm();
-    if (!pushConfigured()) { pushMsg('Primero pon la URL del Worker y la clave.', true); return; }
+    if (!pushCfg || !pushCfg.url) { pushMsg('No se ha podido localizar el servicio de notificaciones.', true); return; }
     pushMsg('Enviando prueba…', false);
     pushRequest('/test', 'POST', '{}').then(function(d) {
       if (!d || !d.ok) throw new Error((d && d.error) || 'No se pudo entregar el aviso.');
@@ -10582,7 +10598,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   pushWebBtn.addEventListener('click', function() {
     pushReadForm();
     if (!webPushSupported()) { pushMsg('Este navegador no admite notificaciones push. En iPhone, a\u00f1ade antes la app a la pantalla de inicio.', true); return; }
-    if (!pushConfigured()) { pushMsg('Primero pon la URL del Worker y la clave.', true); return; }
+    if (!pushCfg || !pushCfg.url) { pushMsg('No se ha podido localizar el servicio de notificaciones.', true); return; }
     pushCurrentSub().then(function(sub) {
       if (sub) {
         pushMsg('Desactivando\u2026', false);
@@ -11831,6 +11847,18 @@ mark();})();
     document.addEventListener('pointermove',move,true);
     ['pointerup','pointercancel'].forEach(function(n){ document.addEventListener(n,off,true); });
   }
+})();
+</script>
+
+<script>
+(function(){
+  var box=document.getElementById('push-onboard'), ok=document.getElementById('push-onboard-btn'), later=document.getElementById('push-onboard-close');
+  if(!box||!ok) return;
+  function close(){ box.hidden=true; try{localStorage.setItem('pokecheck_push_onboard_v1','1');}catch(e){} }
+  ok.addEventListener('click',function(){ close(); var b=document.getElementById('push-webpush-btn'); if(b) b.click(); });
+  if(later) later.addEventListener('click',close);
+  var seen=false; try{seen=localStorage.getItem('pokecheck_push_onboard_v1')==='1';}catch(e){}
+  if(!seen && 'Notification' in window && Notification.permission==='default' && 'serviceWorker' in navigator && 'PushManager' in window){ setTimeout(function(){box.hidden=false;},1200); }
 })();
 </script>
 
