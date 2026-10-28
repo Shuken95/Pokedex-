@@ -703,7 +703,6 @@
     pointer-events:auto; margin-top:2px; background:none; border:none; color:var(--accent);
     font-family:var(--font); font-size:11px; font-weight:700; text-decoration:underline; cursor:pointer; padding:2px;
   }
-  .tcg-card-shared-badge{position:absolute;right:6px;top:6px;z-index:2;padding:4px 7px;border-radius:999px;background:rgba(13,148,136,.92);color:#fff;font-size:9px;font-weight:800;line-height:1;letter-spacing:.02em;box-shadow:0 2px 6px rgba(0,0,0,.22);pointer-events:none}
   .tcg-card-lang-badge{
     position:absolute; top:4px; left:30px; width:18px; height:18px; border-radius:50%;
     background:rgba(16,16,18,.75); display:flex; align-items:center; justify-content:center;
@@ -4815,10 +4814,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       addImageBtn.className = 'tcg-card-add-image-btn';
       addImageBtn.setAttribute('role', 'button');
       addImageBtn.setAttribute('tabindex', '0');
-      addImageBtn.textContent = 'Añadir imagen para todos';
+      addImageBtn.textContent = 'Añadir imagen';
       addImageBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        var url = window.prompt('URL de imagen para compartir esta carta con todos los usuarios:', tcgImageOverrides[card.id] || '');
+        var url = window.prompt('URL de imagen para esta carta:', tcgImageOverrides[card.id] || '');
         if (url === null) return;
         url = url.trim();
         if (!url) {
@@ -4909,12 +4908,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
 
     imgWrap.appendChild(img);
-    if (tcgImageOverrides[card.id]) {
-      var sharedBadge = document.createElement('span');
-      sharedBadge.className = 'tcg-card-shared-badge';
-      sharedBadge.textContent = 'Imagen compartida';
-      imgWrap.appendChild(sharedBadge);
-    }
     if (card._matchLang) {
       var langBadge = document.createElement('span');
       langBadge.className = 'tcg-card-lang-badge';
