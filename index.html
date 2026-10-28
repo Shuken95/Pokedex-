@@ -2708,6 +2708,30 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // el escaneo (id de carta real -> URL). No tiene nada que ver con tcgCustom (cartas
   // enteramente añadidas a mano): estas SÍ existen en el catálogo, solo les falta la imagen.
   var tcgImageOverrides = {};
+  var TCG_EXTERNAL_IMAGE_CACHE_KEY = 'pokecheck_tcg_external_images_v1';
+  var tcgExternalImageCache = {};
+  try { tcgExternalImageCache = JSON.parse(localStorage.getItem(TCG_EXTERNAL_IMAGE_CACHE_KEY) || '{}') || {}; } catch (e) { tcgExternalImageCache = {}; }
+  function saveTcgExternalImageCache() { try { localStorage.setItem(TCG_EXTERNAL_IMAGE_CACHE_KEY, JSON.stringify(tcgExternalImageCache)); } catch (e) {} }
+  var TCG_JP_TO_INT_SET = { 'SV2a':'sv3pt5', 'SV1S':'sv1', 'SV1V':'sv1', 'SV3':'sv3', 'SV4K':'sv4', 'SV4M':'sv4', 'SV5K':'sv5', 'SV5M':'sv5', 'SV6':'sv6', 'SV6a':'sv6', 'SV7':'sv7', 'SV8':'sv8', 'SV8a':'sv8', 'SV9':'sv9', 'SV9a':'sv9', 'SM11a':'sm11', 'SM11b':'sm12', 'SM12a':'sm12', 'S8a':'swsh4.5', 'S8b':'swsh4.5', 'S12a':'swsh12.5' };
+  function externalTcgImageCandidates(card) {
+    var setId = tcgCardSetId(card), number = String(card.localId || '').replace(/[^0-9A-Za-z-]/g, '');
+    var mapped = TCG_JP_TO_INT_SET[setId];
+    if (!mapped || !number) return [];
+    return ['https://images.pokemontcg.io/' + mapped + '/' + number + '.png', 'https://images.pokemontcg.io/' + mapped + '/' + number + '_hires.png'];
+  }
+  function tryExternalTcgImage(card, img, done) {
+    var cached = tcgExternalImageCache[card.id];
+    if (cached) { img.src = cached; return; }
+    var candidates = externalTcgImageCandidates(card), i = 0;
+    function next() {
+      if (i >= candidates.length) { done(); return; }
+      var url = candidates[i++], probe = new Image();
+      probe.onload = function() { tcgExternalImageCache[card.id] = url; saveTcgExternalImageCache(); img.src = url; };
+      probe.onerror = next; probe.referrerPolicy = 'no-referrer'; probe.src = url;
+    }
+    next();
+  }
+
   try {
     tcgImageOverrides = JSON.parse(localStorage.getItem(TCG_IMAGE_OVERRIDE_KEY) || '{}');
     if (!tcgImageOverrides || typeof tcgImageOverrides !== 'object') tcgImageOverrides = {};
@@ -4571,7 +4595,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var langs = [card._matchLang, 'en', 'ja', 'zh-tw', 'ko'].filter(Boolean).filter(function(v, i, a) { return a.indexOf(v) === i; });
     var i = 0;
     function next() {
-      if (i >= langs.length) { done(); return; }
+      if (i >= langs.length) { tryExternalTcgImage(card, img, done); return; }
       var lang = langs[i++];
       fetchTcgCardDetail(card.id, lang).then(function(other) {
         if (other && other.image) {
