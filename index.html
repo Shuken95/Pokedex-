@@ -2724,13 +2724,28 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var cached = tcgExternalImageCache[card.id];
     if (cached) { img.src = cached; return; }
     var candidates = externalTcgImageCandidates(card), i = 0;
-    function next() {
+    function probeNext() {
       if (i >= candidates.length) { done(); return; }
       var url = candidates[i++], probe = new Image();
       probe.onload = function() { tcgExternalImageCache[card.id] = url; saveTcgExternalImageCache(); img.src = url; };
-      probe.onerror = next; probe.referrerPolicy = 'no-referrer'; probe.src = url;
+      probe.onerror = probeNext; probe.referrerPolicy = 'no-referrer'; probe.src = url;
     }
-    next();
+    // Cardmarket's public product id is present in TCGdex pricing metadata. Its CDN
+    // has changed hosts over time, so probe only documented/public URL shapes and cache
+    // the first one that actually returns an image; never show a guessed broken URL.
+    fetchTcgCardDetail(card.id, card._matchLang || 'ja').then(function(detail) {
+      var ids = [];
+      var cm = detail && detail.pricing && detail.pricing.cardmarket;
+      if (cm && cm.idProduct) ids.push(String(cm.idProduct));
+      (detail && detail.variants_detailed || []).forEach(function(v) { if (v.pricing && v.pricing.cardmarket && v.pricing.cardmarket.idProduct) ids.push(String(v.pricing.cardmarket.idProduct)); });
+      ids = ids.filter(function(id, n, all) { return all.indexOf(id) === n; });
+      ids.forEach(function(id) {
+        candidates.push('https://product-images.s3-eu-west-1.amazonaws.com/' + id + '.jpg');
+        candidates.push('https://product-images.s3.amazonaws.com/' + id + '.jpg');
+        candidates.push('https://product-images.s3.us-east-1.amazonaws.com/' + id + '.jpg');
+      });
+      probeNext();
+    }).catch(probeNext);
   }
 
   try {
