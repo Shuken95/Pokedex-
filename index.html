@@ -2715,6 +2715,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var TCG_JP_TO_INT_SET = { 'SV2a':'sv3pt5', 'SV1S':'sv1', 'SV1V':'sv1', 'SV3':'sv3', 'SV4K':'sv4', 'SV4M':'sv4', 'SV5K':'sv5', 'SV5M':'sv5', 'SV6':'sv6', 'SV6a':'sv6', 'SV7':'sv7', 'SV8':'sv8', 'SV8a':'sv8', 'SV9':'sv9', 'SV9a':'sv9', 'SM11a':'sm11', 'SM11b':'sm12', 'SM12a':'sm12', 'S8a':'swsh4.5', 'S8b':'swsh4.5', 'S12a':'swsh12.5' };
   function externalTcgImageCandidates(card) {
     var setId = tcgCardSetId(card), number = String(card.localId || '').replace(/[^0-9A-Za-z-]/g, '');
+    if (/^\d+$/.test(number)) number = String(parseInt(number, 10));
     var mapped = TCG_JP_TO_INT_SET[setId];
     if (!mapped || !number) return [];
     return ['https://images.pokemontcg.io/' + mapped + '/' + number + '.png', 'https://images.pokemontcg.io/' + mapped + '/' + number + '_hires.png'];
