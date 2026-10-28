@@ -4835,6 +4835,43 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     try { refreshTcgCardVisibility(wrap); } catch (e) {}
   }
 
+  // Añadir / cambiar / quitar la foto manual de una carta (override por URL).
+  function promptEditCardImage(card, wrap, englishName, setLabel) {
+    if (!card || !card.id) return;
+    var current = tcgImageOverrides[card.id] || '';
+    var url = window.prompt(
+      'URL de la imagen para esta carta.\n' +
+      '• Pega una nueva URL para cambiarla.\n' +
+      '• Deja vacío y acepta para quitar la foto personalizada.',
+      current
+    );
+    if (url === null) return; // canceló
+    url = String(url).trim();
+    delete tcgImageResolveFail[card.id];
+    delete tcgImageResolveCache[card.id];
+    if (!url) {
+      delete tcgImageOverrides[card.id];
+      try { saveTcgImageOverrides(); } catch (e) {}
+      // Quitar foto actual y volver a intentar auto o dejar placeholder
+      if (wrap) {
+        var imgWrap = wrap.querySelector('.tcg-card-img-wrap');
+        if (imgWrap) {
+          var img = imgWrap.querySelector('img');
+          if (img) img.remove();
+        }
+        wrap.classList.add('tcg-card-no-image');
+        wrap.dataset.hasImage = 'false';
+        // Disparar re-render suave: si el wrap expone auto-resolve, usarlo
+        if (typeof wrap._autoResolveImage === 'function') wrap._autoResolveImage(true);
+        else if (typeof wrap._showNoImage === 'function') wrap._showNoImage('Sin imagen aún');
+      }
+      return;
+    }
+    tcgImageOverrides[card.id] = url;
+    try { saveTcgImageOverrides(); } catch (e) {}
+    if (wrap) applyResolvedCardImage(wrap, card, url, englishName, setLabel);
+  }
+
   function tcgCardShouldBeHidden(wrap) {
     if (tcgMissingOnly && wrap.classList.contains('owned')) return true;
     if (tcgNoPriceOnly) {
@@ -5038,19 +5075,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       addImageBtn.className = 'tcg-card-add-image-btn';
       addImageBtn.setAttribute('role', 'button');
       addImageBtn.setAttribute('tabindex', '0');
-      addImageBtn.textContent = 'Añadir imagen';
+      addImageBtn.textContent = tcgImageOverrides[card.id] ? 'Cambiar imagen' : 'Añadir imagen';
       addImageBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        var url = window.prompt('URL de la imagen para esta carta:', tcgImageOverrides[card.id] || '');
-        if (url === null) return;
-        url = String(url).trim();
-        if (!url) {
-          if (tcgImageOverrides[card.id]) { delete tcgImageOverrides[card.id]; saveTcgImageOverrides(); }
-          return;
-        }
-        tcgImageOverrides[card.id] = url;
-        saveTcgImageOverrides();
-        applyResolvedCardImage(wrap, card, url, englishName, setLabel);
+        promptEditCardImage(card, wrap, englishName, setLabel);
       });
 
       var retryBtn = document.createElement('span');
@@ -5097,12 +5125,21 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         showNoImagePlaceholder('Sin imagen aún');
       });
     }
+    wrap._autoResolveImage = autoResolveImage;
+    wrap._showNoImage = showNoImagePlaceholder;
 
     img.addEventListener('load', function() {
       wrap.dataset.hasImage = 'true';
       refreshTcgCardVisibility(wrap);
     });
     img.addEventListener('error', function() {
+      // Si la URL manual no carga, quitar override roto y ofrecer cambiarla.
+      if (tcgImageOverrides[card.id] && img.src && img.src.indexOf(String(tcgImageOverrides[card.id]).slice(0, 40)) !== -1) {
+        delete tcgImageOverrides[card.id];
+        try { saveTcgImageOverrides(); } catch (e) {}
+        showNoImagePlaceholder('URL no válida — cambia la imagen');
+        return;
+      }
       // La URL de TCGdex falló (404 frecuente en JP/KR/ZH): resolución automática.
       if (!img.dataset.triedAutoResolve) {
         img.dataset.triedAutoResolve = 'true';
@@ -5181,10 +5218,22 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       langBadge.title = tcgLangEntry(card._matchLang)[1];
       imgWrap.appendChild(langBadge);
     }
+    var editImgBtn = document.createElement('span');
+    editImgBtn.className = 'tcg-edit-image-btn';
+    editImgBtn.setAttribute('role', 'button');
+    editImgBtn.setAttribute('aria-label', 'Cambiar imagen de la carta');
+    editImgBtn.title = 'Cambiar imagen';
+    editImgBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+    editImgBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      promptEditCardImage(card, wrap, englishName, setLabel);
+    });
+
     imgWrap.appendChild(check);
     imgWrap.appendChild(zoomBtn);
     imgWrap.appendChild(cardmarketLinkBtn);
     imgWrap.appendChild(bookmarkBtn);
+    imgWrap.appendChild(editImgBtn);
 
     var setEl = document.createElement('span');
     setEl.className = 'tcg-card-set';
@@ -9726,7 +9775,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       btn.appendChild(num);
       btn.appendChild(nameEl);
       btn.addEventListener('mousedown', function(e) { e.preventDefault(); }); // evita que el blur cierre el desplegable antes del click
-      btn.addEventListener('click', function() { onSelect(p); dropdownEl.hidden = true; });
+      btn.addEventListener('click', function() {
+        onSelect(p);
+        dropdownEl.hidden = true;
+        // el mousedown evita el blur para que no se cierre el desplegable; ahora que ya se eligió, quitamos el foco para que baje el teclado
+        var ae = document.activeElement;
+        if (ae && ae !== document.body && typeof ae.blur === 'function') ae.blur();
+      });
 
       dropdownEl.appendChild(btn);
     });
