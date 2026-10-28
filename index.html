@@ -419,6 +419,8 @@
   }
   .backup-action:hover{ border-color:var(--border-strong); background:var(--surface-hover); }
   .backup-action svg{ flex-shrink:0; color:var(--accent); }
+  .diagnostics-status{margin:8px 2px 0;padding:10px 12px;border:1px solid var(--border);border-radius:12px;font-size:12px;line-height:1.55;color:var(--text-dim);white-space:pre-line}
+  .diagnostics-status.is-ok{color:var(--accent)} .diagnostics-status.is-error{color:#d97a7a}
   .backup-status{ margin:6px 2px 10px; font-size:12px; color:var(--accent); text-align:center; }
   .backup-status.is-error{ color:#d97a7a; }
 
@@ -2069,6 +2071,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <span>Importar copia de seguridad</span>
       </button>
       <input type="file" id="backup-file-input" accept="application/json" hidden>
+      <button type="button" id="diagnostics-btn" class="backup-action"><span>Comprobar conexión y servicios</span></button>
+      <p id="diagnostics-status" class="diagnostics-status" hidden></p>
       <p id="backup-status" class="backup-status" hidden></p>
       <p class="backup-desc">Exporta tu colección a una hoja de cálculo, con precio y cantidad de cada carta.</p>
       <button type="button" id="csv-export-btn" class="backup-action">
@@ -11949,5 +11953,25 @@ mark();})();
 })();
 </script>
 
+<script>
+(function(){
+  var btn=document.getElementById('diagnostics-btn'), out=document.getElementById('diagnostics-status');
+  if(!btn||!out) return;
+  function check(url,label){
+    var ctl=new AbortController(), timer=setTimeout(function(){ctl.abort();},7000);
+    return fetch(url,{cache:'no-store',signal:ctl.signal}).then(function(r){if(!r.ok) throw new Error();return label+': correcto';}).catch(function(){return label+': no disponible';}).then(function(x){clearTimeout(timer);return x;});
+  }
+  btn.addEventListener('click',function(){
+    btn.disabled=true; out.hidden=false; out.className='diagnostics-status'; out.textContent='Comprobando…';
+    var support=('serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window)?'Notificaciones del dispositivo: compatibles':'Notificaciones del dispositivo: no disponibles';
+    Promise.all([check('https://api.tcgdex.net/v2/en/cards?name=Pikachu*&category=Pokemon','Catálogo TCG'),check('https://pokeapi.co/api/v2/pokemon/pikachu','Datos Pokédex'),check('https://pokedex-avisos.danicrevi95.workers.dev/health','Worker de avisos')]).then(function(rows){
+      out.textContent=rows.concat([support]).join(String.fromCharCode(10));
+      out.classList.toggle('is-ok',rows.every(function(x){return x.indexOf('correcto')!==-1;}));
+      out.classList.toggle('is-error',rows.some(function(x){return x.indexOf('no disponible')!==-1;}));
+      btn.disabled=false;
+    });
+  });
+})();
+</script>
 </body>
 </html>
