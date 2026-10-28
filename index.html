@@ -2747,8 +2747,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!tcgImageOverrides || typeof tcgImageOverrides !== 'object') tcgImageOverrides = {};
   } catch (e) { tcgImageOverrides = {}; }
 
-  var anthropicApiKey = '';
-  try { anthropicApiKey = localStorage.getItem(ANTHROPIC_KEY_KEY) || ''; } catch (e) { anthropicApiKey = ''; }
+  // La IA se ejecuta detrás del Worker con Groq; la clave nunca llega al navegador.
+  var anthropicApiKey = 'worker';
 
   // Aviso de bajada de precio: IMPORTANTE, no es push real en segundo plano (esta app no
   // tiene backend). Solo comprueba precios cuando se abre la app o las Estadísticas, y si
@@ -5438,7 +5438,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   function callClaudeCardScan(base64Image) {
-    return fetch('https://api.anthropic.com/v1/messages', {
+    return fetch('https://pokedex-avisos.danicrevi95.workers.dev/ai', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -9679,7 +9679,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       'Usa el "Price Trend" (Tendencia) de la ficha; si la carta indica edici\u00f3n en castellano, prioriza el precio de las ofertas en espa\u00f1ol (desde). ' +
       'Responde \u00daNICAMENTE con un array JSON sin texto adicional ni backticks, con esta forma: ' +
       '[{"key":"la key indicada","price":n\u00famero o null,"url":"url de la ficha de Cardmarket o cadena vac\u00eda"}].\n\nCartas:\n' + lines;
-    return fetch('https://api.anthropic.com/v1/messages', {
+    return fetch('https://pokedex-avisos.danicrevi95.workers.dev/ai', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -10418,7 +10418,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       'Incluye solo tiendas cuya p\u00e1gina del producto hayas visto con reserva o preventa disponible; no inventes tiendas, enlaces ni precios (si no consta el precio o la entrega, pon cadena vac\u00eda). ' +
       'Responde \u00daNICAMENTE con un array JSON sin texto adicional ni backticks, m\u00e1ximo 10 elementos: [{"s":"nombre de la tienda","u":"URL https directa a la p\u00e1gina del producto","p":"precio con moneda","e":"fecha de entrega o env\u00edo"}]. Si no encuentras ninguna, responde [].';
     var key = releaseKey(r);
-    fetch('https://api.anthropic.com/v1/messages', {
+    fetch('https://pokedex-avisos.danicrevi95.workers.dev/ai', {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-api-key': anthropicApiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
@@ -10530,7 +10530,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var today = new Date().toISOString().slice(0, 10);
     var prompt = 'Hoy es ' + today + '. Busca en la web los próximos lanzamientos del TCG de Pokémon (expansiones y productos importantes como Elite Trainer Box, colecciones premium o mazos) con fecha confirmada en los próximos 6 meses para España/Europa; si solo hay fecha de EE. UU. o Japón, úsala. ' +
       'Responde ÚNICAMENTE con un array JSON sin texto adicional ni backticks, con máximo 15 elementos ordenados por fecha: [{"d":"AAAA-MM-DD","n":"nombre del lanzamiento","k":"Expansión" o "Producto"}].';
-    fetch('https://api.anthropic.com/v1/messages', {
+    fetch('https://pokedex-avisos.danicrevi95.workers.dev/ai', {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-api-key': anthropicApiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
@@ -11748,7 +11748,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!c) return;
     if (!anthropicApiKey) { vgcAiInit(); return; }
     vgcAiOut('<p class="vgc-say"><span class="vgc-spin"></span>Claude está analizando el equipo…</p>');
-    fetch('https://api.anthropic.com/v1/messages', {
+    fetch('https://pokedex-avisos.danicrevi95.workers.dev/ai', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
