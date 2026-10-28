@@ -2744,7 +2744,16 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         candidates.push('https://product-images.s3.amazonaws.com/' + id + '.jpg');
         candidates.push('https://product-images.s3.us-east-1.amazonaws.com/' + id + '.jpg');
       });
-      probeNext();
+      // Último fallback: el proxy cacheado de PokémonTCGAPI devuelve imágenes japonesas
+      // y solo consume créditos la primera vez que se consulta ese nombre.
+      fetch('https://pokedex-avisos.danicrevi95.workers.dev/ptcg-images?name=' + encodeURIComponent(card._searchName || card.name || ''))
+        .then(function(res) { return res.ok ? res.json() : null; })
+        .then(function(data) {
+          var wanted = String(card.localId || '').replace(/^0+/, '') || String(card.localId || '');
+          var rows = data && Array.isArray(data.cards) ? data.cards : [];
+          rows.filter(function(x) { return (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted; })
+            .forEach(function(x) { if (x.image) candidates.push(x.image); });
+        }).catch(function() {}).then(probeNext);
     }).catch(probeNext);
   }
 
@@ -4755,6 +4764,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     wrap.type = 'button';
     wrap.className = 'tcg-card';
     wrap.dataset.cardId = card.id;
+    card._searchName = englishName || card.name || '';
     if (tcgOwned.has(card.id)) {
       wrap.classList.add('owned');
       if (!tcgMetaSlug(tcgOwnedMeta[card.id])) {
