@@ -2727,11 +2727,20 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       .then(function(res) { return res.ok ? res.json() : null; })
       .then(function(data) {
         var wanted = String(card.localId || '').replace(/^0+/, '') || String(card.localId || '');
-        (data && data.cards || []).filter(function(x) { return (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted; }).forEach(function(x) { add(x.image); });
+        (data && data.cards || []).filter(function(x) {
+          var sameNumber = (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted;
+          var queryName = String(card._searchName || card.name || '').trim();
+          var sourceName = String(x.name || '').trim();
+          var samePokemon = !queryName || !sourceName || (typeof tcgNameMatches === 'function' && (tcgNameMatches(sourceName, queryName) || tcgNameMatches(queryName, sourceName)));
+          return sameNumber && samePokemon;
+        }).forEach(function(x) { add(x.image); });
         var lang = card._matchLang || 'ja', setId = (card.set && card.set.id) || (card.id.split('-')[0] || ''), num = String(card.localId || card.id.split('-')[1] || '').replace(/[^0-9A-Za-z-]/g, ''), n = parseInt(num,10), nums = isNaN(n) ? [num] : [num,String(n),('000'+n).slice(-3)];
         return fetchTcgCardDetail(card.id, lang).catch(function(){ return null; }).then(function(detail) {
           var serie = detail && detail.set && detail.set.serie && detail.set.serie.id, sid = (detail && detail.set && detail.set.id) || setId;
-          if (serie && sid) nums.forEach(function(x) { add('https://assets.tcgdex.net/'+lang+'/'+serie+'/'+sid+'/'+x+'/low.webp'); add('https://assets.tcgdex.net/'+lang+'/'+serie+'/'+sid+'/'+x+'/high.webp'); add('https://assets.tcgdex.net/'+lang+'/'+serie+'/'+sid+'/'+x+'/low.png'); });
+          var queryName = String(card._searchName || card.name || '').trim();
+          var detailName = String(detail && detail.name || '').trim();
+          var detailMatches = !queryName || !detailName || (typeof tcgNameMatches === 'function' && (tcgNameMatches(detailName, queryName) || tcgNameMatches(queryName, detailName)));
+          if (serie && sid && detailMatches) nums.forEach(function(x) { add('https://assets.tcgdex.net/'+lang+'/'+serie+'/'+sid+'/'+x+'/low.webp'); add('https://assets.tcgdex.net/'+lang+'/'+serie+'/'+sid+'/'+x+'/high.webp'); add('https://assets.tcgdex.net/'+lang+'/'+serie+'/'+sid+'/'+x+'/low.png'); });
           (detail && detail.variants_detailed || []).forEach(function(v) { var id=v && v.thirdParty && v.thirdParty.tcgplayer; if(id) add('https://product-images.tcgplayer.com/fit-in/437x437/'+id+'.jpg'); });
         });
       }).catch(function() {}).then(function() { probe(0); });
