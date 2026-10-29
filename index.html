@@ -1656,6 +1656,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     <p class="splash-foot">Colecciona · descubre · completa</p>
   </div>
 </div>
+<script>
+  // Failsafe: el splash nunca debe bloquear la app si una API tarda o falla.
+  (function(){
+    var splash=document.getElementById('app-splash');
+    if(!splash) return;
+    setTimeout(function(){ splash.classList.add('is-leaving'); setTimeout(function(){ if(splash.parentNode) splash.parentNode.removeChild(splash); }, 600); }, 4200);
+  })();
+</script>
 
 <header>
   <div class="header-top">
@@ -11897,7 +11905,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!splash) return;
     function leave() { splash.classList.add('is-leaving'); setTimeout(function() { splash.remove(); }, 500); }
     window.addEventListener('load', function() { setTimeout(leave, 1700); }, { once: true });
-    setTimeout(leave, 5000);
+    setTimeout(leave, 4200);
   })();
 
   // Comprueba precios cada vez que se abre la app, no solo al entrar en Estadísticas.
