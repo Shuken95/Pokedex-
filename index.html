@@ -2718,7 +2718,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     function probe(i) {
       if (i >= candidates.length) { done(); return; }
       var url = candidates[i], test = new Image(), timer = setTimeout(function(){ if (!finished) probe(i + 1); }, 4500);
-      test.onload = function() { if (finished) return; finished = true; clearTimeout(timer); tcgExternalImageCache[card.id] = url; saveTcgExternalImageCache(); img.src = url; };
+      test.onload = function() { if (finished) return; finished = true; clearTimeout(timer); tcgExternalImageCache[card.id] = url; tcgImageOverrides[card.id] = url; saveTcgExternalImageCache(); saveTcgImageOverrides(); img.src = url; };
       test.onerror = function() { clearTimeout(timer); probe(i + 1); };
       test.referrerPolicy = 'no-referrer'; test.src = url;
     }
@@ -4614,7 +4614,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         var expected = card._searchName || card.name || '';
         var matches = other && other.name && (typeof tcgSpeciesNameMatches === 'function' ? tcgSpeciesNameMatches(other.name, expected) : true);
         if (matches && other.image) {
-          img.src = tcgCardImageUrl(other.image, 'low');
+          var resolved = tcgCardImageUrl(other.image, 'low');
+          tcgImageOverrides[card.id] = resolved; saveTcgImageOverrides();
+          img.src = resolved;
           return;
         }
         next();
