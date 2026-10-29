@@ -1555,7 +1555,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   #dex-controls:not(.filters-open) .filter-row,
   #dex-controls:not(.filters-open) .dex-global-row{ display:none; }
   /* Splash inicial: entrada breve y cuidada de la colección */
-  #app-splash{display:none!important;position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 30%,#d8fff2 0,#8edbcc 28%,#167c86 72%,#092d47 100%);color:#fff;transition:opacity .45s ease,visibility .45s ease}
+  #app-splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 30%,#d8fff2 0,#8edbcc 28%,#167c86 72%,#092d47 100%);color:#fff;transition:opacity .45s ease,visibility .45s ease}
   #app-splash.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
   #app-splash:before,#app-splash:after{content:"";position:absolute;border-radius:50%;filter:blur(2px);opacity:.28;border:1px solid rgba(255,255,255,.55)}
   #app-splash:before{width:72vmin;height:72vmin;transform:translate(-28vmin,-20vmin);box-shadow:0 0 0 22px rgba(255,255,255,.08),0 0 0 44px rgba(255,255,255,.06)}
@@ -1735,6 +1735,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     <button type="button" class="mode-tab" id="tab-dex" data-mode="dex"><span class="tab-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span class="tab-label">Pokédex</span></button>
     <button type="button" class="mode-tab" id="tab-vgc" data-mode="vgc" data-testid="tab-vgc"><span class="tab-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.6-8 9-4.8-1.4-8-4.5-8-9V6z"/></svg></span><span class="tab-label">VGC</span></button>
     <button type="button" class="mode-tab" id="tab-tcg" data-mode="tcg"><span class="tab-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="12" height="15" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg></span><span class="tab-label">TCG</span></button>
+    <button type="button" class="mode-tab" id="tab-trade" data-mode="trade" data-testid="tab-trade"><span class="tab-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span><span class="tab-label">Cambios</span><span class="trade-tab-badge" id="trade-tab-badge" hidden></span></button>
     <button type="button" class="mode-tab" id="tab-shop" data-mode="shop" data-testid="tab-shop"><span class="tab-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></span><span class="tab-label">Tienda</span><span id="shop-tab-badge" class="shop-tab-badge" hidden></span></button>
   </nav>
 
@@ -2325,7 +2326,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </div>
     </div>
   </div>
-</div>
+  <div id="trade-view" hidden data-testid="trade-view"><div id="trade-root" class="trade-root"></div></div>
 
   <div id="vgc-view" hidden data-testid="vgc-view">
     <div class="vgc-card">
@@ -2712,34 +2713,34 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function tryExternalTcgImage(card, img, done) {
     var cached = tcgExternalImageCache[card.id];
     if (cached) { img.src = cached; return; }
-    var candidates = [], seen = {}, resolved = false;
-    function add(url) { if (url && !seen[url]) { seen[url] = true; candidates.push(url); } }
-    function probeNext(i) {
-      i = i || 0;
+    var candidates = externalTcgImageCandidates(card), i = 0;
+    function probeNext() {
       if (i >= candidates.length) { done(); return; }
-      var url = candidates[i], probe = new Image(), timer = setTimeout(function(){ if (!resolved) probeNext(i + 1); }, 4500);
-      probe.onload = function() { if (resolved) return; resolved = true; clearTimeout(timer); tcgExternalImageCache[card.id] = url; saveTcgExternalImageCache(); img.src = url; };
-      probe.onerror = function() { clearTimeout(timer); probeNext(i + 1); };
-      probe.referrerPolicy = 'no-referrer'; probe.src = url;
+      var url = candidates[i++], probe = new Image();
+      probe.onload = function() { tcgExternalImageCache[card.id] = url; saveTcgExternalImageCache(); img.src = url; };
+      probe.onerror = probeNext; probe.referrerPolicy = 'no-referrer'; probe.src = url;
     }
-    // Primero, la caché persistente del Worker (sin consumir créditos si ya existe).
+    function addJapaneseApiCandidates(data) {
+      var wanted = String(card.localId || '').replace(/^0+/, '') || String(card.localId || '');
+      var rows = data && Array.isArray(data.cards) ? data.cards : [];
+      rows.filter(function(x) { return (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted; })
+        .forEach(function(x) { if (x.image) candidates.push(x.image); });
+    }
     fetch('https://pokedex-avisos.danicrevi95.workers.dev/ptcg-images?name=' + encodeURIComponent(card._searchName || card.name || ''))
       .then(function(res) { return res.ok ? res.json() : null; })
-      .then(function(data) {
-        var wanted = String(card.localId || '').replace(/^0+/, '') || String(card.localId || '');
-        (data && data.cards || []).filter(function(x) { return (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted; }).forEach(function(x) { add(x.image); });
-        var setId = (card.set && card.set.id) || (card.id.indexOf('-') >= 0 ? card.id.split('-')[0] : '');
-        var lang = card._matchLang || 'ja', num = String(card.localId || (card.id.split('-')[1] || '')).replace(/[^0-9A-Za-z-]/g, '');
-        var n = parseInt(num, 10), nums = isNaN(n) ? [num] : [num, String(n), ('000' + n).slice(-3)];
-        return fetchTcgCardDetail(card.id, lang).catch(function() { return null; }).then(function(detail) {
-          var serie = detail && detail.set && detail.set.serie && detail.set.serie.id;
-          var sid = (detail && detail.set && detail.set.id) || setId;
-          if (serie && sid) nums.forEach(function(x) { add('https://assets.tcgdex.net/' + lang + '/' + serie + '/' + sid + '/' + x + '/low.webp'); add('https://assets.tcgdex.net/' + lang + '/' + serie + '/' + sid + '/' + x + '/high.webp'); add('https://assets.tcgdex.net/' + lang + '/' + serie + '/' + sid + '/' + x + '/low.png'); });
-          var tp = detail && detail.variants_detailed || [];
-          tp.forEach(function(v) { var id = v && v.thirdParty && v.thirdParty.tcgplayer; if (id) add('https://product-images.tcgplayer.com/fit-in/437x437/' + id + '.jpg'); });
+      .then(function(data) { addJapaneseApiCandidates(data); return fetchTcgCardDetail(card.id, card._matchLang || 'ja'); })
+      .then(function(detail) {
+        var ids = [], cm = detail && detail.pricing && detail.pricing.cardmarket;
+        if (cm && cm.idProduct) ids.push(String(cm.idProduct));
+        (detail && detail.variants_detailed || []).forEach(function(v) { if (v.pricing && v.pricing.cardmarket && v.pricing.cardmarket.idProduct) ids.push(String(v.pricing.cardmarket.idProduct)); });
+        ids.filter(function(id, n, all) { return all.indexOf(id) === n; }).forEach(function(id) {
+          candidates.push('https://product-images.s3-eu-west-1.amazonaws.com/' + id + '.jpg');
+          candidates.push('https://product-images.s3.amazonaws.com/' + id + '.jpg');
+          candidates.push('https://product-images.s3.us-east-1.amazonaws.com/' + id + '.jpg');
         });
-      }).catch(function() {}).then(function() { probeNext(0); });
+      }).catch(function() {}).then(probeNext);
   }
+
   try {
     tcgImageOverrides = JSON.parse(localStorage.getItem(TCG_IMAGE_OVERRIDE_KEY) || '{}');
     if (!tcgImageOverrides || typeof tcgImageOverrides !== 'object') tcgImageOverrides = {};
