@@ -8151,29 +8151,20 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
     Promise.all(tasks).then(function(results) {
       if (myRequestId !== tcgRequestId) return;
-      var seen = {};
-      var merged = [];
-      results.forEach(function(r) {
-        r.cards.forEach(function(c) {
-          if (!seen[c.id]) {
-            seen[c.id] = true;
-            c._matchLang = r.code;
-            merged.push(c);
-          }
-        });
+      var candidates = [];
+      results.forEach(function(r) { r.cards.forEach(function(c) { c._matchLang = r.code; c._queryName = name; candidates.push(c); }); });
+      if (!candidates.length) { tcgGridEl.innerHTML = ''; tcgStatusEl.textContent = 'No se encontraron cartas de “' + name + '” en ningún idioma.'; tcgStatusEl.style.display = 'block'; return; }
+      Promise.all(candidates.map(function(c) { return fetchTcgCardDetail(c.id, c._matchLang || 'en').then(function(detail) {
+        var expected = c._queryName || name;
+        if (!detail || !detail.name || (detail.category && detail.category !== 'Pokemon')) return null;
+        if (typeof tcgNameMatches === 'function' && !tcgNameMatches(detail.name, expected) && !tcgNameMatches(expected, detail.name)) return null;
+        c.name=detail.name; c.localId=detail.localId||c.localId; c.image=detail.image||c.image||null; c.set=detail.set||c.set; return c;
+      }).catch(function(){ return null; }); })).then(function(validated) {
+        if (myRequestId !== tcgRequestId) return;
+        var seen={}, merged=validated.filter(function(c){ if(!c||seen[c.id]) return false; seen[c.id]=true; return true; });
+        if (!merged.length) { tcgGridEl.innerHTML=''; tcgStatusEl.textContent='No se encontraron cartas que correspondan a “'+name+'”.'; tcgStatusEl.style.display='block'; return; }
+        renderTcgResults(merged,myRequestId,name,null,name); tcgStatusEl.textContent=merged.length+' cartas encontradas en todos los idiomas.'; tcgStatusEl.style.display='block'; tcgStatusEl.style.padding='0 0 14px';
       });
-      if (merged.length === 0) {
-        tcgGridEl.innerHTML = '';
-        tcgStatusEl.textContent = 'No se encontraron cartas de \u201c' + name + '\u201d en ning\u00fan idioma.';
-        tcgStatusEl.style.display = 'block';
-        return;
-      }
-      renderTcgResults(merged, myRequestId, name, null, name);
-      if (myRequestId === tcgRequestId) {
-        tcgStatusEl.textContent = merged.length + ' cartas encontradas en todos los idiomas.';
-        tcgStatusEl.style.display = 'block';
-        tcgStatusEl.style.padding = '0 0 14px';
-      }
     });
   }
 
