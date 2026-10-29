@@ -2712,34 +2712,34 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function tryExternalTcgImage(card, img, done) {
     var cached = tcgExternalImageCache[card.id];
     if (cached) { img.src = cached; return; }
-    var candidates = externalTcgImageCandidates(card), i = 0;
-    function probeNext() {
+    var candidates = [], seen = {}, resolved = false;
+    function add(url) { if (url && !seen[url]) { seen[url] = true; candidates.push(url); } }
+    function probeNext(i) {
+      i = i || 0;
       if (i >= candidates.length) { done(); return; }
-      var url = candidates[i++], probe = new Image();
-      probe.onload = function() { tcgExternalImageCache[card.id] = url; saveTcgExternalImageCache(); img.src = url; };
-      probe.onerror = probeNext; probe.referrerPolicy = 'no-referrer'; probe.src = url;
+      var url = candidates[i], probe = new Image(), timer = setTimeout(function(){ if (!resolved) probeNext(i + 1); }, 4500);
+      probe.onload = function() { if (resolved) return; resolved = true; clearTimeout(timer); tcgExternalImageCache[card.id] = url; saveTcgExternalImageCache(); img.src = url; };
+      probe.onerror = function() { clearTimeout(timer); probeNext(i + 1); };
+      probe.referrerPolicy = 'no-referrer'; probe.src = url;
     }
-    function addJapaneseApiCandidates(data) {
-      var wanted = String(card.localId || '').replace(/^0+/, '') || String(card.localId || '');
-      var rows = data && Array.isArray(data.cards) ? data.cards : [];
-      rows.filter(function(x) { return (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted; })
-        .forEach(function(x) { if (x.image) candidates.push(x.image); });
-    }
+    // Primero, la caché persistente del Worker (sin consumir créditos si ya existe).
     fetch('https://pokedex-avisos.danicrevi95.workers.dev/ptcg-images?name=' + encodeURIComponent(card._searchName || card.name || ''))
       .then(function(res) { return res.ok ? res.json() : null; })
-      .then(function(data) { addJapaneseApiCandidates(data); return fetchTcgCardDetail(card.id, card._matchLang || 'ja'); })
-      .then(function(detail) {
-        var ids = [], cm = detail && detail.pricing && detail.pricing.cardmarket;
-        if (cm && cm.idProduct) ids.push(String(cm.idProduct));
-        (detail && detail.variants_detailed || []).forEach(function(v) { if (v.pricing && v.pricing.cardmarket && v.pricing.cardmarket.idProduct) ids.push(String(v.pricing.cardmarket.idProduct)); });
-        ids.filter(function(id, n, all) { return all.indexOf(id) === n; }).forEach(function(id) {
-          candidates.push('https://product-images.s3-eu-west-1.amazonaws.com/' + id + '.jpg');
-          candidates.push('https://product-images.s3.amazonaws.com/' + id + '.jpg');
-          candidates.push('https://product-images.s3.us-east-1.amazonaws.com/' + id + '.jpg');
+      .then(function(data) {
+        var wanted = String(card.localId || '').replace(/^0+/, '') || String(card.localId || '');
+        (data && data.cards || []).filter(function(x) { return (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted; }).forEach(function(x) { add(x.image); });
+        var setId = (card.set && card.set.id) || (card.id.indexOf('-') >= 0 ? card.id.split('-')[0] : '');
+        var lang = card._matchLang || 'ja', num = String(card.localId || (card.id.split('-')[1] || '')).replace(/[^0-9A-Za-z-]/g, '');
+        var n = parseInt(num, 10), nums = isNaN(n) ? [num] : [num, String(n), ('000' + n).slice(-3)];
+        return fetchTcgCardDetail(card.id, lang).catch(function() { return null; }).then(function(detail) {
+          var serie = detail && detail.set && detail.set.serie && detail.set.serie.id;
+          var sid = (detail && detail.set && detail.set.id) || setId;
+          if (serie && sid) nums.forEach(function(x) { add('https://assets.tcgdex.net/' + lang + '/' + serie + '/' + sid + '/' + x + '/low.webp'); add('https://assets.tcgdex.net/' + lang + '/' + serie + '/' + sid + '/' + x + '/high.webp'); add('https://assets.tcgdex.net/' + lang + '/' + serie + '/' + sid + '/' + x + '/low.png'); });
+          var tp = detail && detail.variants_detailed || [];
+          tp.forEach(function(v) { var id = v && v.thirdParty && v.thirdParty.tcgplayer; if (id) add('https://product-images.tcgplayer.com/fit-in/437x437/' + id + '.jpg'); });
         });
-      }).catch(function() {}).then(probeNext);
+      }).catch(function() {}).then(function() { probeNext(0); });
   }
-
   try {
     tcgImageOverrides = JSON.parse(localStorage.getItem(TCG_IMAGE_OVERRIDE_KEY) || '{}');
     if (!tcgImageOverrides || typeof tcgImageOverrides !== 'object') tcgImageOverrides = {};
