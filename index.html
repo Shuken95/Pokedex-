@@ -2731,7 +2731,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
           var sameNumber = (String(x.number || '').replace(/^0+/, '') || String(x.number || '')) === wanted;
           var queryName = String(card._searchName || card.name || '').trim();
           var sourceName = String(x.name || '').trim();
-          var samePokemon = !queryName || !sourceName || (typeof tcgNameMatches === 'function' && (tcgNameMatches(sourceName, queryName) || tcgNameMatches(queryName, sourceName)));
+          var samePokemon = !queryName || !sourceName || (tcgSpeciesNameMatches(sourceName, queryName));
           return sameNumber && samePokemon;
         }).forEach(function(x) { add(x.image); });
         var lang = card._matchLang || 'ja', setId = (card.set && card.set.id) || (card.id.split('-')[0] || ''), num = String(card.localId || card.id.split('-')[1] || '').replace(/[^0-9A-Za-z-]/g, ''), n = parseInt(num,10), nums = isNaN(n) ? [num] : [num,String(n),('000'+n).slice(-3)];
@@ -2739,7 +2739,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
           var serie = detail && detail.set && detail.set.serie && detail.set.serie.id, sid = (detail && detail.set && detail.set.id) || setId;
           var queryName = String(card._searchName || card.name || '').trim();
           var detailName = String(detail && detail.name || '').trim();
-          var detailMatches = !queryName || !detailName || (typeof tcgNameMatches === 'function' && (tcgNameMatches(detailName, queryName) || tcgNameMatches(queryName, detailName)));
+          var detailMatches = !queryName || !detailName || (tcgSpeciesNameMatches(detailName, queryName));
           if (serie && sid && detailMatches) nums.forEach(function(x) { add('https://assets.tcgdex.net/'+lang+'/'+serie+'/'+sid+'/'+x+'/low.webp'); add('https://assets.tcgdex.net/'+lang+'/'+serie+'/'+sid+'/'+x+'/high.webp'); add('https://assets.tcgdex.net/'+lang+'/'+serie+'/'+sid+'/'+x+'/low.png'); });
           (detail && detail.variants_detailed || []).forEach(function(v) { var id=v && v.thirdParty && v.thirdParty.tcgplayer; if(id) add('https://product-images.tcgplayer.com/fit-in/437x437/'+id+'.jpg'); });
         });
@@ -8125,6 +8125,17 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   // Busca el Pokémon en todos los idiomas de TCGdex a la vez y fusiona los
   // resultados por id de carta (una misma carta comparte id entre idiomas).
+  function tcgSpeciesNameMatches(cardName, queryName) {
+    var card = String(cardName || '').toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9぀-ヿ㐀-鿿]+/g, ' ').trim();
+    var query = String(queryName || '').toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9぀-ヿ㐀-鿿]+/g, ' ').trim();
+    if (!card || !query) return false;
+    if (typeof tcgNameMatches === 'function' && (tcgNameMatches(cardName, queryName) || tcgNameMatches(queryName, cardName))) return true;
+    if (card === query || card.indexOf(query + ' ') === 0 || card.indexOf(' ' + query) !== -1) return true;
+    // Nombres de Pokémon con entrenador/personaje: “Misty’s Psyduck”, etc.
+    var words = query.split(/\s+/).filter(Boolean);
+    return words.length > 0 && words.every(function(w) { return card.split(/\s+/).indexOf(w) !== -1; });
+  }
+
   function runTcgSearchAllLanguages(name, myRequestId) {
     tcgStatusEl.textContent = 'Buscando \u201c' + name + '\u201d en todos los idiomas\u2026';
     tcgStatusEl.style.display = 'block';
@@ -8157,7 +8168,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       Promise.all(candidates.map(function(c) { return fetchTcgCardDetail(c.id, c._matchLang || 'en').then(function(detail) {
         var expected = c._queryName || name;
         if (!detail || !detail.name || (detail.category && detail.category !== 'Pokemon')) return null;
-        if (typeof tcgNameMatches === 'function' && !tcgNameMatches(detail.name, expected) && !tcgNameMatches(expected, detail.name)) return null;
+        if (!tcgSpeciesNameMatches(detail.name, expected)) return null;
         c.name=detail.name; c.localId=detail.localId||c.localId; c.image=detail.image||c.image||null; c.set=detail.set||c.set; return c;
       }).catch(function(){ return null; }); })).then(function(validated) {
         if (myRequestId !== tcgRequestId) return;
