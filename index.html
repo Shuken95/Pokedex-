@@ -4611,7 +4611,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (i >= langs.length) { tryExternalTcgImage(card, img, done); return; }
       var lang = langs[i++];
       fetchTcgCardDetail(card.id, lang).then(function(other) {
-        if (other && other.image) {
+        var expected = card._searchName || card.name || '';
+        var matches = other && other.name && (typeof tcgSpeciesNameMatches === 'function' ? tcgSpeciesNameMatches(other.name, expected) : true);
+        if (matches && other.image) {
           img.src = tcgCardImageUrl(other.image, 'low');
           return;
         }
