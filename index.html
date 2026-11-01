@@ -3987,7 +3987,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       savedGridEl.hidden = false;
       ids.forEach(function(id) {
         var meta = tcgSavedMeta[id];
-        var card = { id: id, name: meta.name, image: meta.image, localId: meta.localId, set: meta.set || null, _matchLang: tcgInferCardLang(meta) };
+        var card = { id: id, name: meta.name, image: meta.image, localId: meta.localId, set: meta.set || null, _matchLang: tcgInferCardLang(meta, id) };
         var setLabel = meta.set ? meta.set.name : (id.split('-')[0] || '');
         savedGridEl.appendChild(buildTcgCard(card, setLabel, meta.englishName));
       });
@@ -4068,7 +4068,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // Necesitan consulta las normales de las que aún no sabemos la rareza (o la imagen).
   function tcgOwnedIdsToFetch() {
     return Array.from(tcgOwned).filter(function(id) {
-      return id.indexOf('custom-') !== 0 && !(tcgOwnedCardsCache[id] && tcgOwnedCardsCache[id].rarity !== undefined);
+      return id.indexOf('custom-') !== 0 && !(tcgOwnedCardsCache[id] && tcgOwnedCardsCache[id].rarity !== undefined && tcgOwnedCardsCache[id].image);
     });
   }
   function fetchOwnedCardInfo(id) {
@@ -6610,7 +6610,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       return fetchManualCardmarketPrice(entry.cardmarketUrl).then(pickCardmarketPrice);
     }
     var meta = tcgOwnedMeta[id] || tcgSavedMeta[id] || {};
-    var lang = typeof tcgInferCardLang === 'function' ? tcgInferCardLang(meta) : (meta.lang || 'en');
+    var lang = typeof tcgInferCardLang === 'function' ? tcgInferCardLang(meta, id) : (meta.lang || 'en');
     return fetchTcgCardDetail(id, lang).then(function(detail) {
       return pickCardmarketPrice(detail && detail.pricing && detail.pricing.cardmarket);
     });
@@ -6625,7 +6625,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var pending = Array.from(tcgOwned).filter(function(id) {
       var cached = huchaPriceCache[id];
       var meta = tcgOwnedMeta[id] || tcgSavedMeta[id] || {};
-      var wantedLang = typeof tcgInferCardLang === 'function' ? tcgInferCardLang(meta) : (meta.lang || 'en');
+      var wantedLang = typeof tcgInferCardLang === 'function' ? tcgInferCardLang(meta, id) : (meta.lang || 'en');
       return force || !cached || cached.lang !== wantedLang || (now - cached.at) > HUCHA_TTL_MS;
     });
     if (pending.length === 0) { renderHuchaTotal(); return; }
@@ -10271,12 +10271,16 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   // Une las cartas guardadas (siempre se siguen) con las añadidas desde las sugerencias.
-  function tcgInferCardLang(meta) {
+  function tcgInferCardLang(meta, cardId) {
     if (meta && meta.lang) return meta.lang;
     var n = String(meta && (meta.name || meta.displayName) || '');
     if (/[ぁ-んァ-ン]/.test(n)) return 'ja';
     if (/[가-힣]/.test(n)) return 'ko';
     if (/[一-龯]/.test(n)) return 'zh-tw';
+    // Legacy owned metadata only stored the slug. Japanese expansions keep
+    // their own TCGdex ids (SV2a, SM, S, M, PMCG, etc.).
+    var id = String(cardId || '');
+    if (/^(SV\d+[A-Za-z]*|SM\d+[A-Za-z]*|S\d+[A-Za-z]*|M\d+[A-Za-z]*|PMCG)/i.test(id)) return 'ja';
     return 'en';
   }
 
@@ -10292,7 +10296,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       var english = m.englishName || (isCustom && m.slug ? formatName(m.slug) : name);
       items[id] = {
         id: id, name: name, englishName: english, imageBase: isCustom ? null : base, image: img,
-        localId: m.localId || m.number || '', setName: m.setName || (m.set && m.set.name) || '', lang: tcgInferCardLang(m),
+        localId: m.localId || m.number || '', setName: m.setName || (m.set && m.set.name) || '', lang: tcgInferCardLang(m, id),
         cmUrl: isCustom ? (m.cardmarketUrl || '') : '', saved: saved,
         anniv: id.indexOf('30th-') === 0,
         sealed: id.indexOf('sealed-') === 0
