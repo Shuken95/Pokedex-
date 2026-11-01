@@ -8276,6 +8276,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var base = tcgSearchSpeciesTerm(original);
     var terms = [base];
     if (original && original.toLowerCase() !== base.toLowerCase()) terms.push(original);
+    // Algunas expansiones japonesas recientes indexan las formas con el prefijo
+    // japonés y no devuelven esos resultados al buscar solo el nombre base.
+    if (langCode === 'ja' && base) {
+      terms.push('メガ' + base, 'メガ ' + base, 'かがやく' + base, 'ひかる' + base);
+    }
     return Promise.all(terms.map(function(term) {
       return tcgFetchJson(tcgNameSearchUrl(langCode, term)).catch(function() { return []; });
     })).then(function(rows) {
