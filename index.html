@@ -8766,7 +8766,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
           .catch(function() { return { code: code, cards: [] }; });
       }
       return resolveLocalizedName(searchName, code).then(function(localizedName) {
-        var query = localizedName || name;
+        var query = localizedName || searchName;
         return tcgFetchNameVariants(code, query)
           .then(function(matches) { return { code: code, cards: Array.isArray(matches) ? matches : [] }; })
           .catch(function() { return { code: code, cards: [] }; });
