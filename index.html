@@ -8253,15 +8253,31 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   // Compatibilidad: una petición contains + filtro local (rápido).
-  function tcgSearchSpeciesTerm(term) { return String(term || '').trim().replace(/^(shiny|shining|radiant|brillante|brilliante)\s+/i, '').trim(); }
+  function tcgSearchSpeciesTerm(term) {
+    var t = String(term || '').trim();
+    // Quitamos solo modificadores de carta, nunca fragmentos internos de nombres
+    // (por ejemplo, la V de Vaporeon no se elimina).
+    t = t.replace(/(shiny|shining|radiant|brillante|brilliante|mega|gigantamax|gmax|ex|gx|vstar|vmax|v-union|break|prime|legend|lv\.?x|tera|ancient|future|amazing|prism\s+star|tag\s+team|dark|light)/gi, ' ');
+    t = t.replace(/\s+/g, ' ').replace(/[-–—]+/g, ' ').trim();
+    return t || String(term || '').trim();
+  }
 
   function tcgFetchNameVariants(langCode, speciesName) {
-    return tcgFetchJson(tcgNameSearchUrl(langCode, speciesName))
-      .then(function(list) {
-        var arr = Array.isArray(list) ? list : [];
-        return arr.filter(function(c) { return !c.name || tcgNameMatches(c.name, speciesName); });
-      })
-      .catch(function() { return []; });
+    var original = String(speciesName || '').trim();
+    var base = tcgSearchSpeciesTerm(original);
+    var terms = [base];
+    if (original && original.toLowerCase() !== base.toLowerCase()) terms.push(original);
+    return Promise.all(terms.map(function(term) {
+      return tcgFetchJson(tcgNameSearchUrl(langCode, term)).catch(function() { return []; });
+    }).then(function(rows) {
+      var seen = {}, merged = [];
+      rows.forEach(function(list) { (Array.isArray(list) ? list : []).forEach(function(c) {
+        if (!c || !c.id || seen[c.id]) return;
+        if (c.name && !tcgNameMatches(c.name, base)) return;
+        seen[c.id] = true; merged.push(c);
+      }); });
+      return merged;
+    })).catch(function() { return []; });
   }
 
   // Devuelve el listado {id, name, display} del Pokédex para un slug dado (ej. "charmander")
