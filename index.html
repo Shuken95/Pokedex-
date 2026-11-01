@@ -3982,7 +3982,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       savedGridEl.hidden = false;
       ids.forEach(function(id) {
         var meta = tcgSavedMeta[id];
-        var card = { id: id, name: meta.name, image: meta.image, localId: meta.localId, set: meta.set || null };
+        var card = { id: id, name: meta.name, image: meta.image, localId: meta.localId, set: meta.set || null, _matchLang: meta.lang || 'en' };
         var setLabel = meta.set ? meta.set.name : (id.split('-')[0] || '');
         savedGridEl.appendChild(buildTcgCard(card, setLabel, meta.englishName));
       });
@@ -5484,7 +5484,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       bookmarkBtn.classList.toggle('is-saved', willSave);
       if (willSave) {
         tcgSaved.add(card.id);
-        tcgSavedMeta[card.id] = { name: card.name, image: card.image, localId: card.localId, set: card.set || null, englishName: englishName || card.name };
+        tcgSavedMeta[card.id] = { name: card.name, image: card.image, localId: card.localId, set: card.set || null, englishName: englishName || card.name, lang: card._matchLang || (typeof tcgLang === 'string' && tcgLang !== 'all' ? tcgLang : 'en') };
       } else {
         tcgSaved.delete(card.id);
         delete tcgSavedMeta[card.id];
@@ -10274,7 +10274,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       var english = m.englishName || (isCustom && m.slug ? formatName(m.slug) : name);
       items[id] = {
         id: id, name: name, englishName: english, imageBase: isCustom ? null : base, image: img,
-        localId: m.localId || m.number || '', setName: m.setName || (m.set && m.set.name) || '',
+        localId: m.localId || m.number || '', setName: m.setName || (m.set && m.set.name) || '', lang: m.lang || 'en',
         cmUrl: isCustom ? (m.cardmarketUrl || '') : '', saved: saved,
         anniv: id.indexOf('30th-') === 0,
         sealed: id.indexOf('sealed-') === 0
@@ -10328,7 +10328,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       });
     }
     if (force) delete tcgCardDetailCache['en:' + item.id];
-    return fetchTcgCardDetail(item.id, 'en').then(function(detail) {
+    return fetchTcgCardDetail(item.id, item.lang || 'en').then(function(detail) {
       var v = pickCardmarketPrice(detail && detail.pricing && detail.pricing.cardmarket);
       if (v != null) return { price: v, src: 'Cardmarket' };
       var num = tcgCardLocalNumber({ id: item.id, localId: item.localId });
@@ -10344,7 +10344,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function shopClaudeLookup(batch) {
     var lines = batch.map(function(it) {
       return '- key=' + it.id + ' | ' + it.englishName + (it.name !== it.englishName ? ' (' + it.name + ')' : '') +
-        ' | set: ' + (it.anniv ? '30th Celebration / 30 Aniversario' : (it.setName || '?')) +
+        ' | lang: ' + (it.lang || 'en') + ' | set: ' + (it.anniv ? '30th Celebration / 30 Aniversario' : (it.setName || '?')) +
         ' | n\u00ba ' + (it.localId || '?') + (it.anniv ? ' | edici\u00f3n en castellano' : '');
     }).join('\n');
     var prompt = 'Busca en cardmarket.com el precio actual en euros de estas cartas del TCG de Pok\u00e9mon. ' +
