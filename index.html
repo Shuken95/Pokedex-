@@ -2364,7 +2364,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
         <span>Modo día / noche</span>
       </button>
-      <p class="backup-desc" style="margin:6px 0 0">El modo día/noche solo afecta al estilo iOS.</p></div>
       <button id="backup-btn" type="button" class="backup-action" title="Copia de seguridad">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>Copia de seguridad</span>
@@ -2380,11 +2379,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       <p class="backup-desc">Avisos con la app cerrada. La conexión del servicio ya viene integrada. Activa las notificaciones en este móvil para recibir avisos aunque la app esté cerrada.</p>
       <input id="settings-push-url" type="hidden" value="https://pokedex-avisos.danicrevi95.workers.dev">
       <input id="settings-push-key" type="hidden">
-      <label class="toggle" style="margin:0 2px 10px">
-        <input type="checkbox" id="settings-push-telegram" checked>
-        <span class="toggle-track"><span class="toggle-thumb"></span></span>
-        <span class="toggle-label">Avisar por Telegram (si lo has vinculado)</span>
-      </label>
+      <input type="checkbox" id="settings-push-telegram" checked hidden>
       <label class="toggle" style="margin:0 2px 10px">
         <input type="checkbox" id="settings-push-releases" checked>
         <span class="toggle-track"><span class="toggle-thumb"></span></span>
@@ -8258,6 +8253,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   // Compatibilidad: una petición contains + filtro local (rápido).
+  function tcgSearchSpeciesTerm(term) { return String(term || '').trim().replace(/^(shiny|shining|radiant|brillante|brilliante)\s+/i, '').trim(); }
+
   function tcgFetchNameVariants(langCode, speciesName) {
     return tcgFetchJson(tcgNameSearchUrl(langCode, speciesName))
       .then(function(list) {
@@ -8616,6 +8613,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   function runTcgSearch() {
     var name = tcgSearchInput.value.trim();
+    var speciesName = tcgSearchSpeciesTerm(name);
     var myRequestId = ++tcgRequestId;
     tcgGridEl.innerHTML = '';
 
@@ -8639,7 +8637,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (tcgLang === 'en') {
       tcgStatusEl.textContent = 'Buscando cartas de \u201c' + name + '\u201d\u2026';
       tcgStatusEl.style.display = 'block';
-      tcgFetchNameVariants('en', name)
+      tcgFetchNameVariants('en', speciesName)
         .then(function(matches) {
           if (myRequestId !== tcgRequestId) return;
           var filtered = (matches || []).filter(function(c) { return tcgNameMatches(c.name, name); });
@@ -8656,7 +8654,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgStatusEl.textContent = 'Traduciendo el nombre a ' + tcgLangLabel(tcgLang) + '\u2026';
     tcgStatusEl.style.display = 'block';
 
-    resolveLocalizedName(name, tcgLang).then(function(localizedName) {
+    resolveLocalizedName(speciesName, tcgLang).then(function(localizedName) {
       if (myRequestId !== tcgRequestId) return;
 
       if (localizedName) {
@@ -8666,7 +8664,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         tcgStatusEl.textContent = 'Buscando \u201c' + localizedName + '\u201d en ' + tcgLangLabel(tcgLang) + '\u2026';
         Promise.all([
           tcgFetchNameVariants(tcgLang, localizedName),
-          tcgFetchNameVariants('en', name)
+          tcgFetchNameVariants('en', speciesName)
         ]).then(function(results) {
           if (myRequestId !== tcgRequestId) return;
           var byNameMatches = Array.isArray(results[0]) ? results[0] : [];
@@ -8715,7 +8713,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
       // No se pudo traducir el nombre: buscamos en inglés y comprobamos carta a carta
       tcgStatusEl.textContent = 'No se pudo traducir el nombre autom\u00e1ticamente. Buscando ediciones en ' + tcgLangLabel(tcgLang) + '\u2026';
-      tcgFetchNameVariants('en', name).then(function(matches) {
+      tcgFetchNameVariants('en', speciesName).then(function(matches) {
         if (myRequestId !== tcgRequestId) return;
         if (!Array.isArray(matches) || matches.length === 0) {
           tcgGridEl.innerHTML = '';
@@ -8756,17 +8754,18 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgStatusEl.textContent = 'Buscando \u201c' + name + '\u201d en todos los idiomas\u2026';
     tcgStatusEl.style.display = 'block';
 
+    var searchName = tcgSearchSpeciesTerm(name);
     var langCodes = TCG_LANGS
       .map(function(l) { return l[0]; })
       .filter(function(code) { return code !== 'all'; });
 
     var tasks = langCodes.map(function(code) {
       if (code === 'en') {
-        return tcgFetchNameVariants('en', name)
+        return tcgFetchNameVariants('en', searchName)
           .then(function(matches) { return { code: code, cards: Array.isArray(matches) ? matches : [] }; })
           .catch(function() { return { code: code, cards: [] }; });
       }
-      return resolveLocalizedName(name, code).then(function(localizedName) {
+      return resolveLocalizedName(searchName, code).then(function(localizedName) {
         var query = localizedName || name;
         return tcgFetchNameVariants(code, query)
           .then(function(matches) { return { code: code, cards: Array.isArray(matches) ? matches : [] }; })
@@ -11514,7 +11513,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       tile('tcg', stats.ownedCount, 'cartas en tu colecci\u00f3n') +
       tile('tcg', priced.length ? formatEuro(stats.total / priced.length) : '\u2014', 'valor medio por carta') +
       tile('shop', followed, 'seguidas \u00b7 \u25b2' + ups + ' \u25bc' + downs) + '</div>';
-    html += '<section class="home-card home-stats-card"><h3>Estadísticas</h3>' +
       '<div class="home-row"><span>Pokémon registrados</span><span>' + esc(overallCountEl.textContent || '-') + '</span></div>' +
       '<div class="home-row"><span>Cartas en colección</span><span>' + stats.ownedCount + '</span></div>' +
       '<div class="home-row"><span>Valor estimado</span><span>' + (formatEuro(stats.total) || '0,00 €') + '</span></div>' +
