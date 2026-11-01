@@ -8781,13 +8781,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var tasks = langCodes.map(function(code) {
       if (code === 'en') {
         return tcgFetchNameVariants('en', searchName)
-          .then(function(matches) { return { code: code, cards: Array.isArray(matches) ? matches : [] }; })
+          .then(function(matches) { return { code: code, queryName: (typeof searchName !== 'undefined' ? searchName : (typeof query !== 'undefined' ? query : name)), cards: Array.isArray(matches) ? matches : [] }; })
           .catch(function() { return { code: code, cards: [] }; });
       }
       return resolveLocalizedName(searchName, code).then(function(localizedName) {
         var query = localizedName || searchName;
         return tcgFetchNameVariants(code, query)
-          .then(function(matches) { return { code: code, cards: Array.isArray(matches) ? matches : [] }; })
+          .then(function(matches) { return { code: code, queryName: (typeof searchName !== 'undefined' ? searchName : (typeof query !== 'undefined' ? query : name)), cards: Array.isArray(matches) ? matches : [] }; })
           .catch(function() { return { code: code, cards: [] }; });
       }).catch(function() {
         return { code: code, cards: [] };
@@ -8802,9 +8802,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       results.forEach(function(r) {
         (r.cards || []).forEach(function(c) {
           if (!c || !c.id || seen[c.id]) return;
+          var expected = r.queryName || name;
+          if (c.name && !tcgNameMatches(c.name, expected)) return;
           seen[c.id] = true;
           c._matchLang = r.code;
-          c._queryName = name;
+          c._queryName = expected;
           merged.push(c);
         });
       });
