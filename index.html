@@ -3138,7 +3138,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function tryExternalTcgImage(card, img, done) {
     if (!card || !img) { done(); return; }
     var cached = tcgExternalImageCache[card.id] || tcgImageOverrides[card.id];
-    if (cached) { img.src = cached; return; }
+    if (cached && lang !== 'ja') { img.src = cached; return; }
 
     var candidates = [], seen = {}, finished = false, metaDone = false, probing = false;
     function add(url) { if (url && !seen[url]) { seen[url] = true; candidates.push(url); } }
@@ -3237,11 +3237,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       .then(function(res) { return res.ok ? res.json() : null; })
       .catch(function() { return null; });
 
-    startProbe();
 
     Promise.all([detailP, setP, workerP]).then(function(results) {
       var detail = results[0], set = results[1], data = results[2];
-      if (detail && detail.image) add(tcgCardImageUrl(detail.image, 'low'));
+      if (detail && detail.image) {
+        var exact = tcgCardImageUrl(detail.image, 'low');
+        if (exact) candidates.unshift(exact);
+      }
       if (detail && detail.variants_detailed) {
         detail.variants_detailed.forEach(function(v) {
           var id = v && v.thirdParty && v.thirdParty.tcgplayer;
@@ -3257,11 +3259,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         var wanted = String(num).replace(/^0+/, '') || num;
         data.cards.forEach(function(x) {
           var xn = String(x.number || '').replace(/^0+/, '') || String(x.number || '');
-          if (xn === wanted && x.image) add(x.image);
+          var sourceName = String(x.name || '').trim();
+          var expectedName = String(card._searchName || card.name || '').trim();
+          var nameOk = !sourceName || !expectedName || (typeof tcgNameMatches === 'function' && tcgNameMatches(sourceName, expectedName));
+          if (xn === wanted && nameOk && x.image) add(x.image);
         });
       }
       metaDone = true;
-      resumeProbeIfNeeded();
+      startProbe();
     }).catch(function() {
       metaDone = true;
       resumeProbeIfNeeded();
