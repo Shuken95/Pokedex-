@@ -11528,7 +11528,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     try {
       var hitItems = shopAlertItems(shopTrackedItems());
       if (hitItems.length) html += '<section class="home-card"><h3>' + ICO.bell + ' En tu precio</h3>' +
-        hitItems.slice(0, 5).map(function(it) { return row(it.name, formatEuro(shopInfo(it.id).price) + ' (\u2264 ' + formatEuro(shopTargetOf(it.id)) + ')', 'down'); }).join('') + '</section>';
+        hitItems.slice(0, 5).map(function(it) { return '<button type="button" class="home-row is-link home-buy-row" data-buy-card="' + esc(it.id) + '"><span>' + esc(it.name) + '</span><span class="down">' + formatEuro(shopInfo(it.id).price) + ' (≤ ' + formatEuro(shopTargetOf(it.id)) + ') ↗</span></button>'; }).join('') + '</section>';
     } catch (e) {}
     if (priced.length) html += '<section class="home-card"><h3>Tus cartas m\u00e1s valiosas</h3>' +
       priced.slice(0, 3).map(function(p) { return row(p.name, formatEuro(p.price)); }).join('') + '</section>';
