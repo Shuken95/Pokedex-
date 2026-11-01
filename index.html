@@ -11514,6 +11514,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       tile('tcg', stats.ownedCount, 'cartas en tu colecci\u00f3n') +
       tile('tcg', priced.length ? formatEuro(stats.total / priced.length) : '\u2014', 'valor medio por carta') +
       tile('shop', followed, 'seguidas \u00b7 \u25b2' + ups + ' \u25bc' + downs) + '</div>';
+    html += '<section class="home-card home-stats-card"><h3>Estadísticas</h3>' +
+      '<div class="home-row"><span>Pokémon registrados</span><span>' + esc(overallCountEl.textContent || '-') + '</span></div>' +
+      '<div class="home-row"><span>Cartas en colección</span><span>' + stats.ownedCount + '</span></div>' +
+      '<div class="home-row"><span>Valor estimado</span><span>' + (formatEuro(stats.total) || '0,00 €') + '</span></div>' +
+      '<div class="home-row"><span>Cartas seguidas</span><span>' + followed + '</span></div></section>';
 
     var row = function(name, right, cls) { return '<div class="home-row"><span>' + esc(name) + '</span><span class="' + (cls || '') + '">' + right + '</span></div>'; };
     html += '<section class="home-card"><h3>Cambios en tus seguidas</h3>' + (movers.length ?
@@ -12872,7 +12877,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
           }).join('');
         }
         extra += '</section>';
-        extra += '<section class="home-card"><h3>Copia de seguridad rápida</h3><p class="home-sub">Exporta o importa tu colección desde Ajustes. Atajo:</p><div class="home-export-row"><button type="button" id="home-backup-btn">Descargar backup JSON</button></div></section>';
         host.insertAdjacentHTML('beforeend', extra);
         var cw = document.getElementById('home-copy-wishlist');
         if (cw) cw.addEventListener('click', function() {
