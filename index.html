@@ -4078,7 +4078,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       .catch(function(err) { if (lang === 'en') throw err; return get('en'); })
       .then(function(d) {
         if (!d || !d.image) return null;
-        var info = { name: d.name, image: d.image, localId: d.localId, set: d.set ? { id: d.set.id, name: d.set.name } : null, rarity: d.rarity || '' };
+        var info = { name: d.name, image: tcgCardImageUrl(d.image, 'low'), localId: d.localId, set: d.set ? { id: d.set.id, name: d.set.name } : null, rarity: d.rarity || '' };
         tcgOwnedCardsCache[id] = info;
         return info;
       })
@@ -6624,7 +6624,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var now = Date.now();
     var pending = Array.from(tcgOwned).filter(function(id) {
       var cached = huchaPriceCache[id];
-      return force || !cached || (now - cached.at) > HUCHA_TTL_MS;
+      var meta = tcgOwnedMeta[id] || tcgSavedMeta[id] || {};
+      var wantedLang = typeof tcgInferCardLang === 'function' ? tcgInferCardLang(meta) : (meta.lang || 'en');
+      return force || !cached || cached.lang !== wantedLang || (now - cached.at) > HUCHA_TTL_MS;
     });
     if (pending.length === 0) { renderHuchaTotal(); return; }
 
@@ -6649,9 +6651,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
           // Solo se guarda el precio inmediatamente anterior (no un histórico completo) para
           // poder mostrar "quién ha subido/bajado" desde la última vez que se consultó.
           var prevPrice = (previous && typeof previous.price === 'number') ? previous.price : null;
-          huchaPriceCache[id] = { price: price, at: Date.now(), prevPrice: prevPrice };
+          huchaPriceCache[id] = { price: price, at: Date.now(), prevPrice: prevPrice, lang: lang };
         })
-        .catch(function() { huchaPriceCache[id] = { price: null, at: Date.now() }; })
+        .catch(function() { huchaPriceCache[id] = { price: null, at: Date.now(), lang: lang }; })
         .then(next);
     }
     var workers = [];
