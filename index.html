@@ -1399,6 +1399,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   .home-row.is-link{ cursor:pointer; -webkit-tap-highlight-color:transparent; }
   .home-row.is-link:active{ opacity:.65; }
   .home-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:13px;border-top:1px solid var(--border)}
+  .home-valuable-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--border);text-align:left;width:100%;background:none;color:var(--text);font:inherit;}
+  .home-valuable-thumb{width:34px;height:48px;object-fit:cover;border-radius:4px;background:var(--surface-hover);flex-shrink:0;}
+  .home-valuable-main{min-width:0;flex:1;overflow:hidden;}
+  .home-valuable-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .home-valuable-meta{display:block;color:var(--text-dim);font-size:11px;margin-top:2px;}
   .home-row span:last-child{font-weight:600;white-space:nowrap}
   header .mode-tabs .mode-tab{padding-left:2px;padding-right:2px;font-size:12px;white-space:nowrap}
   html[data-style="arcade"] header .mode-tabs .mode-tab{font-size:7px;padding:12px 2px}
@@ -11539,7 +11544,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       var c = huchaPriceCache[id];
       if (c && typeof c.price === 'number') {
         var meta = tcgOwnedMeta[id];
-        priced.push({ name: meta ? formatName(tcgMetaSlug(meta) || '') : id, price: c.price });
+        priced.push({ id: id, name: meta ? formatName(tcgMetaSlug(meta) || '') : id, price: c.price, image: (tcgOwnedCardsCache[id] && tcgOwnedCardsCache[id].image) || (tcgSavedMeta[id] && tcgSavedMeta[id].image) || '' });
       }
     });
     priced.sort(function(a, b) { return b.price - a.price; });
@@ -11579,9 +11584,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (hitItems.length) html += '<section class="home-card"><h3>' + ICO.bell + ' En tu precio</h3>' +
         hitItems.slice(0, 5).map(function(it) { return '<button type="button" class="home-row is-link home-buy-row" data-buy-card="' + esc(it.id) + '"><span>' + esc(it.name) + '</span><span class="down">' + formatEuro(shopInfo(it.id).price) + ' (≤ ' + formatEuro(shopTargetOf(it.id)) + ') ↗</span></button>'; }).join('') + '</section>';
     } catch (e) {}
-    if (priced.length) html += '<section class="home-card"><h3>Tus cartas m\u00e1s valiosas</h3>' +
-      priced.slice(0, 3).map(function(p) { return row(p.name, formatEuro(p.price)); }).join('') + '</section>';
+    if (priced.length) html += '<section class="home-card"><h3>Tus cartas más valiosas</h3>' + priced.slice(0, 3).map(function(p) { return '<div class="home-valuable-row">' + (p.image ? '<img class="home-valuable-thumb" src="' + esc(p.image) + '" loading="lazy" alt="">' : '<span class="home-valuable-thumb"></span>') + '<span class="home-valuable-main"><span class="home-valuable-name">' + esc(p.name) + '</span><span class="home-valuable-meta">' + formatEuro(p.price) + '</span></span></div>'; }).join('') + '</section>';
     homeViewEl.innerHTML = html;
+    var topMissing = priced.slice(0, 3).filter(function(p) { return !p.image; }).map(function(p) { return p.id; });
+    if (topMissing.length && !renderHome._valuableImagesPending && typeof fetchOwnedCardInfo === 'function') {
+      renderHome._valuableImagesPending = true;
+      Promise.all(topMissing.map(fetchOwnedCardInfo)).then(function() { renderHome._valuableImagesPending = false; renderHome(); }).catch(function() { renderHome._valuableImagesPending = false; });
+    }
     if (typeof renderValueBreakdown === 'function' && valuePopupEl && !valuePopupEl.hidden) renderValueBreakdown();
   }
   homeViewEl.addEventListener('click', function(e) {
