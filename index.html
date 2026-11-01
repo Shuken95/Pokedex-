@@ -8269,15 +8269,18 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (original && original.toLowerCase() !== base.toLowerCase()) terms.push(original);
     return Promise.all(terms.map(function(term) {
       return tcgFetchJson(tcgNameSearchUrl(langCode, term)).catch(function() { return []; });
-    }).then(function(rows) {
+    })).then(function(rows) {
       var seen = {}, merged = [];
-      rows.forEach(function(list) { (Array.isArray(list) ? list : []).forEach(function(c) {
-        if (!c || !c.id || seen[c.id]) return;
-        if (c.name && !tcgNameMatches(c.name, base)) return;
-        seen[c.id] = true; merged.push(c);
-      }); });
+      rows.forEach(function(list) {
+        (Array.isArray(list) ? list : []).forEach(function(c) {
+          if (!c || !c.id || seen[c.id]) return;
+          if (c.name && !tcgNameMatches(c.name, base)) return;
+          seen[c.id] = true;
+          merged.push(c);
+        });
+      });
       return merged;
-    })).catch(function() { return []; });
+    }).catch(function() { return []; });
   }
 
   // Devuelve el listado {id, name, display} del Pokédex para un slug dado (ej. "charmander")
