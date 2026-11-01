@@ -3982,7 +3982,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       savedGridEl.hidden = false;
       ids.forEach(function(id) {
         var meta = tcgSavedMeta[id];
-        var card = { id: id, name: meta.name, image: meta.image, localId: meta.localId, set: meta.set || null, _matchLang: meta.lang || 'en' };
+        var card = { id: id, name: meta.name, image: meta.image, localId: meta.localId, set: meta.set || null, _matchLang: tcgInferCardLang(meta) };
         var setLabel = meta.set ? meta.set.name : (id.split('-')[0] || '');
         savedGridEl.appendChild(buildTcgCard(card, setLabel, meta.englishName));
       });
@@ -10262,6 +10262,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   // Une las cartas guardadas (siempre se siguen) con las añadidas desde las sugerencias.
+  function tcgInferCardLang(meta) {
+    if (meta && meta.lang) return meta.lang;
+    var n = String(meta && (meta.name || meta.displayName) || '');
+    if (/[ぁ-んァ-ン]/.test(n)) return 'ja';
+    if (/[가-힣]/.test(n)) return 'ko';
+    if (/[一-龯]/.test(n)) return 'zh-tw';
+    return 'en';
+  }
+
   function shopTrackedItems() {
     var items = {};
     function add(id, m, saved) {
@@ -10274,7 +10283,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       var english = m.englishName || (isCustom && m.slug ? formatName(m.slug) : name);
       items[id] = {
         id: id, name: name, englishName: english, imageBase: isCustom ? null : base, image: img,
-        localId: m.localId || m.number || '', setName: m.setName || (m.set && m.set.name) || '', lang: m.lang || 'en',
+        localId: m.localId || m.number || '', setName: m.setName || (m.set && m.set.name) || '', lang: tcgInferCardLang(m),
         cmUrl: isCustom ? (m.cardmarketUrl || '') : '', saved: saved,
         anniv: id.indexOf('30th-') === 0,
         sealed: id.indexOf('sealed-') === 0
