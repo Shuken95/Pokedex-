@@ -8270,16 +8270,23 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     return Promise.all(terms.map(function(term) {
       return tcgFetchJson(tcgNameSearchUrl(langCode, term)).catch(function() { return []; });
     })).then(function(rows) {
-      var seen = {}, merged = [];
-      rows.forEach(function(list) {
-        (Array.isArray(list) ? list : []).forEach(function(c) {
-          if (!c || !c.id || seen[c.id]) return;
-          if (c.name && !tcgNameMatches(c.name, base)) return;
-          seen[c.id] = true;
-          merged.push(c);
-        });
-      });
-      return merged;
+      var raw = [], seenRaw = {};
+      rows.forEach(function(list) { (Array.isArray(list) ? list : []).forEach(function(c) {
+        if (!c || !c.id || seenRaw[c.id]) return;
+        seenRaw[c.id] = true; raw.push(c);
+      }); });
+      // Las respuestas resumidas de algunos idiomas pueden reciclar IDs; la ficha
+      // detallada del idioma es la fuente de verdad para evitar Jynx/Blastoise.
+      return Promise.all(raw.map(function(card) {
+        if (langCode === 'en') return Promise.resolve(card);
+        return fetchTcgCardDetail(card.id, langCode).then(function(detail) {
+          if (!detail || !detail.name || !tcgNameMatches(detail.name, base)) return null;
+          card.name = detail.name; card.image = detail.image || card.image || null; card.localId = detail.localId || card.localId; card.set = detail.set || card.set;
+          return card;
+        }).catch(function() { return null; });
+      }));
+    }).then(function(cards) {
+      return cards.filter(function(c) { return c && (!c.name || tcgNameMatches(c.name, base)); });
     }).catch(function() { return []; });
   }
 
