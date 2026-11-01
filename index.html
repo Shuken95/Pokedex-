@@ -6609,7 +6609,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (!entry || !entry.cardmarketUrl) return Promise.resolve(null);
       return fetchManualCardmarketPrice(entry.cardmarketUrl).then(pickCardmarketPrice);
     }
-    return fetchTcgCardDetail(id, 'en').then(function(detail) {
+    var meta = tcgOwnedMeta[id] || tcgSavedMeta[id] || {};
+    var lang = typeof tcgInferCardLang === 'function' ? tcgInferCardLang(meta) : (meta.lang || 'en');
+    return fetchTcgCardDetail(id, lang).then(function(detail) {
       return pickCardmarketPrice(detail && detail.pricing && detail.pricing.cardmarket);
     });
   }
