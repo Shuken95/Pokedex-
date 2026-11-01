@@ -8237,6 +8237,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var q = tcgNormalizeName(term);
     if (!card || !q || q.length < 2) return false;
     if (card === q) return true;
+    // En japonés los modificadores suelen ir pegados al nombre: かがやくリザードン,
+    // メガリザードンXex. La coincidencia por substring es segura aquí porque
+    // comparamos la especie japonesa completa y no un fragmento latino.
+    if (/[぀-ヿ㐀-鿿]/.test(q) && card.indexOf(q) !== -1) return true;
     // Prefijo exacto del nombre de carta: "charizard ex"
     if (card.indexOf(q) === 0) {
       var n = card.charAt(q.length);
