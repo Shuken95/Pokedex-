@@ -2727,7 +2727,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <div id="shop-releases-list" data-testid="shop-releases-list"></div>
         <p id="shop-releases-note" class="tcg-missing-dex-empty"></p>
         <div class="shop-suggest-actions">
-          <button type="button" id="shop-releases-claude" class="shop-refresh-btn" data-testid="shop-releases-claude">Actualizar con IA</button>
+          <button type="button" id="shop-releases-ai" class="shop-refresh-btn" data-testid="shop-releases-ai">Actualizar con IA</button>
           <button type="button" id="shop-releases-add-toggle" class="shop-chip" data-testid="shop-releases-add-toggle">+ Añadir fecha</button>
         </div>
         <div id="shop-releases-form" class="shop-form" hidden>
@@ -2885,7 +2885,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var TCG_SHOP_USERNAME_KEY = 'pokecheck_tcg_shop_username_v1';
   var SWIPE_HINT_KEY = 'pokecheck_swipe_hint_seen_v1';
   var TABTIPS_KEY = 'pokecheck_tabtips_seen_v1';
-  var ANTHROPIC_KEY_KEY = 'pokecheck_anthropic_key_v1';
+  var AI_WORKER_ENABLED_KEY = 'pokecheck_ai_worker_enabled_v1';
   var PRICE_ALERTS_KEY = 'pokecheck_price_alerts_v1';
   var TCG_HUCHA_CACHE_KEY = 'pokecheck_tcg_hucha_cache_v1';
   var TCG_HUCHA_HISTORY_KEY = 'pokecheck_tcg_hucha_history_v1';
@@ -3298,8 +3298,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!tcgImageOverrides || typeof tcgImageOverrides !== 'object') tcgImageOverrides = {};
   } catch (e) { tcgImageOverrides = {}; }
 
-  // La IA se ejecuta detrás del Worker con Groq; la clave nunca llega al navegador.
-  var anthropicApiKey = 'worker';
+  // La IA usa Groq a través del Worker; la clave permanece en el servidor.
+  var aiWorkerEnabled = true;
 
   // Aviso de bajada de precio: IMPORTANTE, no es push real en segundo plano (esta app no
   // tiene backend). Solo comprueba precios cuando se abre la app o las Estadísticas, y si
@@ -3798,7 +3798,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   function openSettingsPopup() {
-    settingsApiKeyInput.value = anthropicApiKey;
+    settingsApiKeyInput.value = aiWorkerEnabled;
     settingsPopup.hidden = false;
     requestAnimationFrame(function() { settingsPopup.classList.add('is-open'); });
   }
@@ -4800,10 +4800,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   settingsBackdrop.addEventListener('click', closeSettingsPopup);
   settingsClose.addEventListener('click', closeSettingsPopup);
   settingsApiKeyInput.addEventListener('change', function() {
-    anthropicApiKey = settingsApiKeyInput.value.trim();
-    try { localStorage.setItem(ANTHROPIC_KEY_KEY, anthropicApiKey); } catch (e) {}
+    aiWorkerEnabled = settingsApiKeyInput.value.trim();
+    try { localStorage.setItem(AI_WORKER_ENABLED_KEY, aiWorkerEnabled); } catch (e) {}
     settingsApiKeyStatus.hidden = false;
-    settingsApiKeyStatus.textContent = anthropicApiKey ? 'Clave guardada en este dispositivo.' : 'Clave eliminada.';
+    settingsApiKeyStatus.textContent = aiWorkerEnabled ? 'Servicio de IA configurado en este dispositivo.' : 'Servicio de IA desactivado.';
     setTimeout(function() { settingsApiKeyStatus.hidden = true; }, 2500);
   });
 
@@ -6146,8 +6146,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // enlace de Cardmarket: la IA solo rellena nombre/set/número/idioma, el usuario revisa y
   // confirma con el botón normal de "Añadir a mi colección". No se añade nada sin repasar.
 
-  var CLAUDE_SCAN_MODEL = 'claude-sonnet-5';
-  var CLAUDE_SCAN_PROMPT = 'Esta es una foto de una carta del juego de cartas coleccionables de Pok\u00e9mon, en cualquier idioma (incluido japon\u00e9s). Identif\u00edcala y responde \u00daNICAMENTE con un objeto JSON sin texto adicional ni backticks, con esta forma exacta: {"name": "nombre del Pok\u00e9mon en ingl\u00e9s", "set": "nombre de la expansi\u00f3n o set si se distingue, si no cadena vac\u00eda", "number": "n\u00famero impreso en la carta tal cual aparece (ej. 025/078), si no cadena vac\u00eda", "lang": "c\u00f3digo de idioma de la carta: en, ja, es, es-mx, fr, de, it, pt, pt-br, pt-pt, nl, pl, ru, ko, zh-tw, zh-cn, id o th; cadena vac\u00eda si no est\u00e1s seguro"}. Si no reconoces la carta con confianza, deja "name" como cadena vac\u00eda.';
+  var GROQ_AI_MODEL = 'qwen/qwen3.8-27b';
+  var GROQ_CARD_SCAN_PROMPT = 'Esta es una foto de una carta del juego de cartas coleccionables de Pok\u00e9mon, en cualquier idioma (incluido japon\u00e9s). Identif\u00edcala y responde \u00daNICAMENTE con un objeto JSON sin texto adicional ni backticks, con esta forma exacta: {"name": "nombre del Pok\u00e9mon en ingl\u00e9s", "set": "nombre de la expansi\u00f3n o set si se distingue, si no cadena vac\u00eda", "number": "n\u00famero impreso en la carta tal cual aparece (ej. 025/078), si no cadena vac\u00eda", "lang": "c\u00f3digo de idioma de la carta: en, ja, es, es-mx, fr, de, it, pt, pt-br, pt-pt, nl, pl, ru, ko, zh-tw, zh-cn, id o th; cadena vac\u00eda si no est\u00e1s seguro"}. Si no reconoces la carta con confianza, deja "name" como cadena vac\u00eda.';
 
   // Redimensiona/comprime la foto en el propio navegador antes de enviarla: una foto de
   // móvil sin tocar puede pesar varios MB, y para identificar una carta sobra con mucha
@@ -6175,23 +6175,20 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     return TCG_LANGS.some(function(l) { return l[0] === code && l[0] !== 'all'; });
   }
 
-  function callClaudeCardScan(base64Image) {
+  function callGroqCardScan(base64Image) {
     return fetch('https://pokedex-avisos.danicrevi95.workers.dev/ai', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: CLAUDE_SCAN_MODEL,
+        model: GROQ_AI_MODEL,
         max_tokens: 300,
         messages: [{
           role: 'user',
           content: [
             { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64Image } },
-            { type: 'text', text: CLAUDE_SCAN_PROMPT }
+            { type: 'text', text: GROQ_CARD_SCAN_PROMPT }
           ]
         }]
       })
@@ -6332,7 +6329,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         tcgScanPreviewImg.src = 'data:image/jpeg;base64,' + base64;
         tcgScanPreview.hidden = false;
         tcgScanPreview.classList.add('is-scanning');
-        return callClaudeCardScan(base64);
+        return callGroqCardScan(base64);
       })
       .then(function(result) {
         if (!result) {
@@ -6374,7 +6371,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         showTcgAddForm(
           {},
           isAuthError
-            ? 'La clave API no es válida. Revísala en Ajustes.'
+            ? 'El servicio de IA no acepta la petición. Revisa la configuración de Groq.'
             : 'No se pudo consultar la IA. Rellena los datos a mano.',
           true
         );
@@ -6382,10 +6379,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   tcgAddScanBtn.addEventListener('click', function() {
-    if (!anthropicApiKey) {
+    if (!aiWorkerEnabled) {
       tcgAddLinkStatus.hidden = false;
       tcgAddLinkStatus.className = 'tcg-add-status is-error';
-      tcgAddLinkStatus.textContent = 'Añade tu clave API de la IA en Ajustes para poder escanear cartas.';
+      tcgAddLinkStatus.textContent = 'El servicio de IA no está activado. Revisa Ajustes.';
       return;
     }
     tcgScanFileInput.value = '';
@@ -10436,8 +10433,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var SHOP_LAST_REFRESH_KEY = 'pokecheck_shop_last_refresh_v1';
   var SHOP_TTL_MS = 24 * 60 * 60 * 1000;
   var SHOP_HISTORY_MAX = 90;
-  var SHOP_CLAUDE_BATCH = 8;
-  var SHOP_CLAUDE_MAX = 24;
+  var SHOP_GROQ_BATCH = 8;
+  var SHOP_GROQ_MAX = 24;
   var SHOP_ICON_CART = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>';
   var SHOP_ICON_BELL = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>';
   var SHOP_ICON_X = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
@@ -10592,7 +10589,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     }).catch(function() { return null; });
   }
 
-  function shopClaudeLookup(batch) {
+  function shopGroqLookup(batch) {
     var lines = batch.map(function(it) {
       return '- key=' + it.id + ' | ' + it.englishName + (it.name !== it.englishName ? ' (' + it.name + ')' : '') +
         ' | lang: ' + (it.lang || 'en') + ' | set: ' + (it.anniv ? '30th Celebration / 30 Aniversario' : (it.setName || '?')) +
@@ -10606,12 +10603,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: CLAUDE_SCAN_MODEL,
+        model: GROQ_AI_MODEL,
         max_tokens: 2000,
         tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 6 }],
         messages: [{ role: 'user', content: prompt }]
@@ -10657,15 +10651,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var workers = [];
     for (var w = 0; w < 3; w++) workers.push(next());
     Promise.all(workers).then(function() {
-      if (!anthropicApiKey || missing.length === 0) return;
-      var todo = missing.slice(0, SHOP_CLAUDE_MAX);
-      skipped = missing.slice(SHOP_CLAUDE_MAX).map(function(it) { return it.id; });
+      if (!aiWorkerEnabled || missing.length === 0) return;
+      var todo = missing.slice(0, SHOP_GROQ_MAX);
+      skipped = missing.slice(SHOP_GROQ_MAX).map(function(it) { return it.id; });
       var batches = [];
-      for (var b = 0; b < todo.length; b += SHOP_CLAUDE_BATCH) batches.push(todo.slice(b, b + SHOP_CLAUDE_BATCH));
+      for (var b = 0; b < todo.length; b += SHOP_GROQ_BATCH) batches.push(todo.slice(b, b + SHOP_GROQ_BATCH));
       shopRefreshLabel.textContent = 'IA\u2026';
       return batches.reduce(function(chain, batch) {
         return chain.then(function() {
-          return shopClaudeLookup(batch).then(function(results) {
+          return shopGroqLookup(batch).then(function(results) {
             results.forEach(function(r) {
               if (!r || !r.key) return;
               var price = typeof r.price === 'number' ? r.price : parseFloat(String(r.price || '').replace(',', '.'));
@@ -10725,7 +10719,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       shopStatsEl.appendChild(shopEl('span', 'shop-down', '\u25bc ' + downs + ' bajan'));
     }
     shopNoteEl.textContent = 'Precios de Cardmarket (tendencia, EUR). Se refrescan solos cada 24 h al abrir la app.' +
-      (anthropicApiKey ? ' Las cartas sin precio se buscan con la IA.' : ' A\u00f1ade tu clave de IA en Ajustes para buscar las que no tengan precio.');
+      (aiWorkerEnabled ? ' Las cartas sin precio se buscan con la IA.' : ' Activa el servicio de IA en Ajustes para buscar las cartas sin precio.');
     shopRefreshBtn.disabled = shopRefreshing;
     shopRefreshBtn.classList.toggle('is-busy', shopRefreshing);
     if (shopRefreshing) {
@@ -11400,7 +11394,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function searchReleasePreorders() {
     var r = releaseCurrent;
     if (!r) return;
-    if (!anthropicApiKey) { releasePreorderMsg('Necesitas tu clave de IA en Ajustes para esto.', true); return; }
+    if (!aiWorkerEnabled) { releasePreorderMsg('El servicio de IA no está activado. Revisa Ajustes.', true); return; }
     releasePreorderBtn.disabled = true;
     releasePreorderMsg('Buscando preventas\u2026', false);
     var today = new Date().toISOString().slice(0, 10);
@@ -11412,9 +11406,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var key = releaseKey(r);
     fetch('https://pokedex-avisos.danicrevi95.workers.dev/ai', {
       method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-api-key': anthropicApiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        model: CLAUDE_SCAN_MODEL, max_tokens: 3000, thinking: { type: 'disabled' },
+        model: GROQ_AI_MODEL, max_tokens: 3000, thinking: { type: 'disabled' },
         tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 6 }],
         messages: [{ role: 'user', content: prompt }]
       })
@@ -11514,9 +11508,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     shopReleasesMsg('', false);
     renderShopReleases();
   });
-  document.getElementById('shop-releases-claude').addEventListener('click', function() {
+  document.getElementById('shop-releases-ai').addEventListener('click', function() {
     var btn = this;
-    if (!anthropicApiKey) { shopReleasesMsg('Necesitas tu clave de IA en Ajustes para esto.', true); return; }
+    if (!aiWorkerEnabled) { shopReleasesMsg('El servicio de IA no está activado. Revisa Ajustes.', true); return; }
     btn.disabled = true;
     shopReleasesMsg('Buscando lanzamientos…', false);
     var today = new Date().toISOString().slice(0, 10);
@@ -11524,9 +11518,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       'Responde ÚNICAMENTE con un array JSON sin texto adicional ni backticks, con máximo 15 elementos ordenados por fecha: [{"d":"AAAA-MM-DD","n":"nombre del lanzamiento","k":"Expansión" o "Producto"}].';
     fetch('https://pokedex-avisos.danicrevi95.workers.dev/ai', {
       method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-api-key': anthropicApiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        model: CLAUDE_SCAN_MODEL, max_tokens: 3000, thinking: { type: 'disabled' },
+        model: GROQ_AI_MODEL, max_tokens: 3000, thinking: { type: 'disabled' },
         tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }],
         messages: [{ role: 'user', content: prompt }]
       })
@@ -12699,7 +12693,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   // ---------- Explicación del equipo con IA ----------
-  var CLAUDE_VGC_MODEL = CLAUDE_SCAN_MODEL;
+  var GROQ_VGC_MODEL = GROQ_AI_MODEL;
   var VGC_AI_PFX = 'vgcai_v1:';
   var VGC_AI_SYSTEM = 'Eres un entrenador veterano de VGC (Pokémon dobles) que enseña a un jugador que está empezando. Respondes siempre en español, con tono cercano y claro, sin jerga innecesaria (si usas un término como "lead", "pivot" o "Trick Room", explícalo en pocas palabras). ' +
     'Basa tu análisis SOLO en los datos del equipo que te paso: no inventes movimientos, objetos ni estadísticas que no aparezcan, y si algo no se puede saber con esos datos, dilo. Formato: usa encabezados con "## " y listas con "- ", frases cortas, nada de tablas, máximo unas 350 palabras. Se juega en dobles: cada jugador lleva 6 Pokémon y elige 4 para cada combate, con 2 en el campo a la vez.';
@@ -12748,8 +12742,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var k = vgcAiKey(), cached = null;
     try { cached = k ? localStorage.getItem(k) : null; } catch (e) {}
     if (cached) { vgcAiShow(cached); return; }
-    if (!anthropicApiKey) {
-      vgcAiOut('<p class="vgc-sub" style="margin:0 0 10px">Para usar esta función necesitas tu clave API de la IA. Se guarda solo en este dispositivo.</p><button type="button" class="vgc-ai-btn" data-vgc-settings="1">Añadir clave en Ajustes</button>');
+    if (!aiWorkerEnabled) {
+      vgcAiOut('<p class="vgc-sub" style="margin:0 0 10px">Esta función necesita que el servicio de IA esté activado en Ajustes.</p><button type="button" class="vgc-ai-btn" data-vgc-settings="1">Revisar Ajustes</button>');
       return;
     }
     vgcAiOut('<button type="button" class="vgc-ai-btn" data-vgc-ai="1">Explicar este equipo con IA</button>');
@@ -12757,17 +12751,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function vgcAiRun() {
     var c = vgc.ctx, k = vgcAiKey();
     if (!c) return;
-    if (!anthropicApiKey) { vgcAiInit(); return; }
+    if (!aiWorkerEnabled) { vgcAiInit(); return; }
     vgcAiOut('<p class="vgc-say"><span class="vgc-spin"></span>La IA está analizando el equipo…</p>');
     fetch('https://pokedex-avisos.danicrevi95.workers.dev/ai', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
       },
-      body: JSON.stringify({ model: CLAUDE_VGC_MODEL, max_tokens: 4000, thinking: { type: 'disabled' }, system: VGC_AI_SYSTEM, messages: [{ role: 'user', content: vgcAiData(c) }] })
+      body: JSON.stringify({ model: GROQ_VGC_MODEL, max_tokens: 4000, thinking: { type: 'disabled' }, system: VGC_AI_SYSTEM, messages: [{ role: 'user', content: vgcAiData(c) }] })
     }).then(function(res) {
       if (!res.ok) {
         return res.text().then(function(t) {
@@ -12786,7 +12777,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       vgcAiShow(cut ? text + '\n\nLa respuesta se ha cortado por longitud. Pulsa "Volver a generar".' : text);
     }).catch(function(err) {
       if (vgc.ctx !== c) return;
-      var msg = err && err.status === 401 ? 'La clave API no es válida. Revísala en Ajustes.' :
+      var msg = err && err.status === 401 ? 'El servicio de IA no acepta la petición. Revisa la configuración de Groq.' :
         err && err.status === 429 ? 'Demasiadas peticiones seguidas. Espera un momento e inténtalo otra vez.' :
         err && err.status === 400 ? 'La cuenta de la clave no tiene saldo o no puede usar este modelo (error 400).' :
         err && err.status ? 'La IA ha respondido con un error (HTTP ' + err.status + (err.apiMsg ? ': ' + vgcEsc(err.apiMsg) : '') + ').' :
