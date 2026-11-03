@@ -935,6 +935,12 @@
   .tcg-lightbox-pin-btn.is-pinned{ background:var(--accent); color:#fff; border-color:transparent; }
   .tcg-lightbox-pin-btn[disabled]{ opacity:.65; cursor:default; }
   .tcg-copies-total{ font-size:11px; font-weight:600; color:var(--text-dim); }
+  .tcg-copies-toggle{ width:100%; background:none; border:none; padding:0; margin:0; font:inherit; color:inherit; text-align:left; cursor:pointer; }
+  .tcg-copies-toggle-right{ display:flex; align-items:center; gap:8px; }
+  .tcg-copies-chevron{ color:var(--text-dim); transition:transform .2s ease; }
+  .tcg-copies-toggle[aria-expanded="true"] .tcg-copies-chevron{ transform:rotate(180deg); }
+  #tcg-copies-body{ display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+  #tcg-copies-body[hidden]{ display:none; }
   .tcg-copies{ display:flex; flex-direction:column; gap:8px; }
   .tcg-copy{
     background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:8px;
@@ -2782,12 +2788,17 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       <p id="tcg-lightbox-meta" class="tcg-lightbox-meta"></p>
       <div id="tcg-lightbox-badges" class="tcg-lightbox-badges"></div>
       <div id="tcg-lightbox-owned-box" class="tcg-lightbox-owned-box" hidden>
-        <div class="tcg-lightbox-qty-row">
+        <button type="button" id="tcg-copies-toggle" class="tcg-lightbox-qty-row tcg-copies-toggle" aria-expanded="false" aria-controls="tcg-copies-body">
           <span class="tcg-lightbox-qty-label">Copias</span>
-          <span id="tcg-copies-total" class="tcg-copies-total"></span>
+          <span class="tcg-copies-toggle-right">
+            <span id="tcg-copies-total" class="tcg-copies-total"></span>
+            <svg class="tcg-copies-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+        </button>
+        <div id="tcg-copies-body" hidden>
+          <div id="tcg-lightbox-copies" class="tcg-copies"></div>
+          <button type="button" id="tcg-lightbox-copy-add" class="tcg-copy-add">Añadir copia distinta</button>
         </div>
-        <div id="tcg-lightbox-copies" class="tcg-copies"></div>
-        <button type="button" id="tcg-lightbox-copy-add" class="tcg-copy-add">Añadir copia distinta</button>
         <div class="tcg-lightbox-qty-row">
           <span class="tcg-lightbox-qty-label">Mostrar en «Mis cartas»</span>
           <button type="button" id="tcg-lightbox-pin" class="tcg-lightbox-pin-btn">Añadir</button>
@@ -3466,6 +3477,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var tcgLightboxOwnedBox = document.getElementById('tcg-lightbox-owned-box');
   var tcgLightboxCopiesEl = document.getElementById('tcg-lightbox-copies');
   var tcgLightboxCopiesTotalEl = document.getElementById('tcg-copies-total');
+  var tcgCopiesToggleEl = document.getElementById('tcg-copies-toggle');
+  var tcgCopiesBodyEl = document.getElementById('tcg-copies-body');
+  function setTcgCopiesOpen(open) {
+    tcgCopiesBodyEl.hidden = !open;
+    tcgCopiesToggleEl.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  tcgCopiesToggleEl.addEventListener('click', function() { setTcgCopiesOpen(tcgCopiesBodyEl.hidden); });
   var tcgLightboxCopyAddBtn = document.getElementById('tcg-lightbox-copy-add');
   var tcgLightboxPriceBodyEl = document.getElementById('tcg-lightbox-price-body');
   var tcgLightboxCardmarketLink = document.getElementById('tcg-lightbox-cardmarket-link');
@@ -4912,11 +4930,23 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var modeSwipeState = { active: false, axisLocked: false, isHorizontal: false, startX: 0, startY: 0, startT: 0 };
   var mainEl = document.querySelector('main');
 
+  // ¿El dedo empezó dentro de algo que ya hace scroll horizontal (carruseles, chips, tablas)?
+  function hScrollerAt(target) {
+    var el = target, guard = 0;
+    while (el && el !== mainEl && el.nodeType === 1 && guard++ < 25) {
+      if (el.scrollWidth > el.clientWidth + 4) {
+        var ox = window.getComputedStyle(el).overflowX;
+        if (ox === 'auto' || ox === 'scroll') return true;
+      }
+      el = el.parentElement;
+    }
+    return false;
+  }
+
   function modeSwipeBlocked(target) {
-    // No interferir con el pintado por mantener pulsado en la estantería de generaciones,
-    // ni con popups/modales, lightbox, o inputs de texto.
-    return !!(target.closest && (
-      target.closest('#generations') ||
+    // No interferir con popups/modales, lightbox, inputs de texto ni scrollers horizontales.
+    // (El pintado por mantener pulsado en las generaciones se controla en touchmove.)
+    return hScrollerAt(target) || !!(target.closest && (
       target.closest('.tcg-lang-popup') ||
       target.closest('#tcg-lightbox') ||
       target.closest('input') ||
@@ -4941,6 +4971,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   mainEl.addEventListener('touchmove', function(e) {
     if (!modeSwipeState.active || e.touches.length > 1) return;
+    if (touchState && touchState.painting) { modeSwipeState.active = false; return; }
     var dx = e.touches[0].clientX - modeSwipeState.startX;
     var dy = e.touches[0].clientY - modeSwipeState.startY;
     if (!modeSwipeState.axisLocked) {
@@ -4974,9 +5005,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       switchMode(mode, direction);
       if (mode === 'tcg' && tcgSearchInput.value.trim() === '' && tcgCollectionBackEl.hidden) showTcgEmptyState();
     };
+    // Dentro de una generación (o de la vista global) de la Pokédex, deslizar a la derecha
+    // vuelve a la estantería en vez de saltar de pestaña; hacia la izquierda no hace nada.
+    var inDexInner = MODE_ORDER[idx] === 'dex' && shelfViewEl.hidden;
     if (dx < 0) {
+      if (inDexInner) return;
       if (idx < MODE_ORDER.length - 1) goTo(MODE_ORDER[idx + 1], 'left');
     } else {
+      if (inDexInner) { exitToShelf(); return; }
       // Deslizar hacia la derecha -> "atrás". Si estamos en un Pokémon concreto
       // dentro de la pestaña TCG (resultados o colección), primero vuelve a la
       // pantalla principal de TCG en vez de saltar a la pestaña anterior.
@@ -4989,6 +5025,117 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       }
     }
   }, { passive: true });
+
+  // ---------- Popups: botón/gesto "atrás" del móvil y gestos para cerrar ----------
+  var popupStack = [];
+  var popupSkipPop = 0;
+  function closePopupEl(el) {
+    if (!el) return;
+    if (el.id === 'tcg-lightbox') {
+      var lc = document.getElementById('tcg-lightbox-close');
+      if (lc) lc.click(); else el.hidden = true;
+      return;
+    }
+    var btn = el.querySelector('.tcg-lang-sheet-close');
+    var bd = el.querySelector('.tcg-lang-backdrop');
+    if (btn) btn.click(); else if (bd) bd.click(); else el.hidden = true;
+  }
+  // Devuelve true si el "atrás" se ha usado para cerrar un popup.
+  function handlePopupPopstate() {
+    if (popupSkipPop > 0) { popupSkipPop--; return true; }
+    if (popupStack.length) { closePopupEl(popupStack.pop()); return true; }
+    return false;
+  }
+  (function() {
+    var els = Array.prototype.slice.call(document.querySelectorAll('.tcg-lang-popup, #tcg-lightbox'));
+    var obs = new MutationObserver(function(muts) {
+      muts.forEach(function(m) {
+        var el = m.target, i = popupStack.indexOf(el);
+        if (!el.hidden && i === -1) {
+          popupStack.push(el);
+          try { history.pushState({ popup: true }, ''); } catch (e) {}
+        } else if (el.hidden && i !== -1) {
+          popupStack.splice(i, 1);
+          if (history.state && history.state.popup) { popupSkipPop++; history.back(); }
+        }
+      });
+    });
+    els.forEach(function(el) { obs.observe(el, { attributes: true, attributeFilter: ['hidden'] }); });
+  })();
+
+  // Deslizar hacia abajo sobre una hoja la cierra siguiendo el dedo; en la ficha de Pokémon
+  // también cierra deslizar hacia la derecha (volver a la Pokédex de la generación).
+  (function() {
+    var st = null;
+    function inScrollableNotAtTop(target, sheet) {
+      var el = target, guard = 0;
+      while (el && el !== sheet && el.nodeType === 1 && guard++ < 25) {
+        if (el.scrollHeight > el.clientHeight + 2) {
+          var oy = window.getComputedStyle(el).overflowY;
+          if ((oy === 'auto' || oy === 'scroll') && el.scrollTop > 0) return true;
+        }
+        el = el.parentElement;
+      }
+      return false;
+    }
+    function reset(delay) {
+      if (!st) return;
+      var sheet = st.sheet, bd = st.bd;
+      setTimeout(function() {
+        sheet.style.transition = ''; sheet.style.transform = '';
+        if (bd) { bd.style.transition = ''; bd.style.opacity = ''; }
+      }, delay);
+    }
+    document.addEventListener('touchstart', function(e) {
+      st = null;
+      if (e.touches.length !== 1) return;
+      var sheet = e.target.closest && e.target.closest('.tcg-lang-sheet');
+      if (!sheet) return;
+      var pop = sheet.closest('.tcg-lang-popup');
+      if (!pop || pop.hidden) return;
+      if (e.target.closest('input, textarea, select')) return;
+      st = { sheet: sheet, pop: pop, bd: pop.querySelector('.tcg-lang-backdrop'), x: e.touches[0].clientX, y: e.touches[0].clientY,
+             t: e.timeStamp, mode: '', canDown: !inScrollableNotAtTop(e.target, sheet), hScroll: hScrollerAt(e.target),
+             allowRight: pop.id === 'dex-detail-popup' };
+    }, { passive: true });
+    document.addEventListener('touchmove', function(e) {
+      if (!st || e.touches.length > 1) return;
+      var dx = e.touches[0].clientX - st.x, dy = e.touches[0].clientY - st.y;
+      if (!st.mode) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        if (dy > 0 && Math.abs(dy) > Math.abs(dx) * 1.2 && st.canDown) st.mode = 'down';
+        else if (st.allowRight && !st.hScroll && dx > 0 && Math.abs(dx) > Math.abs(dy) * 1.5) st.mode = 'right';
+        else { st = null; return; }
+        if (st.mode === 'down') { st.sheet.style.transition = 'none'; if (st.bd) st.bd.style.transition = 'none'; }
+      }
+      e.preventDefault();
+      if (st.mode === 'down') {
+        var d = Math.max(0, dy);
+        st.sheet.style.transform = 'translateY(' + d + 'px)';
+        if (st.bd) st.bd.style.opacity = String(Math.max(0, 1 - d / Math.max(200, st.sheet.offsetHeight)));
+      }
+    }, { passive: false });
+    function finish(e, cancelled) {
+      if (!st) return;
+      var cur = st; var t = e.changedTouches && e.changedTouches[0];
+      var dx = t ? t.clientX - cur.x : 0, dy = t ? t.clientY - cur.y : 0;
+      var v = Math.max(1, e.timeStamp - cur.t);
+      var close = false;
+      if (!cancelled && cur.mode === 'down') close = dy > 90 || (dy > 35 && dy / v > 0.5);
+      if (!cancelled && cur.mode === 'right') close = dx > 70 || (dx > 30 && dx / v > 0.5);
+      if (cur.mode === 'down') {
+        cur.sheet.style.transition = 'transform .2s ease';
+        if (cur.bd) cur.bd.style.transition = 'opacity .2s ease';
+        cur.sheet.style.transform = close ? 'translateY(100%)' : 'translateY(0)';
+        if (cur.bd) cur.bd.style.opacity = close ? '0' : '1';
+      }
+      if (close) closePopupEl(cur.pop);
+      if (cur.mode) reset(close ? 450 : 230);
+      st = null;
+    }
+    document.addEventListener('touchend', function(e) { finish(e, false); }, { passive: true });
+    document.addEventListener('touchcancel', function(e) { finish(e, true); }, { passive: true });
+  })();
 
   function tcgLangEntry(code) {
     for (var i = 0; i < TCG_LANGS.length; i++) {
@@ -5389,7 +5536,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       searchImageBtn.className = 'tcg-card-add-image-btn';
       searchImageBtn.setAttribute('role', 'button');
       searchImageBtn.setAttribute('tabindex', '0');
-      searchImageBtn.textContent = 'Buscar o añadir imagen';
+      searchImageBtn.textContent = 'Buscar imagen';
       searchImageBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         // Se busca siempre con el nombre en inglés (el mismo dato que ya usamos para el
@@ -8199,6 +8346,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!id || !tcgOwned.has(id)) { tcgLightboxOwnedBox.hidden = true; return; }
     tcgCopiesReconcile();
     tcgLightboxOwnedBox.hidden = false;
+    setTcgCopiesOpen(false);
     renderTcgLightboxCopies(id);
     tcgUpdatePinBtn(id);
   }
@@ -9759,6 +9907,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   window.addEventListener('popstate', function() {
+    if (handlePopupPopstate()) return;
     if (shelfViewEl.hidden) exitToShelf();
   });
 
