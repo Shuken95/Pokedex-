@@ -2685,8 +2685,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </select>
     </div>
     <div id="shop-list" class="shop-list" data-testid="shop-list"></div>
-    <p class="shop-section-title">Añadir al seguimiento</p>
-    <div id="shop-suggest-sections"></div>
     <p class="shop-section-title">Productos sellados</p>
     <div class="tcg-missing-dex">
       <button type="button" id="shop-sealed-toggle" class="tcg-missing-dex-toggle" aria-expanded="false" data-testid="shop-sealed-toggle">
@@ -10471,7 +10469,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         sealed: id.indexOf('sealed-') === 0
       };
     }
-    tcgSaved.forEach(function(id) { add(id, tcgSavedMeta[id] || tcgCustom[id], true); });
+    tcgSaved.forEach(function(id) { add(id, tcgSavedMeta[id] || tcgOwnedMeta[id] || tcgCustom[id], true); });
     Object.keys(shopFollow).forEach(function(id) { if (!items[id]) add(id, shopFollow[id], false); });
     return Object.keys(items).map(function(k) { return items[k]; });
   }
@@ -10775,7 +10773,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       rm.title = 'Dejar de seguir';
       rm.innerHTML = SHOP_ICON_X;
       rm.setAttribute('data-testid', 'shop-row-unfollow-' + item.id);
-      rm.addEventListener('click', function() { delete shopFollow[item.id]; delete shopTargets[item.id]; delete shopAlerted[item.id]; shopSave(); renderShop(); refreshShopSuggestions(); });
+      rm.addEventListener('click', function() { delete shopFollow[item.id]; delete shopTargets[item.id]; delete shopAlerted[item.id]; shopSave(); renderShop(); });
       actions.appendChild(rm);
     }
     row.appendChild(img);
@@ -10797,7 +10795,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     renderShopHead();
     var items = shopTrackedItems();
     renderShopMovers(items);
-    renderShopSuggestSections();
     renderShopAlerts(items);
     var counts = { all: items.length, saved: 0, sealed: 0, alert: 0 };
     var chips = [['all', 'Todas'], ['saved', 'Guardadas']];
@@ -10827,8 +10824,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
     shopListEl.innerHTML = '';
     if (!list.length) {
-      var empty = shopEl('p', 'shop-empty', items.length ? 'No hay cartas en este filtro.' : 'Guarda cartas con el \u0001 en TCG o a\u00f1ade abajo cartas de tus secciones para seguir su precio.');
-      if (!items.length) empty.innerHTML = empty.innerHTML.replace('\u0001', ICO.bookmark);
+      var empty = shopEl('p', 'shop-empty', items.length ? 'No hay cartas en este filtro.' : 'Aún no sigues ninguna carta. En TCG, pulsa el icono de marcador de una carta para añadirla aquí.');
       empty.setAttribute('data-testid', 'shop-empty');
       shopListEl.appendChild(empty);
       return;
@@ -10836,162 +10832,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     list.forEach(function(it) { shopListEl.appendChild(buildShopRow(it)); });
   }
 
-  // ----- Sugerencias: una por cada sección de tu pestaña TCG -----
-  var shopSuggestState = {};   // id de sección -> desplegada
-  var shopSectionCards = {};   // id de sección -> cartas ya cargadas
-  var shopSuggestSig = null;
-  var shopSuggestSectionsEl = document.getElementById('shop-suggest-sections');
-
-  // Mismas cartas que la sección de TCG. Si es un set, se intenta la versión en castellano
-  // (nombres e imágenes en español, como se hacía con el 30 Aniversario) y si no existe se usa la inglesa.
-  function fetchShopSectionCards(def) {
-    if (shopSectionCards[def.id]) return Promise.resolve(shopSectionCards[def.id]);
-    var base = fetchCustomSectionCards(def);
-    var p;
-    if (def.mode === 'set') {
-      p = Promise.all([
-        tcgFetchJson('https://api.tcgdex.net/v2/es/sets/' + encodeURIComponent(def.setId)).catch(function() { return null; }),
-        base
-      ]).then(function(res) {
-        var en = {};
-        (res[1] || []).forEach(function(c) { en[c.id] = c; });
-        var es = res[0] && Array.isArray(res[0].cards) ? res[0].cards : (res[1] || []);
-        return es.map(function(c) {
-          return { id: c.id, name: c.name, englishName: en[c.id] ? en[c.id].name : c.name, image: c.image || (en[c.id] && en[c.id].image), localId: c.localId, setName: def.label };
-        }).sort(function(a, b) { return (parseInt(a.localId, 10) || 9999) - (parseInt(b.localId, 10) || 9999); });
-      });
-    } else {
-      p = base.then(function(cards) {
-        return sortCustomSectionCards(def, cards).map(function(c) {
-          return { id: c.id, name: c.name, englishName: c.name, image: c.image, localId: c.localId, setName: c.set && c.set.name ? c.set.name : '' };
-        });
-      });
-    }
-    return p.then(function(cards) {
-      if (cards.length) shopSectionCards[def.id] = cards;
-      return cards;
-    });
-  }
-
-  function shopIsTracked(id) { return tcgSaved.has(id) || !!shopFollow[id]; }
-
-  function renderShopSuggest(def) {
-    var key = def.id;
-    var box = document.getElementById('shop-suggest-' + key);
-    var badge = document.getElementById('shop-suggest-' + key + '-badge');
-    var loader = function() { return fetchShopSectionCards(def); };
-    if (shopSuggestState[key]) { box.hidden = false; if (!box.childNodes.length) box.appendChild(shopEl('p', 'tcg-missing-dex-empty', 'Cargando cartas\u2026')); }
-    loader().then(function(cards) {
-      badge.textContent = cards.filter(function(c) { return shopIsTracked(c.id); }).length + '/' + cards.length;
-      if (!shopSuggestState[key]) return;
-      box.innerHTML = '';
-      if (!cards.length) { box.appendChild(shopEl('p', 'tcg-missing-dex-empty', 'No se pudieron cargar las cartas. Int\u00e9ntalo m\u00e1s tarde.')); return; }
-      var actions = shopEl('div', 'shop-suggest-actions');
-      var allBtn = shopEl('button', 'shop-refresh-btn', 'Seguir todas');
-      allBtn.type = 'button';
-      allBtn.setAttribute('data-testid', 'shop-follow-all-' + key);
-      allBtn.addEventListener('click', function() {
-        cards.forEach(function(c) { if (!shopIsTracked(c.id)) shopFollow[c.id] = c; });
-        shopSave(); renderShop(); renderShopSuggest(key); shopRefresh(false);
-      });
-      var noneBtn = shopEl('button', 'shop-chip', 'Quitar todas');
-      noneBtn.type = 'button';
-      noneBtn.setAttribute('data-testid', 'shop-unfollow-all-' + key);
-      noneBtn.addEventListener('click', function() {
-        cards.forEach(function(c) { delete shopFollow[c.id]; });
-        shopSave(); renderShop(); renderShopSuggest(key);
-      });
-      actions.appendChild(allBtn);
-      actions.appendChild(noneBtn);
-      box.appendChild(actions);
-      var grid = shopEl('div', 'shop-suggest-grid');
-      cards.forEach(function(c) {
-        var tile = shopEl('div', 'shop-tile');
-        var img = shopEl('img');
-        img.loading = 'lazy';
-        img.referrerPolicy = 'no-referrer';
-        img.alt = c.name;
-        if (c.image) img.src = tcgCardImageUrl(c.image, 'low');
-        tile.appendChild(img);
-        tile.appendChild(shopEl('div', 'shop-tile-name', c.name + (c.localId ? ' #' + c.localId : '')));
-        var saved = tcgSaved.has(c.id);
-        var on = shopIsTracked(c.id);
-        var btn = shopEl('button', 'shop-tile-btn' + (on ? ' is-on' : ''), saved ? 'Guardada' : (on ? 'Siguiendo' : '+ Seguir'));
-        btn.type = 'button';
-        btn.disabled = saved;
-        btn.setAttribute('data-testid', 'shop-follow-' + c.id);
-        btn.addEventListener('click', function() {
-          if (shopFollow[c.id]) delete shopFollow[c.id]; else shopFollow[c.id] = c;
-          var now = !!shopFollow[c.id];
-          btn.classList.toggle('is-on', now);
-          btn.textContent = now ? 'Siguiendo' : '+ Seguir';
-          shopSave(); renderShop();
-          badge.textContent = cards.filter(function(x) { return shopIsTracked(x.id); }).length + '/' + cards.length;
-          if (now) shopRefresh(false);
-        });
-        tile.appendChild(btn);
-        grid.appendChild(tile);
-      });
-      box.appendChild(grid);
-    });
-  }
-
-  // Contador "siguiendo/total" de cada desplegable (sin pedir nada extra: reutiliza las cartas
-  // que ya carga la pestaña TCG para esa sección).
-  function updateShopSuggestBadges() {
-    customSections.forEach(function(def) {
-      var badge = document.getElementById('shop-suggest-' + def.id + '-badge');
-      if (!badge) return;
-      fetchCustomSectionCards(def).then(function(cards) {
-        badge.textContent = cards.filter(function(c) { return shopIsTracked(c.id); }).length + '/' + cards.length;
-      });
-    });
-  }
-
-  function refreshShopSuggestions() {
-    customSections.forEach(function(def) { if (shopSuggestState[def.id]) renderShopSuggest(def); });
-    updateShopSuggestBadges();
-  }
-
-  // Reconstruye los desplegables solo cuando cambia la lista de secciones (crear/borrar).
-  function renderShopSuggestSections() {
-    if (!shopSuggestSectionsEl) return;
-    var sig = customSections.map(function(d) { return d.id; }).join('|');
-    if (sig === shopSuggestSig) return;
-    shopSuggestSig = sig;
-    shopSuggestSectionsEl.innerHTML = '';
-    customSections.forEach(function(def) {
-      var wrap = shopEl('div', 'tcg-missing-dex');
-      var toggle = shopEl('button', 'tcg-missing-dex-toggle');
-      toggle.type = 'button';
-      toggle.setAttribute('aria-expanded', String(!!shopSuggestState[def.id]));
-      toggle.setAttribute('data-testid', 'shop-suggest-' + def.id + '-toggle');
-      toggle.innerHTML = '<span class="tcg-missing-dex-toggle-label">' + shareEscapeHtml(def.label) + '</span>' +
-        '<span id="shop-suggest-' + def.id + '-badge" class="tcg-missing-dex-badge">0</span>' +
-        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>';
-      var box = shopEl('div');
-      box.id = 'shop-suggest-' + def.id;
-      box.hidden = !shopSuggestState[def.id];
-      wrap.appendChild(toggle);
-      wrap.appendChild(box);
-      shopSuggestSectionsEl.appendChild(wrap);
-      toggle.addEventListener('click', function() {
-        shopSuggestState[def.id] = !shopSuggestState[def.id];
-        toggle.setAttribute('aria-expanded', String(shopSuggestState[def.id]));
-        if (!shopSuggestState[def.id]) { box.hidden = true; return; }
-        renderShopSuggest(def);
-      });
-      if (shopSuggestState[def.id]) renderShopSuggest(def);
-    });
-    updateShopSuggestBadges();
-  }
-
-  // ----- Alertas de precio -----
-  // Cada carta/producto puede tener un precio objetivo. Se evalúa tras cada refresco de precios
-  // (la app abre y refresca sola a los pocos segundos): banner en la Tienda y en el Inicio,
-  // contador en la pestaña y, si activaste los avisos en Ajustes, notificación del navegador.
-  // Una página web no puede avisar con la app cerrada: solo se entera cuando la abres.
-  var shopTabBadgeEl = document.getElementById('shop-tab-badge');
   var shopAlertsEl = document.getElementById('shop-alerts');
 
   function shopTargetOf(id) {
