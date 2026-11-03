@@ -6734,6 +6734,20 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     return null;
   }
 
+  // TCGdex puede incluir precios solo en variants_detailed aunque la carta no tenga
+  // pricing agregado. Aprovecha la primera variante con precio válido en ese caso.
+  function pickTcgCardmarketPrice(detail) {
+    if (!detail) return null;
+    var price = pickCardmarketPrice(detail.pricing && detail.pricing.cardmarket);
+    if (price !== null) return price;
+    var variants = Array.isArray(detail.variants_detailed) ? detail.variants_detailed : [];
+    for (var i = 0; i < variants.length; i++) {
+      price = pickCardmarketPrice(variants[i] && variants[i].pricing && variants[i].pricing.cardmarket);
+      if (typeof price === 'number' && price > 0) return price;
+    }
+    return null;
+  }
+
   function fetchHuchaCardPrice(id) {
     if (id.indexOf('custom-') === 0) {
       var entry = tcgCustom[id];
@@ -6811,10 +6825,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   function fetchHuchaCardPriceTcgdex(id, lang) {
     return fetchTcgCardDetail(id, lang).then(function(detail) {
-      var pr = pickCardmarketPrice(detail && detail.pricing && detail.pricing.cardmarket);
+      var pr = pickTcgCardmarketPrice(detail);
       if (pr !== null || lang === 'en') return pr;
       return fetchTcgCardDetail(id, 'en').then(function(d2) {
-        return pickCardmarketPrice(d2 && d2.pricing && d2.pricing.cardmarket);
+        return pickTcgCardmarketPrice(d2);
       });
     });
   }
@@ -10506,7 +10520,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     }
     if (force) delete tcgCardDetailCache['en:' + item.id];
     return fetchTcgCardDetail(item.id, item.lang || 'en').then(function(detail) {
-      var v = pickCardmarketPrice(detail && detail.pricing && detail.pricing.cardmarket);
+      var v = pickTcgCardmarketPrice(detail);
       if (v != null) return { price: v, src: 'Cardmarket' };
       var num = tcgCardLocalNumber({ id: item.id, localId: item.localId });
       return ensureSetInfo(tcgCardSetId({ id: item.id })).then(function(info) {
