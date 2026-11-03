@@ -196,11 +196,29 @@
   .shop-up{ color:var(--up); } .shop-down{ color:var(--down); } .shop-flat{ color:var(--text-dim); }
   .shop-movers{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 12px; }
   .shop-movers[hidden]{ display:none; }
-  .shop-mover-col{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:10px; min-width:0; }
-  .shop-mover-title{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-dim); margin:0 0 6px; }
-  .shop-mover{ display:flex; justify-content:space-between; gap:6px; font-size:12px; padding:3px 0; }
-  .shop-mover span:first-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .shop-mover span:last-child{ font-family:var(--font); flex-shrink:0; }
+  .shop-mover-col{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:9px; min-width:0; }
+  .shop-mover-title{ display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-dim); margin:0 0 8px; }
+  .shop-mover-list{ display:flex; flex-direction:column; gap:7px; }
+  .shop-mover{
+    display:grid; grid-template-columns:36px minmax(0,1fr); align-items:center; gap:7px; min-width:0;
+    padding:7px; color:var(--text); text-decoration:none; background:var(--bg); border:1px solid var(--border);
+    border-radius:10px; transition:background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .shop-mover:hover{ background:var(--surface-hover); border-color:var(--border-strong); transform:translateY(-1px); }
+  .shop-mover-img{ display:block; width:36px; height:50px; object-fit:cover; border-radius:4px; background:var(--surface-hover); }
+  .shop-mover-main{ min-width:0; }
+  .shop-mover-name{ display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; line-height:1.25; font-weight:600; }
+  .shop-mover-value-row{ display:flex; align-items:center; justify-content:space-between; gap:4px; min-width:0; margin-top:4px; }
+  .shop-mover-price{ font-family:var(--font); font-size:12px; font-weight:700; white-space:nowrap; }
+  .shop-mover-pct{ flex-shrink:0; padding:2px 5px; border-radius:999px; font-family:var(--font); font-size:10px; line-height:1.2; font-weight:700; background:var(--accent-soft); }
+  .shop-mover-pct.shop-up{ color:var(--up); }
+  .shop-mover-pct.shop-down{ color:var(--down); }
+  .shop-mover-foot{ display:flex; align-items:center; justify-content:space-between; gap:4px; min-width:0; margin-top:3px; }
+  .shop-mover-prev{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-dim); font-size:9.5px; }
+  .shop-mover-link{ display:inline-flex; align-items:center; gap:3px; flex-shrink:0; color:var(--accent); font-size:9.5px; font-weight:700; }
+  .shop-mover-link svg{ width:11px; height:11px; }
+  .shop-mover .shop-row-spark{ height:14px; max-width:100%; margin-top:4px; }
+  .shop-mover-empty{ color:var(--text-dim); text-align:center; padding:10px 0; font-size:12px; }
   .shop-toolbar{ display:flex; gap:8px; align-items:center; margin:0 0 10px; }
   .shop-chips{ display:flex; gap:6px; overflow-x:auto; flex:1; scrollbar-width:none; }
   .shop-chips::-webkit-scrollbar{ display:none; }
@@ -836,26 +854,6 @@
   }
   .tcg-custom-section-create-btn:hover{ background:var(--surface-hover); color:var(--text); }
 
-  .tcg-missing-shop-finder{
-    margin:14px 2px 4px; padding:12px 12px 10px; background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md);
-  }
-  .tcg-missing-shop-finder[hidden]{ display:none; }
-  .tcg-missing-shop-finder-label{ font-size:11.5px; font-weight:600; color:var(--text-dim); margin:0 0 8px; }
-  .tcg-missing-shop-finder-row{ display:flex; gap:8px; margin:0 0 8px; }
-  #tcg-missing-shop-username{
-    flex:1; min-width:0; background:var(--surface); border:1px solid var(--border-strong); color:var(--text);
-    font-family:var(--font); font-size:13px; padding:9px 10px; border-radius:var(--r-md);
-  }
-  #tcg-missing-shop-open-btn{
-    background:var(--accent); color:#fff; border:none; font-family:var(--font); font-size:12.5px;
-    font-weight:700; padding:0 14px; border-radius:var(--r-md); cursor:pointer; flex-shrink:0;
-  }
-  #tcg-missing-shop-open-btn:disabled{ opacity:.5; cursor:default; }
-  .tcg-missing-shop-list{
-    margin-top:8px; max-height:120px; overflow-y:auto; font-size:11.5px; line-height:1.6; color:var(--text-dim);
-    background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm); padding:8px 10px;
-  }
-  .tcg-missing-shop-list[hidden]{ display:none; }
   .tcg-missing-dex-grid{ margin-top:10px; }
   .tcg-missing-dex-grid[hidden]{ display:none; }
   .tcg-missing-dex-gen-header{
@@ -2632,16 +2630,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="tcg-missing-dex-chevron"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div id="tcg-missing-dex-grid" class="tcg-collections-grid tcg-missing-dex-grid" hidden></div>
-      <div id="tcg-missing-shop-finder" class="tcg-missing-shop-finder" hidden>
-        <p class="tcg-missing-shop-finder-label">Buscar en la tienda de un vendedor</p>
-        <div class="tcg-missing-shop-finder-row">
-          <input type="text" id="tcg-missing-shop-username" placeholder="Usuario de Cardmarket" autocomplete="off">
-          <button type="button" id="tcg-missing-shop-open-btn">Abrir tienda</button>
-        </div>
-        <button type="button" id="tcg-missing-shop-copy-btn" class="tcg-add-manual-link">Copiar lista de lo que me falta</button>
-        <p id="tcg-missing-shop-status" class="tcg-add-status" hidden></p>
-        <div id="tcg-missing-shop-list" class="tcg-missing-shop-list"></div>
-      </div>
     </div>
     <div id="tcg-owned" class="tcg-missing-dex">
       <button type="button" id="tcg-owned-toggle" class="tcg-missing-dex-toggle" aria-expanded="false">
@@ -2882,7 +2870,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var TCG_FILTERS_KEY = 'pokecheck_tcg_filters_v1';
   var THEME_KEY = 'pokecheck_theme_v1';
   var TCG_IMAGE_OVERRIDE_KEY = 'pokecheck_tcg_image_override_v1';
-  var TCG_SHOP_USERNAME_KEY = 'pokecheck_tcg_shop_username_v1';
   var SWIPE_HINT_KEY = 'pokecheck_swipe_hint_seen_v1';
   var TABTIPS_KEY = 'pokecheck_tabtips_seen_v1';
   var AI_WORKER_ENABLED_KEY = 'pokecheck_ai_worker_enabled_v1';
@@ -3355,12 +3342,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var tcgMissingDexToggleBtn = document.getElementById('tcg-missing-dex-toggle');
   var tcgMissingDexBadgeEl = document.getElementById('tcg-missing-dex-badge');
   var tcgMissingDexGridEl = document.getElementById('tcg-missing-dex-grid');
-  var tcgMissingShopFinderEl = document.getElementById('tcg-missing-shop-finder');
-  var tcgMissingShopUsernameInput = document.getElementById('tcg-missing-shop-username');
-  var tcgMissingShopOpenBtn = document.getElementById('tcg-missing-shop-open-btn');
-  var tcgMissingShopCopyBtn = document.getElementById('tcg-missing-shop-copy-btn');
-  var tcgMissingShopStatus = document.getElementById('tcg-missing-shop-status');
-  var tcgMissingShopListEl = document.getElementById('tcg-missing-shop-list');
   var tcgFiltersReset = document.getElementById('tcg-filters-reset');
   var tcgAddBtn = document.getElementById('tcg-add-btn');
   var tcgAddPopup = document.getElementById('tcg-add-popup');
@@ -8752,60 +8733,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgMissingDexExpanded = !tcgMissingDexExpanded;
     tcgMissingDexToggleBtn.setAttribute('aria-expanded', String(tcgMissingDexExpanded));
     tcgMissingDexGridEl.hidden = !tcgMissingDexExpanded;
-    tcgMissingShopFinderEl.hidden = !tcgMissingDexExpanded;
     if (tcgMissingDexExpanded) {
       if (tcgMissingDexDirty) populateMissingDexGrid();
-      renderMissingShopList();
-    }
-  });
-
-  // Lista (para copiar/ojear) de todo lo que falta, sin agrupar por generación: es lo que
-  // alimenta el buscador de "¿tiene este vendedor algo de lo que me falta?".
-  function renderMissingShopList() {
-    var missing = getMissingDexCards();
-    var seen = {};
-    var names = [];
-    missing.forEach(function(c) {
-      var n = formatName(c.dataset.name);
-      if (!seen[n]) { seen[n] = true; names.push(n); }
-    });
-    names.sort();
-    tcgMissingShopListEl.textContent = names.join(', ');
-    tcgMissingShopListEl.hidden = names.length === 0;
-  }
-
-  tcgMissingShopUsernameInput.value = (function() {
-    try { return localStorage.getItem(TCG_SHOP_USERNAME_KEY) || ''; } catch (e) { return ''; }
-  })();
-
-  tcgMissingShopOpenBtn.addEventListener('click', function() {
-    var username = tcgMissingShopUsernameInput.value.trim();
-    if (!username) {
-      tcgMissingShopStatus.hidden = false;
-      tcgMissingShopStatus.className = 'tcg-add-status is-error';
-      tcgMissingShopStatus.textContent = 'Escribe primero el usuario del vendedor.';
-      return;
-    }
-    try { localStorage.setItem(TCG_SHOP_USERNAME_KEY, username); } catch (e) {}
-    tcgMissingShopStatus.hidden = true;
-    window.open('https://www.cardmarket.com/en/Pokemon/Users/' + encodeURIComponent(username) + '/Offers/Singles', '_blank', 'noopener');
-  });
-
-  tcgMissingShopCopyBtn.addEventListener('click', function() {
-    var text = tcgMissingShopListEl.textContent;
-    if (!text) return;
-    function showCopyStatus(msg, isError) {
-      tcgMissingShopStatus.hidden = false;
-      tcgMissingShopStatus.className = 'tcg-add-status' + (isError ? ' is-error' : ' is-ok');
-      tcgMissingShopStatus.textContent = msg;
-      if (!isError) setTimeout(function() { tcgMissingShopStatus.hidden = true; }, 2500);
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text)
-        .then(function() { showCopyStatus('Lista copiada.'); })
-        .catch(function() { showCopyStatus('No se pudo copiar. Selecciona el texto a mano.', true); });
-    } else {
-      showCopyStatus('Selecciona el texto de la lista a mano para copiarlo.', true);
     }
   });
 
@@ -10735,16 +10664,44 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!withChange.length) { shopMoversEl.hidden = true; return; }
     shopMoversEl.hidden = false;
     [['Suben m\u00e1s', function(x) { return x.info.pct > 0; }, -1, 'shop-up'], ['Bajan m\u00e1s', function(x) { return x.info.pct < 0; }, 1, 'shop-down']].forEach(function(cfg) {
-      var col = shopEl('div', 'shop-mover-col');
+      var col = shopEl('section', 'shop-mover-col');
       col.appendChild(shopEl('p', 'shop-mover-title', cfg[0]));
+      var listEl = shopEl('div', 'shop-mover-list');
       var list = withChange.filter(cfg[1]).sort(function(a, b) { return (a.info.pct - b.info.pct) * cfg[2]; }).slice(0, 3);
-      if (!list.length) col.appendChild(shopEl('div', 'shop-mover shop-flat', '\u2014'));
+      if (!list.length) listEl.appendChild(shopEl('div', 'shop-mover-empty', 'Sin cambios'));
       list.forEach(function(x) {
-        var row = shopEl('div', 'shop-mover');
-        row.appendChild(shopEl('span', null, x.it.name));
-        row.appendChild(shopEl('span', cfg[3], (x.info.pct > 0 ? '+' : '') + (x.info.pct * 100).toFixed(1).replace('.', ',') + '%'));
-        col.appendChild(row);
+        var row = shopEl('a', 'shop-mover');
+        row.href = shopCardmarketUrl(x.it);
+        row.target = '_blank';
+        row.rel = 'noopener';
+        row.title = 'Abrir ' + x.it.name + ' en Cardmarket';
+        row.setAttribute('aria-label', 'Abrir ' + x.it.name + ' en Cardmarket. Precio actual ' + formatEuro(x.info.price) + '.');
+
+        var img = shopEl('img', 'shop-mover-img');
+        img.loading = 'lazy';
+        img.referrerPolicy = 'no-referrer';
+        img.alt = '';
+        if (x.it.image) img.src = x.it.image;
+        row.appendChild(img);
+
+        var main = shopEl('span', 'shop-mover-main');
+        main.appendChild(shopEl('span', 'shop-mover-name', x.it.name));
+        var valueRow = shopEl('span', 'shop-mover-value-row');
+        valueRow.appendChild(shopEl('strong', 'shop-mover-price', formatEuro(x.info.price)));
+        valueRow.appendChild(shopEl('span', 'shop-mover-pct ' + cfg[3], (x.info.pct > 0 ? '+' : '') + (x.info.pct * 100).toFixed(1).replace('.', ',') + '%'));
+        main.appendChild(valueRow);
+
+        var foot = shopEl('span', 'shop-mover-foot');
+        foot.appendChild(shopEl('span', 'shop-mover-prev', 'Antes ' + formatEuro(x.info.prev)));
+        var cmLabel = shopEl('span', 'shop-mover-link', 'Cardmarket');
+        cmLabel.insertAdjacentHTML('afterbegin', SHOP_ICON_CART);
+        foot.appendChild(cmLabel);
+        main.appendChild(foot);
+        if (x.info.history.length > 1) main.insertAdjacentHTML('beforeend', shopSparkline(x.info.history));
+        row.appendChild(main);
+        listEl.appendChild(row);
       });
+      col.appendChild(listEl);
       shopMoversEl.appendChild(col);
     });
   }
