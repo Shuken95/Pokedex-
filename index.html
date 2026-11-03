@@ -219,6 +219,9 @@
   .shop-mover-link svg{ width:11px; height:11px; }
   .shop-mover .shop-row-spark{ height:14px; max-width:100%; margin-top:4px; }
   .shop-mover-empty{ color:var(--text-dim); text-align:center; padding:10px 0; font-size:12px; }
+  .shop-list-heading{ display:flex; align-items:flex-end; justify-content:space-between; margin:4px 2px 8px; }
+  .shop-list-heading .shop-section-title{ margin:0; }
+  .shop-list-sub{ color:var(--text-dim); font-size:11px; margin:3px 0 0; }
   .shop-toolbar{ display:flex; gap:8px; align-items:center; margin:0 0 10px; }
   .shop-chips{ display:flex; gap:6px; overflow-x:auto; flex:1; scrollbar-width:none; }
   .shop-chips::-webkit-scrollbar{ display:none; }
@@ -2676,6 +2679,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     </div>
     <div id="shop-alerts" class="shop-alerts" hidden data-testid="shop-alerts"></div>
     <div id="shop-movers" class="shop-movers" hidden data-testid="shop-movers"></div>
+    <div class="shop-list-heading">
+      <div>
+        <p class="shop-section-title">Cartas seguidas</p>
+        <p id="shop-list-sub" class="shop-list-sub" data-testid="shop-list-sub"></p>
+      </div>
+    </div>
     <div class="shop-toolbar">
       <div id="shop-chips" class="shop-chips" data-testid="shop-filter-chips"></div>
       <select id="shop-sort" class="shop-sort" data-testid="shop-sort-select" aria-label="Ordenar">
@@ -5612,7 +5621,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var bookmarkBtn = document.createElement('span');
     bookmarkBtn.className = 'tcg-bookmark-btn';
     bookmarkBtn.setAttribute('role', 'button');
-    bookmarkBtn.setAttribute('aria-label', 'Guardar carta');
+    bookmarkBtn.setAttribute('aria-label', 'Seguir precio en Tienda');
+    bookmarkBtn.title = 'Seguir precio en Tienda';
     bookmarkBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
     if (tcgSaved.has(card.id)) bookmarkBtn.classList.add('is-saved');
     bookmarkBtn.addEventListener('click', function(e) {
@@ -10409,6 +10419,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var shopChipsEl = document.getElementById('shop-chips');
   var shopSortEl = document.getElementById('shop-sort');
   var shopListEl = document.getElementById('shop-list');
+  var shopListSubEl = document.getElementById('shop-list-sub');
   var shopRefreshBtn = document.getElementById('shop-refresh-btn');
   var shopRefreshLabel = document.getElementById('shop-refresh-label');
 
@@ -10796,6 +10807,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var items = shopTrackedItems();
     renderShopMovers(items);
     renderShopAlerts(items);
+    shopListSubEl.textContent = items.length + (items.length === 1 ? ' carta seguida' : ' cartas seguidas');
     var counts = { all: items.length, saved: 0, sealed: 0, alert: 0 };
     var chips = [['all', 'Todas'], ['saved', 'Guardadas']];
     items.forEach(function(it) { if (it.saved) counts.saved++; if (it.sealed) counts.sealed++; if (shopTargetOf(it.id) != null) counts.alert++; });
