@@ -210,12 +210,12 @@
   .shop-mover-name{ display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; line-height:1.25; font-weight:600; }
   .shop-mover-value-row{ display:flex; align-items:center; justify-content:space-between; gap:4px; min-width:0; margin-top:4px; }
   .shop-mover-price{ font-family:var(--font); font-size:12px; font-weight:700; white-space:nowrap; }
-  .shop-mover-pct{ flex-shrink:0; padding:2px 5px; border-radius:999px; font-family:var(--font); font-size:10px; line-height:1.2; font-weight:700; background:var(--accent-soft); }
+  .shop-mover-pct{ flex-shrink:0; padding:2px 5px; border-radius:999px; font-family:var(--font); font-size:11.5px; line-height:1.2; font-weight:700; background:var(--accent-soft); }
   .shop-mover-pct.shop-up{ color:var(--up); }
   .shop-mover-pct.shop-down{ color:var(--down); }
   .shop-mover-foot{ display:flex; align-items:center; justify-content:space-between; gap:4px; min-width:0; margin-top:3px; }
-  .shop-mover-prev{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-dim); font-size:9.5px; }
-  .shop-mover-link{ display:inline-flex; align-items:center; gap:3px; flex-shrink:0; color:var(--accent); font-size:9.5px; font-weight:700; }
+  .shop-mover-prev{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-dim); font-size:11px; }
+  .shop-mover-link{ display:inline-flex; align-items:center; gap:3px; flex-shrink:0; color:var(--accent); font-size:11px; font-weight:700; }
   .shop-mover-link svg{ width:11px; height:11px; }
   .shop-mover .shop-row-spark{ height:14px; max-width:100%; margin-top:4px; }
   .shop-mover-empty{ color:var(--text-dim); text-align:center; padding:10px 0; font-size:12px; }
@@ -272,7 +272,7 @@
   .ai-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:12px; }
   .ai-stat{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:8px 6px; text-align:center; min-width:0; }
   .ai-stat b{ display:block; font-size:15px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .ai-stat span{ display:block; font-size:10.5px; color:var(--text-dim); margin-top:1px; }
+  .ai-stat span{ display:block; font-size:11.5px; color:var(--text-dim); margin-top:1px; }
   .ai-panel{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:12px; margin-bottom:12px; }
   .ai-panel[hidden]{ display:none; }
   .ai-panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
@@ -560,7 +560,7 @@
   .dups-card img, .dups-ph{ width:100%; aspect-ratio:245/337; object-fit:cover; border-radius:6px; background:#0a0a08; display:block; }
   .dups-qty{ position:absolute; top:3px; right:3px; background:var(--accent); color:#fff; font-size:11px; font-weight:700; line-height:1; padding:4px 6px; border-radius:999px; box-shadow:0 1px 4px rgba(0,0,0,.4); }
   .dups-name{ font-size:11px; font-weight:600; line-height:1.2; margin-top:4px; }
-  .dups-set{ font-size:9.5px; color:var(--text-dim); margin-top:1px; }
+  .dups-set{ font-size:11px; color:var(--text-dim); margin-top:1px; }
   .dups-actions{ padding:8px 10px 0; }
   .dups-actions .backup-action{ width:100%; justify-content:center; }
   .backup-action{
@@ -829,9 +829,9 @@
   }
   .tcg-card.owned img{ filter:none; opacity:1; }
   .tcg-card-no-image-label{
-    position:absolute; inset:0; display:flex; flex-direction:column; gap:4px;
-    align-items:stretch; justify-content:center;
-    text-align:center; padding:10px; font-size:12px; line-height:1.3; color:var(--text-dim);
+    position:absolute; inset:0; display:flex; flex-direction:column; gap:3px;
+    align-items:stretch; justify-content:flex-start;
+    text-align:center; padding:10px 8px 40px; font-size:12px; line-height:1.3; color:var(--text-dim);
     background:var(--bg); border:1px solid var(--border); border-radius:var(--r-sm);
     overflow:hidden;
   }
@@ -841,14 +841,12 @@
     font-size:12px; font-weight:700; color:inherit;
     word-break:normal; overflow-wrap:break-word; hyphens:auto;
   }
-  .tcg-card-no-image-label em{
-    display:block; width:100%; font-style:normal; font-size:11px; opacity:.75;
-  }
+  .tcg-card-no-image-label em{ display:none; }
   .tcg-card-no-image-num{
     display:block; width:100%; font-family:var(--font); font-size:11px;
   }
   .tcg-card-no-image-set{
-    display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;
+    display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:1;
     overflow:hidden; width:100%; font-size:11px; opacity:.85;
   }
   .tcg-card-add-image-btn{
@@ -984,6 +982,36 @@
     justify-content:flex-start; padding:32px 22px; z-index:100; overflow-y:auto;
   }
   .tcg-lightbox[hidden]{ display:none; }
+  .tcg-lightbox-ask{ color:var(--accent); text-decoration:none; display:block; margin:-2px 0 8px; }
+  .tcg-lightbox-chart{ margin:0 0 12px; }
+  .tcg-lightbox-chart[hidden]{ display:none; }
+  .tcg-lightbox-chart svg{ width:100%; height:60px; display:block; }
+  .tcg-lightbox-chart-title{ margin:0 0 4px; font-size:11.5px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:.05em; }
+  .tcg-lightbox-chart-sub{ margin:4px 0 0; font-size:12px; color:var(--text-dim); }
+  .ux-toast{ position:fixed; left:50%; transform:translate(-50%,10px); bottom:calc(var(--tabbar-h,60px) + env(safe-area-inset-bottom,0px) + 18px); z-index:150; background:var(--accent); color:var(--bg); font-family:var(--font); font-size:14px; font-weight:700; padding:12px 18px; border-radius:999px; opacity:0; transition:opacity .25s ease, transform .25s ease; max-width:86vw; text-align:center; }
+  .ux-toast.is-visible{ opacity:1; transform:translate(-50%,0); }
+  .ux-toast[hidden]{ display:none; }
+  .ux-ptr{ position:fixed; top:calc(env(safe-area-inset-top,0px) + 10px); left:50%; transform:translateX(-50%); z-index:150; background:var(--surface); border:1px solid var(--border-strong); color:var(--text-dim); font-family:var(--font); font-size:12.5px; font-weight:700; padding:8px 14px; border-radius:999px; box-shadow:var(--shadow-sm); }
+  .ux-ptr.is-ready{ color:var(--bg); background:var(--accent); }
+  .ux-ptr[hidden]{ display:none; }
+  .ai-hero-hint{ background:var(--surface); border:1px dashed var(--border-strong); border-radius:14px; padding:12px; text-align:center; margin:0 0 14px; }
+  .ai-hero-hint p{ margin:0 0 8px; font-size:13px; color:var(--text-dim); line-height:1.45; }
+  .tcg-lightbox-fiximg{ background:none; border:none; padding:0 0 10px; margin:-6px 0 0; color:var(--text-dim); font-family:var(--font); font-size:12px; font-weight:600; text-decoration:underline; cursor:pointer; }
+  .tcg-lightbox-fiximg[hidden]{ display:none; }
+  .tcg-imgfix{ position:fixed; inset:0; z-index:130; background:rgba(8,8,9,.72); display:flex; align-items:flex-end; justify-content:center; padding:16px; }
+  .tcg-imgfix[hidden]{ display:none; }
+  .tcg-imgfix-card{ width:100%; max-width:420px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:16px; display:flex; flex-direction:column; gap:8px; }
+  .tcg-imgfix-title{ margin:0; font-size:17px; font-weight:800; }
+  .tcg-imgfix-sub{ margin:0; font-size:12px; color:var(--text-dim); }
+  .tcg-imgfix-note{ margin:0 0 4px; font-size:12.5px; line-height:1.45; color:var(--text-dim); }
+  .tcg-imgfix-card input{ background:var(--bg); border:1px solid var(--border-strong); color:var(--text); font-family:var(--font); font-size:16px; padding:11px 12px; border-radius:var(--r-md); min-width:0; }
+  .tcg-imgfix-btn{ background:var(--bg); border:1px solid var(--border-strong); color:var(--text); font-family:var(--font); font-size:13.5px; font-weight:700; padding:11px 12px; border-radius:var(--r-md); cursor:pointer; }
+  .tcg-imgfix-btn.is-primary{ background:var(--accent); color:var(--bg); border-color:transparent; }
+  .tcg-imgfix-btn[hidden]{ display:none; }
+  .tcg-imgfix-status{ margin:0; font-size:12.5px; color:var(--text-dim); line-height:1.4; }
+  .tcg-imgfix-status.is-error{ color:var(--danger); }
+  .tcg-imgfix-status[hidden]{ display:none; }
+  .tcg-imgfix-close{ background:none; border:none; color:var(--text-dim); font-family:var(--font); font-size:13px; font-weight:600; padding:6px; cursor:pointer; }
   .tcg-lightbox-content{ display:flex; flex-direction:column; align-items:center; gap:14px; width:100%; max-width:420px; margin:auto; }
   .tcg-lightbox-img-wrap{ position:relative; width:100%; display:flex; justify-content:center; touch-action:pan-y; }
   .tcg-lightbox img{ max-width:100%; max-height:52vh; border-radius:var(--r-md); box-shadow:0 20px 50px -10px rgba(0,0,0,.7); }
@@ -2472,10 +2500,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </button>
     </div>
     <div class="tcg-filters-body">
-      <button id="refresh-btn" type="button" class="backup-action" title="Actualizar datos">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
-        <span>Actualizar datos</span>
-      </button>
       <button id="theme-btn" type="button" class="backup-action" title="Cambiar tema" aria-label="Cambiar a modo claro">
         <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
         <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -2902,6 +2926,20 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   </div>
 </main>
 
+<div id="tcg-imgfix" class="tcg-imgfix" hidden>
+  <div class="tcg-imgfix-card" role="dialog" aria-label="Corregir imagen">
+    <p class="tcg-imgfix-title">Corregir imagen</p>
+    <p id="tcg-imgfix-sub" class="tcg-imgfix-sub"></p>
+    <p class="tcg-imgfix-note">Si la imagen es de otro Pokémon, busca la carta correcta y pega aquí el enlace de su imagen.</p>
+    <button type="button" id="tcg-imgfix-search" class="tcg-imgfix-btn">Buscar la imagen correcta en Google</button>
+    <input id="tcg-imgfix-url" type="url" inputmode="url" placeholder="Pega aquí la URL de la imagen (https://…)">
+    <button type="button" id="tcg-imgfix-save" class="tcg-imgfix-btn is-primary">Usar esta imagen</button>
+    <button type="button" id="tcg-imgfix-remove" class="tcg-imgfix-btn">Quitar la imagen incorrecta</button>
+    <button type="button" id="tcg-imgfix-restore" class="tcg-imgfix-btn" hidden>Volver a la imagen automática</button>
+    <p id="tcg-imgfix-status" class="tcg-imgfix-status" hidden></p>
+    <button type="button" id="tcg-imgfix-close" class="tcg-imgfix-close">Cerrar</button>
+  </div>
+</div>
 <div id="tcg-lightbox" class="tcg-lightbox" hidden>
   <button type="button" class="tcg-lightbox-close" id="tcg-lightbox-close" aria-label="Cerrar">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -2920,6 +2958,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     <div id="tcg-lightbox-info" class="tcg-lightbox-info">
       <p id="tcg-lightbox-name" class="tcg-lightbox-name"></p>
       <p id="tcg-lightbox-meta" class="tcg-lightbox-meta"></p>
+      <button type="button" id="tcg-lightbox-fiximg" class="tcg-lightbox-fiximg" hidden>¿Imagen incorrecta? Corregir</button>
+      <button type="button" id="tcg-lightbox-ask" class="tcg-lightbox-fiximg tcg-lightbox-ask" hidden>Preguntar a la IA sobre esta carta</button>
+      <div id="tcg-lightbox-chart" class="tcg-lightbox-chart" hidden></div>
       <div id="tcg-lightbox-badges" class="tcg-lightbox-badges"></div>
       <div id="tcg-lightbox-owned-box" class="tcg-lightbox-owned-box" hidden>
         <button type="button" id="tcg-copies-toggle" class="tcg-lightbox-qty-row tcg-copies-toggle" aria-expanded="false" aria-controls="tcg-copies-body">
@@ -3249,6 +3290,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // el escaneo (id de carta real -> URL). No tiene nada que ver con tcgCustom (cartas
   // enteramente añadidas a mano): estas SÍ existen en el catálogo, solo les falta la imagen.
   var tcgImageOverrides = {};
+  // Cartas cuya imagen automática era incorrecta: no se vuelve a poner sola.
+  var TCG_IMAGE_BLOCK_KEY = 'pokecheck_tcg_image_block_v1';
+  var tcgImageBlocked = {};
+  try { tcgImageBlocked = JSON.parse(localStorage.getItem(TCG_IMAGE_BLOCK_KEY) || '{}') || {}; } catch (e) { tcgImageBlocked = {}; }
+  function saveTcgImageBlocked() { try { localStorage.setItem(TCG_IMAGE_BLOCK_KEY, JSON.stringify(tcgImageBlocked)); } catch (e) {} }
   var TCG_CM_URL_KEY = 'pokecheck_tcg_cm_url_v1';
   var tcgCardmarketUrls = {};
   try { tcgCardmarketUrls = JSON.parse(localStorage.getItem(TCG_CM_URL_KEY) || '{}') || {}; } catch (e) { tcgCardmarketUrls = {}; }
@@ -3450,7 +3496,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var noResultsEl = document.getElementById('no-results');
   var searchInput = document.getElementById('search');
   var missingToggle = document.getElementById('missing-toggle');
-  var refreshBtn = document.getElementById('refresh-btn');
   var retryBtn = document.getElementById('retry-btn');
   var overallCountEl = document.getElementById('overall-count');
   var overallFillEl = document.getElementById('overall-fill');
@@ -4823,6 +4868,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       tcgPricePaid: tcgPricePaid,
       tcgCopies: tcgCopies,
       tcgImageOverrides: tcgImageOverrides,
+      tcgImageBlocked: tcgImageBlocked,
       tcgCardmarketUrls: tcgCardmarketUrls,
       tcgWishlist: Array.from(typeof tcgWishlist !== 'undefined' && tcgWishlist ? tcgWishlist : []),
       shopFollow: shopFollow,
@@ -4876,6 +4922,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (data.tcgQuantities && typeof data.tcgQuantities === 'object') { tcgQuantities = data.tcgQuantities; saveTcgQuantities(); }
       if (data.tcgPricePaid && typeof data.tcgPricePaid === 'object') { tcgPricePaid = data.tcgPricePaid; saveTcgPricePaid(); }
       if (data.tcgImageOverrides && typeof data.tcgImageOverrides === 'object') { tcgImageOverrides = data.tcgImageOverrides; saveTcgImageOverrides(); }
+      if (data.tcgImageBlocked && typeof data.tcgImageBlocked === 'object') { tcgImageBlocked = data.tcgImageBlocked; saveTcgImageBlocked(); }
       if (data.tcgCardmarketUrls && typeof data.tcgCardmarketUrls === 'object') { tcgCardmarketUrls = data.tcgCardmarketUrls; saveTcgCardmarketUrls(); }
       if (Array.isArray(data.tcgWishlist)) { tcgWishlist = new Set(data.tcgWishlist); try { localStorage.setItem('pokecheck_tcg_wishlist_v1', JSON.stringify(data.tcgWishlist)); } catch (e) {} }
       if (data.shopFollow && typeof data.shopFollow === 'object') { shopFollow = data.shopFollow; shopSave(); }
@@ -5450,7 +5497,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgSharedImageRequest('/card-image', 'POST', { id: cardId, url: image }).catch(function() {});
   }
   function loadSharedTcgImageOverrides(cards, requestId) {
-    var ids = cards.map(function(c) { return c.id; }).filter(function(id) { return !tcgImageOverrides[id]; });
+    var ids = cards.map(function(c) { return c.id; }).filter(function(id) { return !tcgImageOverrides[id] && !tcgImageBlocked[id]; });
     if (!ids.length) return;
     tcgSharedImageRequest('/card-images?ids=' + encodeURIComponent(ids.slice(0, 100).join(',')), 'GET')
       .then(function(res) { return res.ok ? res.json() : null; })
@@ -5464,7 +5511,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   // Primero CDN/externo (rápido y fiable en JP). Luego ficha TCGdex del mismo idioma.
   function tryAlternateTcgImage(card, img, done) {
-    if (img.dataset.triedImgLangFallback === 'done') { done(); return; }
+    if (img.dataset.triedImgLangFallback === 'done' || (card && tcgImageBlocked[card.id] && !tcgImageOverrides[card.id])) { done(); return; }
     img.dataset.triedImgLangFallback = 'done';
     var cardLang = card._matchLang || (typeof tcgLang === 'string' && tcgLang !== 'all' ? tcgLang : '') || 'ja';
     // CDN primero
@@ -5634,7 +5681,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     img.loading = 'lazy';
     img.alt = card.name;
     img.draggable = false;
-    img.src = tcgImageOverrides[card.id] || tcgCardImageUrl(card.image, 'low');
+    var imgBlocked = !!tcgImageBlocked[card.id] && !tcgImageOverrides[card.id];
+    if (!imgBlocked) img.src = tcgImageOverrides[card.id] || tcgCardImageUrl(card.image, 'low');
     img.addEventListener('load', function() {
       if (!img.naturalWidth) return;
       wrap.dataset.hasImage = 'true';
@@ -5726,8 +5774,23 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     img.addEventListener('error', function() {
       tryAlternateTcgImage(card, img, showNoImagePlaceholder);
     });
+    // Corregir imagen desde el visor ampliado: cambia la imagen de esta carta en la cuadrícula al momento.
+    wrap._setImage = function(url) {
+      if (url) {
+        var ph = imgWrap.querySelector('.tcg-card-no-image-label');
+        if (ph) ph.remove();
+        wrap.classList.remove('tcg-card-no-image');
+        img.dataset.triedImgLangFallback = 'done';
+        img.src = url;
+        if (!img.parentNode) imgWrap.insertBefore(img, imgWrap.firstChild);
+        wrap.dataset.hasImage = 'true';
+        refreshTcgCardVisibility(wrap);
+      } else if (!imgWrap.querySelector('.tcg-card-no-image-label')) {
+        showNoImagePlaceholder();
+      }
+    };
     // JP/KR/ZH: el listado a menudo trae image rota o vacía → resolver CDN al pintar
-    var needResolve = !tcgImageOverrides[card.id] && (
+    var needResolve = !tcgImageOverrides[card.id] && !tcgImageBlocked[card.id] && (
       !card.image ||
       card._matchLang === 'ja' || card._matchLang === 'ko' ||
       card._matchLang === 'zh-tw' || card._matchLang === 'zh-cn' ||
@@ -5787,6 +5850,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
 
     imgWrap.appendChild(img);
+    if (imgBlocked) showNoImagePlaceholder();
     if (card._matchLang) {
       var langBadge = document.createElement('span');
       langBadge.className = 'tcg-card-lang-badge';
@@ -6736,7 +6800,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
   }
 
+  var tcgFixCtx = null;
   function openTcgLightbox(url, alt, card, englishName, setLabel, lang) {
+    tcgFixCtx = (card && card.id) ? { card: card, alt: alt || '', englishName: englishName || '', setLabel: setLabel || '' } : null;
+    var fixBtn = document.getElementById('tcg-lightbox-fiximg');
+    if (fixBtn) fixBtn.hidden = !tcgFixCtx;
+    var askBtn = document.getElementById('tcg-lightbox-ask');
+    if (askBtn) askBtn.hidden = !tcgFixCtx;
+    try { uxRenderCardChart(tcgFixCtx ? tcgFixCtx.card.id : ''); } catch (e) {}
     tcgLightboxImg.src = url;
     tcgLightboxImg.alt = alt || '';
     tcgLightboxImg.onerror = null;
@@ -9614,10 +9685,20 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     card.addEventListener('click', function() {
       var willOwn = !card.classList.contains('owned');
       if (setCardOwned(card, willOwn)) {
-        updateSectionCount(card.closest('.gen-section'));
+        var sec = card.closest('.gen-section');
+        updateSectionCount(sec);
         saveOwned();
         updateOverallCount();
         if (missingOnly) applyFilters();
+        showUndoToast(displayName + (willOwn ? ' a\u00f1adido a tu Pok\u00e9dex.' : ' quitado de tu Pok\u00e9dex.'), function() {
+          if (setCardOwned(card, !willOwn)) {
+            updateSectionCount(card.closest('.gen-section'));
+            saveOwned();
+            updateOverallCount();
+            if (missingOnly) applyFilters();
+          }
+        });
+        if (willOwn) uxCheckGenComplete(sec);
       }
     });
 
@@ -10162,10 +10243,29 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     errorEl.style.display = 'block';
   }
 
+  // La lista de Pokémon se renueva sola: si la copia guardada tiene más de 7 días se vuelve a
+  // descargar en segundo plano y solo se redibuja si ha cambiado algo (p. ej. un Pokémon nuevo).
+  var GENS_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+  function cacheAgeMs() {
+    try {
+      var parsed = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+      return parsed && parsed.at ? Date.now() - parsed.at : Infinity;
+    } catch (e) { return Infinity; }
+  }
+  function refreshGensInBackground(current) {
+    if (cacheAgeMs() < GENS_MAX_AGE_MS) return;
+    fetchAllGenerations().then(function(gens) {
+      if (!gens || !gens.length) return;
+      var changed = JSON.stringify(gens) !== JSON.stringify(current);
+      saveCache(gens);
+      if (changed) render(gens);
+    }).catch(function() {});
+  }
   function init(forceRefresh) {
     var cached = forceRefresh ? null : loadCache();
     if (cached) {
       render(cached);
+      refreshGensInBackground(cached);
       return;
     }
     showLoading();
@@ -10176,19 +10276,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       showError();
     });
   }
-
-  refreshBtn.addEventListener('click', function() {
-    refreshBtn.classList.add('spinning');
-    localStorage.removeItem(CACHE_KEY);
-    fetchAllGenerations().then(function(gens) {
-      saveCache(gens);
-      render(gens);
-    }).catch(function() {
-      showError();
-    }).finally(function() {
-      refreshBtn.classList.remove('spinning');
-    });
-  });
 
   retryBtn.addEventListener('click', function() { init(false); });
 
@@ -10625,7 +10712,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       var isCustom = id.indexOf('custom-') === 0 || id.indexOf('sealed-') === 0;
       var base = m.image || '';
       if (id.indexOf('30th-') === 0) base = base.replace('/en/', '/es/');
-      var img = tcgImageOverrides[id] || (isCustom ? base : (base ? tcgCardImageUrl(base, 'low') : ''));
+      var img = tcgImageOverrides[id] || (tcgImageBlocked[id] ? '' : (isCustom ? base : (base ? tcgCardImageUrl(base, 'low') : '')));
       var name = m.name || m.displayName || id;
       var english = m.englishName || (isCustom && m.slug ? formatName(m.slug) : name);
       items[id] = {
@@ -10940,7 +11027,16 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       rm.title = 'Dejar de seguir';
       rm.innerHTML = SHOP_ICON_X;
       rm.setAttribute('data-testid', 'shop-row-unfollow-' + item.id);
-      rm.addEventListener('click', function() { delete shopFollow[item.id]; delete shopTargets[item.id]; delete shopAlerted[item.id]; shopSave(); renderShop(); });
+      rm.addEventListener('click', function() {
+        var prevFollow = shopFollow[item.id], prevTarget = shopTargets[item.id], prevAlerted = shopAlerted[item.id];
+        delete shopFollow[item.id]; delete shopTargets[item.id]; delete shopAlerted[item.id]; shopSave(); renderShop();
+        showUndoToast('Dejas de seguir ' + item.name + '.', function() {
+          if (prevFollow !== undefined) shopFollow[item.id] = prevFollow;
+          if (prevTarget !== undefined) shopTargets[item.id] = prevTarget;
+          if (prevAlerted !== undefined) shopAlerted[item.id] = prevAlerted;
+          shopSave(); renderShop();
+        });
+      });
       actions.appendChild(rm);
     }
     row.appendChild(img);
@@ -11809,6 +11905,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       '<div class="home-row"><span>Cartas seguidas</span><span>' + followed + '</span></div></section>';
 
     var row = function(name, right, cls) { return '<div class="home-row"><span>' + esc(name) + '</span><span class="' + (cls || '') + '">' + right + '</span></div>'; };
+    try { html += uxTodayHtml(); } catch (e) {}
     html += '<section class="home-card"><h3>Cambios en tus seguidas</h3>' + (movers.length ?
       movers.slice(0, 5).map(function(m) {
         return row(m.name, (m.pct > 0 ? '+' : '') + (m.pct * 100).toFixed(1).replace('.', ',') + '% \u00b7 ' + formatEuro(m.price), m.pct > 0 ? 'up' : 'down');
@@ -12535,11 +12632,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function vgcRenderTop(open) {
     var el = document.getElementById('vgc-top');
     if (!el || !vgc.index) return;
-    var teams = (vgc.index.teams || []).slice(0, 5);
-    if (!teams.length) { el.innerHTML = ''; return; }
-    var h = '<details class="vgc-card vgc-top-card"' + (open ? ' open' : '') + '><summary><p class="vgc-h3">Top 5 equipos del meta</p></summary>' +
-      '<p class="vgc-sub" style="margin:8px 0 4px">Equipos reales de torneos recientes, ordenados por resultados. Toca un Pokémon para ver su set y un equipo recomendado.</p>';
-    teams.forEach(function(t, i) {
+    var allTeams = vgc.index.teams || [];
+    if (!allTeams.length) { el.innerHTML = ''; return; }
+    var off = vgc.teamOff || 0;
+    if (off >= allTeams.length) off = 0;
+    var teams = allTeams.slice(off, off + 5);
+    var h = '<details class="vgc-card vgc-top-card"' + (open ? ' open' : '') + '><summary><p class="vgc-h3">Equipos del meta</p></summary>' +
+      '<p class="vgc-sub" style="margin:8px 0 4px">Equipos reales de torneos recientes, ordenados por resultados (puestos ' + (off + 1) + '\u2013' + (off + teams.length) + ' de ' + allTeams.length + '). Toca un Pokémon para ver su set y un equipo recomendado.</p>';
+    teams.forEach(function(t, k) {
+      var i = off + k;
       var who = t.player || t.event || 'Equipo de torneo';
       var meta = [t.record ? 'Récord ' + t.record : '', t.player ? t.event : ''].filter(Boolean).join(' · ');
       h += '<div class="vgc-team"><div class="vgc-team-head"><span class="vgc-team-rank">' + (i + 1) + '</span><div><p class="vgc-team-who">' + vgcEsc(who) + '</p>' +
@@ -12550,6 +12651,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         '<button type="button" class="vgc-ai-btn is-ghost" data-vgc-sets="' + i + '">' + (vgc.teamHtml && vgc.teamHtml[i] ? 'Ocultar sets completos' : 'Ver sets completos (ataques y puntos)') + '</button>' +
         '<div id="vgc-team-sets-' + i + '">' + ((vgc.teamHtml && vgc.teamHtml[i]) || '') + '</div></div>';
     });
+    if (allTeams.length > 5) h += '<button type="button" class="vgc-ai-btn" data-vgc-more="1">Ver otros equipos (' + (Math.floor(off / 5) + 1) + '/' + Math.ceil(allTeams.length / 5) + ')</button>';
     h += '<p class="vgc-note">Datos de Pikalytics (resultados de torneos). Úsalo como referencia de lo que se lleva ahora, no como receta cerrada.</p></details>';
     el.innerHTML = h;
   }
@@ -12872,6 +12974,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       return;
     }
     if (e.target.closest && e.target.closest('[data-vgc-clear]')) { vgcClearAll(); return; }
+    var more = e.target.closest ? e.target.closest('[data-vgc-more]') : null;
+    if (more) { var n = (vgc.index && vgc.index.teams || []).length; vgc.teamOff = ((vgc.teamOff || 0) + 5 >= n) ? 0 : (vgc.teamOff || 0) + 5; vgcRenderTop(true); return; }
     var ts = e.target.closest ? e.target.closest('[data-vgc-sets]') : null;
     if (ts) { vgcTeamSetsToggle(parseInt(ts.getAttribute('data-vgc-sets'), 10)); return; }
     var b = e.target.closest ? e.target.closest('[data-vgc-pick]') : null;
@@ -12882,7 +12986,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   });
   vgcEls.refresh.addEventListener('click', function() {
     vgcCacheClear();
-    vgc.ready = null; vgc.mons = {}; vgc.index = null; vgc.entered = false; vgc.teamHtml = {};
+    vgc.ready = null; vgc.mons = {}; vgc.index = null; vgc.entered = false; vgc.teamHtml = {}; vgc.teamOff = 0;
     vgcEls.name.textContent = 'Cargando regulación…';
     vgcEls.sub.textContent = '';
     vgcEls.refresh.classList.add('spinning');
@@ -12904,6 +13008,85 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function saveTcgWishlist() {
     try { localStorage.setItem(TCG_WISHLIST_KEY, JSON.stringify(Array.from(tcgWishlist))); } catch (e) {}
   }
+
+
+  // ---------- Corregir la imagen de una carta ----------
+  (function bindTcgImageFix() {
+    var panel = document.getElementById('tcg-imgfix');
+    var subEl = document.getElementById('tcg-imgfix-sub');
+    var urlEl = document.getElementById('tcg-imgfix-url');
+    var statusEl = document.getElementById('tcg-imgfix-status');
+    var restoreBtn = document.getElementById('tcg-imgfix-restore');
+    var openBtn = document.getElementById('tcg-lightbox-fiximg');
+    if (!panel || !openBtn) return;
+    function status(text, bad) { statusEl.hidden = !text; statusEl.textContent = text || ''; statusEl.classList.toggle('is-error', !!bad); }
+    function close() { panel.hidden = true; status(''); }
+    function cardOf() { return tcgFixCtx && tcgFixCtx.card; }
+    function refreshViews(id, url) {
+      var el = document.querySelector('.tcg-card[data-card-id="' + String(id).replace(/"/g, '') + '"]');
+      if (el && el._setImage) el._setImage(url);
+      try { if (typeof renderShop === 'function') renderShop(); } catch (e) {}
+      try { if (typeof renderHome === 'function') renderHome(); } catch (e) {}
+    }
+    openBtn.addEventListener('click', function() {
+      var c = cardOf();
+      if (!c) return;
+      subEl.textContent = [tcgFixCtx.englishName || tcgFixCtx.alt || c.name, tcgFixCtx.setLabel, c.localId ? '#' + c.localId : ''].filter(Boolean).join(' \u00b7 ');
+      urlEl.value = tcgImageOverrides[c.id] || '';
+      restoreBtn.hidden = !(tcgImageOverrides[c.id] || tcgImageBlocked[c.id]);
+      status('');
+      panel.hidden = false;
+    });
+    document.getElementById('tcg-imgfix-close').addEventListener('click', close);
+    panel.addEventListener('click', function(e) { if (e.target === panel) close(); });
+    document.getElementById('tcg-imgfix-search').addEventListener('click', function() {
+      var c = cardOf();
+      if (!c) return;
+      var num = tcgCardLocalNumber(c);
+      var q = [tcgFixCtx.englishName || tcgFixCtx.alt || c.name, tcgFixCtx.setLabel, num ? '#' + num : '', 'pokemon card'].filter(Boolean).join(' ');
+      window.open('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(q), '_blank', 'noopener');
+    });
+    document.getElementById('tcg-imgfix-save').addEventListener('click', function() {
+      var c = cardOf();
+      var url = String(urlEl.value || '').trim();
+      if (!c) return;
+      if (!/^https?:\/\//i.test(url)) { status('Pega un enlace que empiece por https://', true); return; }
+      tcgImageOverrides[c.id] = url;
+      delete tcgImageBlocked[c.id];
+      delete tcgExternalImageCache[c.id];
+      saveTcgImageOverrides(); saveTcgImageBlocked(); saveTcgExternalImageCache();
+      publishTcgSharedImage(c.id, url);
+      tcgLightboxImg.src = url;
+      refreshViews(c.id, url);
+      close();
+    });
+    document.getElementById('tcg-imgfix-remove').addEventListener('click', function() {
+      var c = cardOf();
+      if (!c) return;
+      delete tcgImageOverrides[c.id];
+      delete tcgExternalImageCache[c.id];
+      tcgImageBlocked[c.id] = true;
+      saveTcgImageOverrides(); saveTcgImageBlocked(); saveTcgExternalImageCache();
+      refreshViews(c.id, '');
+      restoreBtn.hidden = false;
+      urlEl.value = '';
+      status('Imagen quitada. La carta mostrar\u00e1 \u00abSin imagen a\u00fan\u00bb y podr\u00e1s a\u00f1adir la correcta.');
+    });
+    restoreBtn.addEventListener('click', function() {
+      var c = cardOf();
+      if (!c) return;
+      delete tcgImageOverrides[c.id];
+      delete tcgExternalImageCache[c.id];
+      delete tcgImageBlocked[c.id];
+      saveTcgImageOverrides(); saveTcgImageBlocked(); saveTcgExternalImageCache();
+      var orig = c.image ? tcgCardImageUrl(c.image, 'low') : '';
+      refreshViews(c.id, orig);
+      if (orig) tcgLightboxImg.src = tcgCardImageUrl(c.image, 'high');
+      restoreBtn.hidden = true;
+      urlEl.value = '';
+      status(orig ? 'Vuelve a usarse la imagen autom\u00e1tica.' : 'Se volver\u00e1 a buscar la imagen autom\u00e1tica al recargar la lista.');
+    });
+  })();
 
   var tcgActionCtx = null;
   function openTcgActionSheet(ctx) {
@@ -13746,6 +13929,19 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     aiHeroSpriteEl.innerHTML = '';
     aiHeroSpriteEl.appendChild(aiSprite('', null));
     aiHeroTitleEl.textContent = 'Soy ' + c[1] + '. \u00bfEn qu\u00e9 te ayudo?';
+    var hint = aiHeroEl.querySelector('.ai-hero-hint');
+    if (hint) hint.remove();
+    try {
+      if (!computeHuchaTotal().ownedCount && !shopTrackedItems().length) {
+        hint = shopEl('div', 'ai-hero-hint');
+        hint.appendChild(shopEl('p', null, 'A\u00fan no tienes cartas ni sigues ninguna. Marca tus cartas en TCG y podr\u00e9 analizarlas.'));
+        var go = shopEl('button', 'shop-refresh-btn', 'Ir a TCG');
+        go.type = 'button';
+        go.addEventListener('click', function() { switchMode('tcg'); });
+        hint.appendChild(go);
+        aiHeroTitleEl.parentNode.insertBefore(hint, aiHeroTitleEl.nextSibling);
+      }
+    } catch (e) {}
   }
   function aiRenderAll() { aiRenderHeader(); aiRefreshStats(); aiRenderPanel(); aiRenderChat(); aiUpdateSend(); }
   // El chat tiene su propio scroll: siempre baja hasta lo \u00faltimo.
@@ -13901,6 +14097,118 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   if (window.visualViewport) { window.visualViewport.addEventListener('resize', function() { aiFitHeight(); if (!aiViewEl.hidden) aiScrollEnd(); }); }
   aiHistoryBtn.addEventListener('click', function() { aiPanelMode = aiPanelMode === 'history' ? null : 'history'; aiRenderPanel(); });
   aiDataBtn.addEventListener('click', function() { aiPanelMode = aiPanelMode === 'data' ? null : 'data'; aiRenderPanel(); });
+
+
+  // ---------- Mejoras de uso: buscador global, aviso de logros, gr\u00e1fico, \u00abHoy\u00bb, tirar para actualizar ----------
+  var uxToastEl = document.createElement('div');
+  uxToastEl.className = 'ux-toast';
+  uxToastEl.hidden = true;
+  document.body.appendChild(uxToastEl);
+  var uxToastTimer = null;
+  function uxToast(text) {
+    clearTimeout(uxToastTimer);
+    uxToastEl.textContent = text;
+    uxToastEl.hidden = false;
+    requestAnimationFrame(function() { uxToastEl.classList.add('is-visible'); });
+    uxToastTimer = setTimeout(function() { uxToastEl.classList.remove('is-visible'); setTimeout(function() { uxToastEl.hidden = true; }, 250); }, 3200);
+  }
+  function uxCheckGenComplete(section) {
+    if (!section) return;
+    var total = section.querySelectorAll('.poke-card').length;
+    if (total && section.querySelectorAll('.poke-card.owned').length === total) {
+      var r = section.querySelector('.gen-region');
+      setTimeout(function() { uxToast('\u00a1' + (r ? r.textContent : 'Generaci\u00f3n') + ' completada! \ud83c\udf89'); }, 600);
+    }
+  }
+
+  // Tarjeta \u00abHoy\u00bb de la pantalla de inicio
+  function uxTodayHtml() {
+    var rows = [];
+    try {
+      var rel = shopReleasesAll().filter(function(r) { return shopDaysUntil(r.d) >= 0; }).sort(function(a, b) { return a.d < b.d ? -1 : 1; })[0];
+      if (rel) {
+        var dd = shopDaysUntil(rel.d);
+        rows.push(['shop', 'Pr\u00f3ximo lanzamiento', rel.n + ' \u00b7 ' + (dd === 0 ? 'hoy' : dd === 1 ? 'ma\u00f1ana' : 'en ' + dd + ' d\u00edas')]);
+      }
+    } catch (e) {}
+    try {
+      var best = null;
+      gensContainer.querySelectorAll('.gen-section').forEach(function(sec) {
+        var tot = sec.querySelectorAll('.poke-card').length, own = sec.querySelectorAll('.poke-card.owned').length, left = tot - own;
+        if (tot && left > 0 && (!best || left < best.left)) { var rg = sec.querySelector('.gen-region'); best = { left: left, name: rg ? rg.textContent : 'una generaci\u00f3n' }; }
+      });
+      if (best) rows.push(['dex', 'M\u00e1s cerca de completar', best.name + ' \u00b7 te ' + (best.left === 1 ? 'falta 1' : 'faltan ' + best.left)]);
+    } catch (e) {}
+    if (!rows.length) return '';
+    return '<section class="home-card"><h3>Hoy</h3>' + rows.map(function(r) {
+      return '<button type="button" class="home-row is-link" data-go="' + r[0] + '"><span>' + shareEscapeHtml(r[1]) + '</span><span>' + shareEscapeHtml(r[2]) + '</span></button>';
+    }).join('') + '</section>';
+  }
+
+  // Gr\u00e1fico de precio en el visor de la carta
+  function uxRenderCardChart(id) {
+    var box = document.getElementById('tcg-lightbox-chart');
+    if (!box) return;
+    box.innerHTML = '';
+    box.hidden = true;
+    if (!id) return;
+    var h = shopInfo(id).history || [];
+    if (h.length < 2) return;
+    var vals = h.slice(-30).map(function(x) { return x.p; }).filter(function(v) { return typeof v === 'number'; });
+    if (vals.length < 2) return;
+    var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals), rg = (mx - mn) || 1;
+    var w = 300, ht = 60, pad = 3, st = (w - pad * 2) / (vals.length - 1);
+    var co = vals.map(function(v, k) { return (pad + k * st).toFixed(1) + ',' + (ht - pad - ((v - mn) / rg) * (ht - pad * 2)).toFixed(1); });
+    var col = vals[vals.length - 1] >= vals[0] ? '#2f9e5b' : '#d9485f';
+    box.innerHTML = '<p class="tcg-lightbox-chart-title">Evoluci\u00f3n del precio</p>' +
+      '<svg viewBox="0 0 ' + w + ' ' + ht + '" preserveAspectRatio="none"><polygon points="' + pad + ',' + ht + ' ' + co.join(' ') + ' ' + (w - pad) + ',' + ht + '" fill="' + col + '" fill-opacity=".14"/>' +
+      '<polyline points="' + co.join(' ') + '" fill="none" stroke="' + col + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>' +
+      '<p class="tcg-lightbox-chart-sub">M\u00edn ' + formatEuro(mn) + ' \u00b7 M\u00e1x ' + formatEuro(mx) + ' \u00b7 Ahora ' + formatEuro(vals[vals.length - 1]) + '</p>';
+    box.hidden = false;
+  }
+
+  // Preguntar a la IA desde una carta
+  (function bindAskAi() {
+    var btn = document.getElementById('tcg-lightbox-ask');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      var ctx = tcgFixCtx;
+      if (!ctx || !ctx.card) return;
+      var c = ctx.card, info = shopInfo(c.id);
+      var label = (ctx.englishName || ctx.alt || c.name) + (ctx.setLabel ? ' (' + ctx.setLabel + (c.localId ? ' #' + c.localId : '') + ')' : '');
+      var q = 'Sobre la carta ' + label + (info.price != null ? ', que ahora cuesta ' + info.price.toFixed(2) + ' EUR' : '') + ': \u00bfmerece la pena comprarla, conservarla o venderla? \u00bfEst\u00e1 cara o barata para lo que suele valer?';
+      closeTcgLightbox();
+      aiStore.active = null;
+      switchMode('ai');
+      setTimeout(function() { aiSend(q); }, 250);
+    });
+  })();
+
+  // Tirar hacia abajo para actualizar precios (solo en la pesta\u00f1a Tienda, arriba del todo)
+  (function bindPullToRefresh() {
+    var ind = document.createElement('div');
+    ind.className = 'ux-ptr';
+    ind.textContent = 'Suelta para actualizar precios';
+    ind.hidden = true;
+    document.body.appendChild(ind);
+    var sy = 0, sx = 0, dy = 0, on = false;
+    document.addEventListener('touchstart', function(e) {
+      if (shopViewEl.hidden || window.scrollY > 0 || e.touches.length !== 1) { on = false; return; }
+      sy = e.touches[0].clientY; sx = e.touches[0].clientX; dy = 0; on = true;
+    }, { passive: true });
+    document.addEventListener('touchmove', function(e) {
+      if (!on) return;
+      dy = e.touches[0].clientY - sy;
+      if (Math.abs(e.touches[0].clientX - sx) > 40 || dy < 0 || window.scrollY > 0) { on = false; ind.hidden = true; return; }
+      ind.hidden = dy < 50;
+      ind.classList.toggle('is-ready', dy > 110);
+    }, { passive: true });
+    document.addEventListener('touchend', function() {
+      var go = on && dy > 110;
+      on = false; ind.hidden = true; ind.classList.remove('is-ready');
+      if (go) { var rb = document.getElementById('shop-refresh-btn'); if (rb && !rb.disabled) rb.click(); }
+    }, { passive: true });
+  })();
 
   // Comprueba precios cada vez que se abre la app, no solo al entrar en Estadísticas.
   // Respeta el TTL de 24h de la hucha, así que si ya se comprobó hoy no llama a nada.
