@@ -720,7 +720,7 @@
   .push-onboard-card p{margin:7px 0 14px;color:var(--text-dim);line-height:1.45}
   .push-onboard-icon{font-size:30px}.push-onboard-note{font-size:12px;margin-bottom:0!important}
   .push-onboard-card .tcg-lang-sheet-close{position:absolute;right:8px;top:8px}
-  .daily-summary-popup{position:fixed;inset:0;z-index:110;display:flex;align-items:flex-end;justify-content:center;padding:18px;background:rgba(0,0,0,.28)}
+  .daily-summary-popup{position:fixed;inset:0;z-index:110;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.34);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
   .daily-summary-popup[hidden]{display:none}
   .daily-summary-card{position:relative;width:min(520px,100%);max-height:min(78vh,680px);overflow:auto;padding:20px 18px 18px;border:1px solid var(--border);border-radius:18px;background:var(--surface);box-shadow:0 16px 48px rgba(0,0,0,.2)}
   .daily-summary-card h2{margin:4px 0 4px;font-size:21px}.daily-summary-card p{color:var(--text-dim);line-height:1.4}
@@ -2488,7 +2488,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 <div id="daily-summary-popup" class="daily-summary-popup" hidden role="dialog" aria-labelledby="daily-summary-title">
   <div class="daily-summary-card">
     <button id="daily-summary-close" class="tcg-lang-sheet-close" type="button" aria-label="Cerrar">×</button>
-    <div class="push-onboard-icon">📰</div>
     <h2 id="daily-summary-title">Resumen de las últimas 24 h</h2>
     <p id="daily-summary-intro">Cambios relevantes en tus cartas seguidas y próximos lanzamientos.</p>
     <div id="daily-summary-body" class="daily-summary-list"></div>
