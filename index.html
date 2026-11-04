@@ -720,6 +720,12 @@
   .push-onboard-card p{margin:7px 0 14px;color:var(--text-dim);line-height:1.45}
   .push-onboard-icon{font-size:30px}.push-onboard-note{font-size:12px;margin-bottom:0!important}
   .push-onboard-card .tcg-lang-sheet-close{position:absolute;right:8px;top:8px}
+  .daily-summary-popup{position:fixed;inset:0;z-index:110;display:flex;align-items:flex-end;justify-content:center;padding:18px;background:rgba(0,0,0,.28)}
+  .daily-summary-popup[hidden]{display:none}
+  .daily-summary-card{position:relative;width:min(520px,100%);max-height:min(78vh,680px);overflow:auto;padding:20px 18px 18px;border:1px solid var(--border);border-radius:18px;background:var(--surface);box-shadow:0 16px 48px rgba(0,0,0,.2)}
+  .daily-summary-card h2{margin:4px 0 4px;font-size:21px}.daily-summary-card p{color:var(--text-dim);line-height:1.4}
+  .daily-summary-list{display:grid;gap:8px;margin:14px 0}.daily-summary-row{padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2,var(--surface))}
+  .daily-summary-row strong{display:block}.daily-summary-up{color:#1b9b67}.daily-summary-down{color:#d45b5b}
   /* ---- Pestaña Cambios ---- */
   .trade-root{ padding:4px 2px 24px; }
   .trade-tab-badge{ position:absolute; top:0; left:calc(50% + 6px); min-width:16px; height:16px; border-radius:8px; background:#e5484d; color:#fff; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; padding:0 4px; box-sizing:border-box; }
@@ -2220,6 +2226,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     </div>
     
     
+    <button id="summary-btn" class="icon-btn" title="Resumen últimas 24 horas" aria-label="Resumen últimas 24 horas">📰</button>
     <button id="settings-btn" class="icon-btn" title="Ajustes" aria-label="Ajustes">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
@@ -2478,6 +2485,17 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   </div>
 </div>
 
+<div id="daily-summary-popup" class="daily-summary-popup" hidden role="dialog" aria-labelledby="daily-summary-title">
+  <div class="daily-summary-card">
+    <button id="daily-summary-close" class="tcg-lang-sheet-close" type="button" aria-label="Cerrar">×</button>
+    <div class="push-onboard-icon">📰</div>
+    <h2 id="daily-summary-title">Resumen de las últimas 24 h</h2>
+    <p id="daily-summary-intro">Cambios relevantes en tus cartas seguidas y próximos lanzamientos.</p>
+    <div id="daily-summary-body" class="daily-summary-list"></div>
+    <button id="daily-summary-refresh" type="button" class="backup-action">Actualizar resumen</button>
+  </div>
+</div>
+
 <div id="push-onboard" class="push-onboard" hidden role="dialog" aria-labelledby="push-onboard-title">
   <div class="push-onboard-card">
     <button id="push-onboard-close" class="tcg-lang-sheet-close" type="button" aria-label="Más tarde">×</button>
@@ -2512,7 +2530,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       <input id="settings-api-key" type="hidden">
       <p id="settings-api-key-status" hidden></p>
       <details class="settings-group"><summary>Avisos de precios y lanzamientos</summary><div class="settings-group-body">
-      <p class="backup-desc">Aviso cuando una carta baja de precio un 10% o más. Importante: solo se comprueba al abrir la app o las Estadísticas — no es un aviso push real con la app cerrada, esta app no tiene servidor propio.</p>
+      <p class="backup-desc">Recibirás un resumen push por la mañana con los principales cambios de precio de las cartas seguidas y avisos de lanzamientos. El resumen de las últimas 24 h también queda disponible en el botón 📰 junto a Ajustes.</p>
       <button type="button" id="price-alerts-btn" class="backup-action">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <span id="price-alerts-label">Avisos de bajada de precio: desactivados</span>
@@ -3629,6 +3647,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var settingsApiKeyStatus = document.getElementById('settings-api-key-status');
   var priceAlertsBtn = document.getElementById('price-alerts-btn');
   var priceAlertsLabelEl = document.getElementById('price-alerts-label');
+  var summaryBtn = document.getElementById('summary-btn');
+  var summaryPopup = document.getElementById('daily-summary-popup');
+  var summaryClose = document.getElementById('daily-summary-close');
+  var summaryBody = document.getElementById('daily-summary-body');
+  var summaryRefresh = document.getElementById('daily-summary-refresh');
   var shareExportBtn = document.getElementById('share-export-btn');
   var themeBtn = document.getElementById('theme-btn');
   var themeIconMoon = document.getElementById('theme-icon-moon');
@@ -4983,6 +5006,52 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     settingsApiKeyStatus.textContent = aiWorkerEnabled ? 'Servicio de IA configurado en este dispositivo.' : 'Servicio de IA desactivado.';
     setTimeout(function() { settingsApiKeyStatus.hidden = true; }, 2500);
   });
+
+  function renderDailySummary() {
+    if (!summaryBody) return;
+    var rows = [], cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    Object.keys(huchaPriceCache || {}).forEach(function(id) {
+      var c = huchaPriceCache[id], meta = tcgOwnedMeta[id] || tcgSavedMeta[id];
+      if (!c || !c.at || c.at < cutoff || typeof c.price !== 'number' || typeof c.prevPrice !== 'number' || c.prevPrice === c.price) return;
+      var pct = (c.price - c.prevPrice) / c.prevPrice;
+      rows.push({ name: meta ? formatName(tcgMetaSlug(meta) || '') : id, from: c.prevPrice, to: c.price, pct: pct });
+    });
+    rows.sort(function(a,b){ return Math.abs(b.pct) - Math.abs(a.pct); });
+    var releases = typeof shopReleasesAll === 'function' ? shopReleasesAll().filter(function(r) {
+      var t = new Date(String(r.d) + 'T00:00:00').getTime();
+      return t >= Date.now() - 24 * 60 * 60 * 1000 && t <= Date.now() + 24 * 60 * 60 * 1000;
+    }) : [];
+    var html = rows.slice(0, 8).map(function(r) {
+      return '<div class="daily-summary-row ' + (r.pct < 0 ? 'daily-summary-down' : 'daily-summary-up') + '"><strong>' + shareEscapeHtml(r.name) + '</strong><span>' + formatEuro(r.from) + ' → ' + formatEuro(r.to) + ' (' + Math.round(r.pct * 100) + '%)</span></div>';
+    });
+    releases.forEach(function(r){ html.push('<div class="daily-summary-row"><strong>📅 ' + shareEscapeHtml(r.n) + '</strong><span>Lanzamiento: ' + shareEscapeHtml(r.d) + '</span></div>'); });
+    summaryBody.innerHTML = html.length ? html.join('') : '<p class="stats-empty">No hay cambios relevantes ni lanzamientos en este periodo.</p>';
+  }
+  function openDailySummary() {
+    if (!summaryPopup) return;
+    renderDailySummary();
+    summaryPopup.hidden = false;
+    if (typeof pushConfigured === 'function' && pushConfigured() && typeof pushRequest === 'function') {
+      pushRequest('/summary', 'GET').then(function(data) {
+        var remote = data && Array.isArray(data.changes) ? data.changes.slice(0, 8) : [];
+        if (!remote.length) return;
+        summaryBody.insertAdjacentHTML('afterbegin', remote.map(function(r) {
+          var pct = r.from ? (r.to-r.from)/r.from : 0;
+          return '<div class="daily-summary-row ' + (pct < 0 ? 'daily-summary-down' : 'daily-summary-up') + '"><strong>' + shareEscapeHtml(r.name || r.id) + '</strong><span>' + formatEuro(r.from) + ' → ' + formatEuro(r.to) + ' (' + Math.round(pct * 100) + '%)</span></div>';
+        }).join(''));
+      }).catch(function(){});
+    }
+  }
+  function closeDailySummary() { if (summaryPopup) summaryPopup.hidden = true; }
+  if (summaryBtn) summaryBtn.addEventListener('click', openDailySummary);
+  if (summaryClose) summaryClose.addEventListener('click', closeDailySummary);
+  if (summaryRefresh) summaryRefresh.addEventListener('click', renderDailySummary);
+  if (summaryPopup) summaryPopup.addEventListener('click', function(e) { if (e.target === summaryPopup) closeDailySummary(); });
+  try {
+    if (localStorage.getItem('pokecheck_daily_summary_seen_v1') !== '1') {
+      setTimeout(function(){ openDailySummary(); try { localStorage.setItem('pokecheck_daily_summary_seen_v1', '1'); } catch(e){} }, 1400);
+    }
+  } catch(e) {}
 
   function updatePriceAlertsBtn() {
     priceAlertsLabelEl.textContent = 'Avisos de bajada de precio: ' + (priceAlertsEnabled ? 'activados' : 'desactivados');
@@ -11660,14 +11729,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     pushStatusEl.hidden = !text;
   }
   function pushPayload() {
-    var items = shopTrackedItems().filter(function(it) { return shopTargetOf(it.id) != null; }).map(function(it) {
+    var items = shopTrackedItems().map(function(it) {
       return {
         id: it.id, name: String(it.name).slice(0, 120), target: shopTargetOf(it.id),
         url: (it.sealed || it.id.indexOf('custom-') === 0) ? (shopInfo(it.id).url || it.cmUrl || '') : ''
       };
     });
     var releases = pushCfg.releases ? shopReleasesAll().map(function(r) { return { d: r.d, n: r.n }; }) : [];
-    return JSON.stringify({ items: items, releases: releases, telegram: pushCfg.telegram });
+    return JSON.stringify({ items: items, releases: releases });
   }
   function pushRequest(path, method, body) {
     return fetch(pushBase() + path, {
