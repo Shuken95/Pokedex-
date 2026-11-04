@@ -4263,7 +4263,22 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     releases.forEach(function(r){ html.push('<div class="daily-summary-row"><strong>📅 ' + shareEscapeHtml(r.n) + '</strong><span>Lanzamiento: ' + shareEscapeHtml(r.d) + '</span></div>'); });
     summaryBody.innerHTML = html.length ? html.join('') : '<p class="stats-empty">No hay cambios relevantes ni lanzamientos en este periodo.</p>';
   }
-  function openDailySummary() { if (!summaryPopup) return; renderDailySummary(); summaryPopup.hidden = false; }
+  function openDailySummary() {
+    if (!summaryPopup) return;
+    renderDailySummary();
+    summaryPopup.hidden = false;
+    if (typeof pushConfigured === 'function' && pushConfigured() && typeof pushRequest === 'function') {
+      pushRequest('/summary', 'GET').then(function(data) {
+        var remote = (data && Array.isArray(data.changes)) ? data.changes.slice().sort(function(a,b){ return Math.abs((b.to-b.from)/b.from) - Math.abs((a.to-a.from)/a.from); }).slice(0, 8) : [];
+        if (!remote.length) return;
+        var html = remote.map(function(r) {
+          var pct = r.from ? (r.to-r.from)/r.from : 0;
+          return '<div class="daily-summary-row ' + (pct < 0 ? 'daily-summary-down' : 'daily-summary-up') + '"><strong>' + shareEscapeHtml(r.name || r.id) + '</strong><span>' + formatEuro(r.from) + ' → ' + formatEuro(r.to) + ' (' + Math.round(pct * 100) + '%)</span></div>';
+        }).join('');
+        summaryBody.insertAdjacentHTML('afterbegin', html);
+      }).catch(function(){});
+    }
+  }
   function closeDailySummary() { if (summaryPopup) summaryPopup.hidden = true; }
   if (summaryBtn) summaryBtn.addEventListener('click', openDailySummary);
   if (summaryClose) summaryClose.addEventListener('click', closeDailySummary);
