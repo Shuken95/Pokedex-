@@ -87,6 +87,9 @@
     display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
     margin-bottom:12px;
   }
+  .header-actions{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+  .header-actions .icon-btn{margin:0}
+  .daily-summary-note{margin:0 0 12px!important;padding:11px 12px;border:1px solid var(--border);border-radius:12px;background:var(--accent-soft);color:var(--text)!important;font-size:13px!important;line-height:1.5!important}
   .title-block h1{
     font-size:19px; font-weight:700; margin:0 0 2px; letter-spacing:-0.01em;
   }
@@ -2224,12 +2227,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       <h1>Mi Pokédex</h1>
       <p><span id="overall-count">–</span></p>
     </div>
-    
-    
-    <button id="summary-btn" class="icon-btn" title="Resumen últimas 24 horas" aria-label="Resumen últimas 24 horas">📰</button>
-    <button id="settings-btn" class="icon-btn" title="Ajustes" aria-label="Ajustes">
+    <div class="header-actions">
+      <button id="summary-btn" class="icon-btn" title="Novedades y valor" aria-label="Novedades y valor">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m7.5 14 2.7-3 2.2 2 4.1-4.5"/><path d="M7.5 17h9"/></svg>
+      </button>
+      <button id="settings-btn" class="icon-btn" title="Ajustes" aria-label="Ajustes">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </button>
+      </button>
+    </div>
   </div>
 
 
@@ -2489,7 +2494,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   <div class="daily-summary-card">
     <button id="daily-summary-close" class="tcg-lang-sheet-close" type="button" aria-label="Cerrar">×</button>
     <h2 id="daily-summary-title">Resumen de las últimas 24 h</h2>
-    <p id="daily-summary-intro">Cambios relevantes en tus cartas seguidas y próximos lanzamientos.</p>
+    <p id="daily-summary-intro">Un vistazo personal a cómo se mueve tu colección y lo que estás siguiendo.</p>
     <div id="daily-summary-body" class="daily-summary-list"></div>
     <button id="daily-summary-refresh" type="button" class="backup-action">Actualizar resumen</button>
   </div>
@@ -3672,6 +3677,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var summaryPopup = document.getElementById('daily-summary-popup');
   var summaryClose = document.getElementById('daily-summary-close');
   var summaryBody = document.getElementById('daily-summary-body');
+  var summaryIntro = document.getElementById('daily-summary-intro');
   var summaryRefresh = document.getElementById('daily-summary-refresh');
   var shareExportBtn = document.getElementById('share-export-btn');
   var themeBtn = document.getElementById('theme-btn');
@@ -5156,6 +5162,30 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function renderDailySummary() {
     if (!summaryBody) return;
     var rows = [], cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    var personal = [];
+    var collectionStats = typeof computeHuchaTotal === 'function' ? computeHuchaTotal() : null;
+    if (collectionStats && collectionStats.ownedCount) {
+      if (collectionStats.known) personal.push('Tu colección ronda los ' + formatEuro(collectionStats.total) + ', con precio conocido para ' + collectionStats.known + ' de tus ' + collectionStats.ownedCount + ' cartas.');
+      else personal.push('Tienes ' + collectionStats.ownedCount + ' cartas en tu colección; todavía faltan precios para poder valorar el conjunto.');
+      if (Array.isArray(huchaHistory) && huchaHistory.length > 1) {
+        var latest = huchaHistory[huchaHistory.length - 1], previous = huchaHistory[huchaHistory.length - 2];
+        var valueDiff = Number(latest.total) - Number(previous.total);
+        if (isFinite(valueDiff) && Math.abs(valueDiff) >= 0.01) personal.push('Desde el último registro, tu colección ' + (valueDiff > 0 ? 'ha ganado ' : 'ha bajado ') + formatEuro(Math.abs(valueDiff)) + '.');
+      }
+    }
+    var followedChanges = [];
+    if (typeof shopTrackedItems === 'function' && typeof shopInfo === 'function') {
+      shopTrackedItems().forEach(function(it) {
+        var info = shopInfo(it.id);
+        if (info && typeof info.pct === 'number' && typeof info.price === 'number') followedChanges.push({ name: it.name, price: info.price, pct: info.pct });
+      });
+      followedChanges.sort(function(a,b) { return Math.abs(b.pct) - Math.abs(a.pct); });
+      if (followedChanges.length) {
+        var biggest = followedChanges[0];
+        personal.push('De lo que sigues, lo que más se ha movido es ' + biggest.name + ': ' + (biggest.pct < 0 ? 'ha bajado' : 'ha subido') + ' un ' + Math.abs(Math.round(biggest.pct * 100)) + '%, hasta ' + formatEuro(biggest.price) + '.');
+      } else if (typeof shopTrackedItems === 'function' && shopTrackedItems().length) personal.push('Estás siguiendo ' + shopTrackedItems().length + ' cartas o productos; todavía no hay una variación reciente que destacar.');
+    }
+    if (summaryIntro) summaryIntro.textContent = personal.length ? personal.join(' ') : 'Aún no hay suficientes datos personales para comparar valores; aquí tienes las novedades disponibles.';
     Object.keys(huchaPriceCache || {}).forEach(function(id) {
       var c = huchaPriceCache[id], meta = tcgOwnedMeta[id] || tcgSavedMeta[id];
       if (!c || !c.at || c.at < cutoff || typeof c.price !== 'number' || typeof c.prevPrice !== 'number' || c.prevPrice === c.price) return;
@@ -5163,14 +5193,16 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       rows.push({ name: meta ? formatName(tcgMetaSlug(meta) || '') : id, from: c.prevPrice, to: c.price, pct: pct });
     });
     rows.sort(function(a,b){ return Math.abs(b.pct) - Math.abs(a.pct); });
+    followedChanges.slice(0, 4).forEach(function(r) { rows.push({ name: r.name, from: null, to: r.price, pct: r.pct, followed: true }); });
     var releases = typeof shopReleasesAll === 'function' ? shopReleasesAll().filter(function(r) {
       var t = new Date(String(r.d) + 'T00:00:00').getTime();
       return t >= Date.now() - 24 * 60 * 60 * 1000 && t <= Date.now() + 24 * 60 * 60 * 1000;
     }) : [];
     var html = rows.slice(0, 8).map(function(r) {
-      return '<div class="daily-summary-row ' + (r.pct < 0 ? 'daily-summary-down' : 'daily-summary-up') + '"><strong>' + shareEscapeHtml(r.name) + '</strong><span>' + formatEuro(r.from) + ' → ' + formatEuro(r.to) + ' (' + Math.round(r.pct * 100) + '%)</span></div>';
+      var movement = r.followed ? ((r.pct < 0 ? 'Ha bajado' : 'Ha subido') + ' un ' + Math.abs(Math.round(r.pct * 100)) + '% · ahora ' + formatEuro(r.to)) : (formatEuro(r.from) + ' → ' + formatEuro(r.to) + ' (' + Math.round(r.pct * 100) + '%)');
+      return '<div class="daily-summary-row ' + (r.pct < 0 ? 'daily-summary-down' : 'daily-summary-up') + '"><strong>' + shareEscapeHtml(r.name) + '</strong><span>' + movement + '</span></div>';
     });
-    releases.forEach(function(r){ html.push('<div class="daily-summary-row"><strong>📅 ' + shareEscapeHtml(r.n) + '</strong><span>Lanzamiento: ' + shareEscapeHtml(r.d) + '</span></div>'); });
+    releases.forEach(function(r){ html.push('<div class="daily-summary-row"><strong>' + shareEscapeHtml(r.n) + '</strong><span>Sale ' + shareEscapeHtml(r.d) + '</span></div>'); });
     summaryBody.innerHTML = html.length ? html.join('') : '<p class="stats-empty">No hay cambios relevantes ni lanzamientos en este periodo.</p>';
   }
   function openDailySummary() {
