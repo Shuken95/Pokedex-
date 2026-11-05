@@ -2622,7 +2622,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </button>
       <input type="file" id="backup-file-input" accept="application/json" hidden>
       <button type="button" id="diagnostics-btn" class="backup-action"><span>Comprobar conexión y servicios</span></button>
-      <p id="diagnostics-status" class="diagnostics-status" hidden></p>
+      <p id="diagnostics-status" class="diagnostics-status" hidden role="status" aria-live="polite"></p>
       <div class="settings-group" style="margin-top:10px">
         <div class="settings-group-body">
           <strong>Sincronizar entre dispositivos</strong>
@@ -5129,6 +5129,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   });
   backupBackdrop.addEventListener('click', closeBackupPopup);
   backupClose.addEventListener('click', closeBackupPopup);
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    if (summaryPopup && !summaryPopup.hidden) return closeDailySummary();
+    if (backupPopup && !backupPopup.hidden) return closeBackupPopup();
+    if (settingsPopup && !settingsPopup.hidden) return closeSettingsPopup();
+  });
   if (statsBtn) statsBtn.addEventListener('click', openStatsPopup);
   statsBackdrop.addEventListener('click', closeStatsPopup);
   statsClose.addEventListener('click', closeStatsPopup);
