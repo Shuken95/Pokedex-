@@ -20,7 +20,7 @@ compatibility_flags = ["nodejs_compat"]
 # Cron: revisa precios y lanzamientos varias veces al día (UTC).
 # Ajusta a tu gusto; 4 veces/día es un buen equilibrio con los límites gratis.
 [triggers]
-crons = ["0 7,12,17,22 * * *"]
+crons = ["0 7,8,12,17,22 * * *"]
 
 [[kv_namespaces]]
 binding = "STORE"

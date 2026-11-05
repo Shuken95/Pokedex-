@@ -11944,7 +11944,19 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       };
     });
     var releases = pushCfg.releases ? shopReleasesAll().map(function(r) { return { d: r.d, n: r.n }; }) : [];
-    return JSON.stringify({ items: items, releases: releases });
+    var portfolio = null;
+    try {
+      var pStats = computeHuchaTotal();
+      portfolio = { total: Math.round((pStats.total || 0) * 100) / 100, cards: pStats.ownedCount || 0 };
+      var todayStr = new Date().toISOString().slice(0, 10);
+      for (var hi = huchaHistory.length - 1; hi >= 0; hi--) {
+        if (huchaHistory[hi] && huchaHistory[hi].date !== todayStr && typeof huchaHistory[hi].total === 'number') {
+          portfolio.prevTotal = huchaHistory[hi].total;
+          break;
+        }
+      }
+    } catch (e) {}
+    return JSON.stringify({ items: items, releases: releases, portfolio: portfolio });
   }
   function pushRequest(path, method, body) {
     return fetch(pushBase() + path, {

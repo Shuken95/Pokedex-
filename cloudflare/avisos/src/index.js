@@ -97,12 +97,14 @@ async function loadState(env) {
           released: raw.released && typeof raw.released === 'object' ? raw.released : {},
           prices: raw.prices && typeof raw.prices === 'object' ? raw.prices : {},
           changes: Array.isArray(raw.changes) ? raw.changes : [],
+          portfolio: raw.portfolio && typeof raw.portfolio === 'object' ? raw.portfolio : null,
+          lastPush: raw.lastPush && typeof raw.lastPush === 'object' ? raw.lastPush : null,
           summarySent: raw.summarySent || '',
           updatedAt: raw.updatedAt || 0,
         }
-      : { items: [], releases: [], alerted: {}, released: {}, prices: {}, changes: [], summarySent: '', updatedAt: 0 };
+      : { items: [], releases: [], alerted: {}, released: {}, prices: {}, changes: [], portfolio: null, lastPush: null, summarySent: '', updatedAt: 0 };
   } catch {
-    return { items: [], releases: [], alerted: {}, released: {}, updatedAt: 0 };
+    return { items: [], releases: [], alerted: {}, released: {}, prices: {}, changes: [], portfolio: null, lastPush: null, summarySent: '', updatedAt: 0 };
   }
 }
 
@@ -160,7 +162,7 @@ async function broadcast(env, payload) {
 
 function pickPrice(cm) {
   if (!cm || typeof cm !== 'object') return null;
-  const candidates = [cm.avg, cm.trend, cm.low, cm.averageSellPrice, cm.lowestPrice];
+  const candidates = [cm.trend, cm.avg, cm.low, cm.averageSellPrice, cm.lowestPrice];
   for (const c of candidates) {
     const n = typeof c === 'number' ? c : parseFloat(String(c || '').replace(',', '.'));
     if (!isNaN(n) && n > 0) return Math.round(n * 100) / 100;
@@ -177,7 +179,14 @@ async function priceFromTcgdex(id) {
     });
     if (!res.ok) return null;
     const data = await res.json();
-    return pickPrice(data && data.pricing && data.pricing.cardmarket);
+    let price = pickPrice(data && data.pricing && data.pricing.cardmarket);
+    if (price !== null) return price;
+    const variants = Array.isArray(data && data.variants_detailed) ? data.variants_detailed : [];
+    for (const v of variants) {
+      price = pickPrice(v && v.pricing && v.pricing.cardmarket);
+      if (typeof price === 'number' && price > 0) return price;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -234,17 +243,21 @@ async function runPriceCheck(env) {
   const now = Date.now();
 
   for (const it of items) {
-    if (!it || !it.id || !(it.target > 0)) continue;
+    if (!it || !it.id) continue;
     const price = await resolvePrice(it);
     if (price == null) continue;
 
+    // Seguimiento de precio de TODAS las cartas seguidas, tengan o no precio objetivo.
+    // Antes solo se median las que tinham objetivo, asi que el resumen diario se quedaba
+    // sin datos que enviar.
     const previousPrice = state.prices[it.id];
     if (typeof previousPrice === 'number' && Math.abs(price - previousPrice) >= 0.004) {
       state.changes.push({ id: it.id, name: it.name, from: previousPrice, to: price, at: now });
     }
     state.prices[it.id] = price;
+    const hasTarget = typeof it.target === 'number' && it.target > 0;
     const prevAlert = state.alerted[it.id];
-    if (it.target > 0 && price <= it.target) {
+    if (hasTarget && price <= it.target) {
       if (prevAlert == null || price < prevAlert - 0.004) {
         state.alerted[it.id] = price;
         alerts++;
@@ -261,7 +274,7 @@ async function runPriceCheck(env) {
           data: { type: 'price', id: it.id },
         });
       }
-    } else if (prevAlert != null && price > it.target) {
+    } else if (hasTarget && prevAlert != null && price > it.target) {
       delete state.alerted[it.id];
     }
   }
@@ -290,26 +303,48 @@ async function runPriceCheck(env) {
     if (state.released[k] < cutoff) delete state.released[k];
   }
 
-  // Resumen diario a primera hora local (el Cron de las 07:00 UTC cae a las 08:00 en Madrid).
+  // Resumen diario a las 09:00 en hora de Madrid. El Cron corre a las 07:00 y 08:00 UTC:
+  // uno de los dos coincide siempre con las 09:00 locales (cambio de hora incluido) y
+  // el otro se descarta. Se envia siempre, aunque no haya cambios de precio.
   const localHour = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', hour12: false }).format(new Date());
   const localDay = todayISO();
-  if (localHour === '08' && state.summarySent !== localDay && state.changes.length) {
-    const top = state.changes.slice().sort((a, b) => Math.abs((b.to - b.from) / b.from) - Math.abs((a.to - a.from) / a.from)).slice(0, 5);
-    const body = top.map((c) => c.name + ': ' + c.from.toFixed(2).replace('.', ',') + ' € → ' + c.to.toFixed(2).replace('.', ',') + ' €').join(' · ');
-    notifications.unshift({ title: 'Resumen de precios', body: body, tag: 'daily-price-summary-' + localDay, data: { type: 'daily-summary' } });
+  if (localHour >= 9 && localHour < 20 && state.summarySent !== localDay) {
+    const top = state.changes.slice().sort((a, b) => Math.abs((b.to - b.from) / b.from) - Math.abs((a.to - a.from) / a.from)).slice(0, 4);
+    const parts = [];
+    const pf = state.portfolio;
+    if (pf && typeof pf.total === 'number') {
+      let valueTxt = 'Tu colección vale ' + pf.total.toFixed(2).replace('.', ',') + ' €';
+      if (typeof pf.prevTotal === 'number' && Math.abs(pf.total - pf.prevTotal) >= 0.01) {
+        const diff = pf.total - pf.prevTotal;
+        valueTxt += ' (' + (diff > 0 ? '+' : '') + diff.toFixed(2).replace('.', ',') + ' € desde el último día)';
+      }
+      parts.push(valueTxt);
+    }
+    if (top.length) {
+      parts.push(top.map((c) => c.name + ': ' + c.from.toFixed(2).replace('.', ',') + ' → ' + c.to.toFixed(2).replace('.', ',') + ' €').join(' · '));
+    } else {
+      parts.push('Tus cartas seguidas no han tenido cambios de precio en las últimas 24 h.');
+    }
+    const upcoming = (state.releases || []).filter((r) => r && r.d && r.d >= localDay).sort((a, b) => (a.d < b.d ? -1 : 1)).slice(0, 2);
+    if (upcoming.length) parts.push('Próximos lanzamientos: ' + upcoming.map((r) => r.n + ' (' + r.d + ')').join(' · '));
+    notifications.unshift({ title: 'Tu día en la Pokédex', body: parts.join(' · ').slice(0, 240), tag: 'daily-price-summary-' + localDay, data: { type: 'daily-summary' } });
     state.summarySent = localDay;
   }
 
   await saveState(env, state);
 
+  const pushResults = [];
   for (const n of notifications) {
-    await broadcast(env, {
+    const r = await broadcast(env, {
       title: n.title,
       body: n.body,
       tag: n.tag,
       data: n.data || {},
     });
+    pushResults.push({ title: n.title, body: n.body, tag: n.tag, sent: r.sent, dead: r.dead, errors: r.errors });
   }
+  state.lastPush = { at: Date.now(), sent: pushResults.reduce((a, b) => a + (b.sent || 0), 0), results: pushResults.slice(-5) };
+  await saveState(env, state);
 
   return { checked: items.length, alerts, releases: releasesHit, sent: notifications.length };
 }
@@ -512,7 +547,7 @@ async function handleRequest(req, env) {
     const tomorrow = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(Date.now() + 24 * 60 * 60 * 1000));
     const releaseDays = new Set([todayISO(), tomorrow]);
     const releases = (state.releases || []).filter((r) => r && r.d && r.n && releaseDays.has(r.d));
-    return withCors(json({ changes, releases, updatedAt: state.updatedAt || 0 }), origin, env);
+    return withCors(json({ changes, releases, portfolio: state.portfolio || null, updatedAt: state.updatedAt || 0 }), origin, env);
   }
 
   if (path === '/push-key' && req.method === 'GET') {
@@ -682,6 +717,17 @@ async function handleRequest(req, env) {
     const keep = new Set(items.map((i) => i.id));
     for (const id of Object.keys(state.alerted)) {
       if (!keep.has(id)) delete state.alerted[id];
+    }
+    if (body.portfolio && typeof body.portfolio === 'object') {
+      const total = Number(body.portfolio.total);
+      const cards = Number(body.portfolio.cards);
+      const prevTotal = body.portfolio.prevTotal == null ? null : Number(body.portfolio.prevTotal);
+      state.portfolio = {
+        total: isFinite(total) ? total : 0,
+        cards: isFinite(cards) ? cards : 0,
+        prevTotal: isFinite(prevTotal) ? prevTotal : null,
+        at: Date.now(),
+      };
     }
     state.items = items;
     state.releases = releases;
