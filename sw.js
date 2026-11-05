@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'pokecheck-shell-v3';
+const SHELL_CACHE = 'pokecheck-shell-v4';
 const RUNTIME_CACHE = 'pokecheck-runtime-v1';
 
 const SHELL_FILES = [
@@ -6,7 +6,10 @@ const SHELL_FILES = [
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './icon-512-maskable.png',
+  './apple-touch-icon.png',
+  './favicon-32.png'
 ];
 
 self.addEventListener('install', (event) => {
