@@ -2623,6 +2623,20 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       <input type="file" id="backup-file-input" accept="application/json" hidden>
       <button type="button" id="diagnostics-btn" class="backup-action"><span>Comprobar conexión y servicios</span></button>
       <p id="diagnostics-status" class="diagnostics-status" hidden></p>
+      <div class="settings-group" style="margin-top:10px">
+        <div class="settings-group-body">
+          <strong>Sincronizar entre dispositivos</strong>
+          <p class="backup-desc">Genera un código secreto y úsalo en tus otros móviles. La colección se cifra en el navegador antes de enviarse a Cloudflare.</p>
+          <input id="collection-sync-token" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="Código de sincronización">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button type="button" id="collection-sync-create" class="backup-action">Generar código</button>
+            <button type="button" id="collection-sync-copy" class="backup-action">Copiar código</button>
+            <button type="button" id="collection-sync-download" class="backup-action">Descargar colección</button>
+            <button type="button" id="collection-sync-upload" class="backup-action">Subir colección</button>
+          </div>
+          <p id="collection-sync-status" class="backup-status" hidden></p>
+        </div>
+      </div>
       <p id="backup-status" class="backup-status" hidden></p>
       <p class="backup-desc">Exporta tu colección a una hoja de cálculo, con precio y cantidad de cada carta.</p>
       <button type="button" id="csv-export-btn" class="backup-action">
@@ -3592,6 +3606,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var backupImportBtn = document.getElementById('backup-import-btn');
   var backupFileInput = document.getElementById('backup-file-input');
   var backupStatusEl = document.getElementById('backup-status');
+  var collectionSyncTokenEl = document.getElementById('collection-sync-token');
+  var collectionSyncCreateBtn = document.getElementById('collection-sync-create');
+  var collectionSyncCopyBtn = document.getElementById('collection-sync-copy');
+  var collectionSyncDownloadBtn = document.getElementById('collection-sync-download');
+  var collectionSyncUploadBtn = document.getElementById('collection-sync-upload');
+  var collectionSyncStatusEl = document.getElementById('collection-sync-status');
   var csvExportBtn = document.getElementById('csv-export-btn');
   var statsBtn = null;
   var statsPopup = document.getElementById('stats-popup');
@@ -4912,8 +4932,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     showBackupStatus('Copia exportada correctamente.');
   }
 
-  function importBackupFile(file) {
-    if (!window.confirm('Importar una copia reemplazará los datos guardados en este dispositivo. ¿Quieres continuar?')) return;
+  function importBackupFile(file, skipConfirm) {
+    if (!skipConfirm && !window.confirm('Importar una copia reemplazará los datos guardados en este dispositivo. ¿Quieres continuar?')) return;
     var reader = new FileReader();
     reader.onload = function() {
       var data;
@@ -4982,6 +5002,95 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     };
     reader.readAsText(file);
   }
+
+  // ---------- Sincronización cifrada entre dispositivos ----------
+  var COLLECTION_SYNC_URL = 'https://pokedex-avisos.danicrevi95.workers.dev/collection';
+  var COLLECTION_TOKEN_KEY = 'pokecheck_collection_sync_token_v1';
+  var COLLECTION_VERSION_KEY = 'pokecheck_collection_sync_version_v1';
+  function collectionSyncStatus(text, isError) {
+    if (!collectionSyncStatusEl) return;
+    collectionSyncStatusEl.textContent = text || '';
+    collectionSyncStatusEl.classList.toggle('is-error', !!isError);
+    collectionSyncStatusEl.hidden = !text;
+  }
+  function collectionTokenBytes(token) {
+    var raw = atob(token.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - token.length % 4) % 4));
+    var out = new Uint8Array(raw.length);
+    for (var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+    return out;
+  }
+  function collectionRandomToken() {
+    var bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    var raw = '';
+    bytes.forEach(function(b) { raw += String.fromCharCode(b); });
+    return btoa(raw).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  }
+  async function collectionEncrypt(value, token) {
+    var key = await crypto.subtle.importKey('raw', collectionTokenBytes(token), { name: 'AES-GCM' }, false, ['encrypt']);
+    var iv = crypto.getRandomValues(new Uint8Array(12));
+    var data = new TextEncoder().encode(JSON.stringify(value));
+    var encrypted = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, data));
+    var all = new Uint8Array(iv.length + encrypted.length); all.set(iv); all.set(encrypted, iv.length);
+    var raw = ''; all.forEach(function(b) { raw += String.fromCharCode(b); });
+    return btoa(raw).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  }
+  async function collectionDecrypt(value, token) {
+    var raw = atob(value.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - value.length % 4) % 4));
+    var all = new Uint8Array(raw.length); for (var i = 0; i < raw.length; i++) all[i] = raw.charCodeAt(i);
+    var key = await crypto.subtle.importKey('raw', collectionTokenBytes(token), { name: 'AES-GCM' }, false, ['decrypt']);
+    var plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: all.slice(0, 12) }, key, all.slice(12));
+    return JSON.parse(new TextDecoder().decode(plain));
+  }
+  function collectionPayload() {
+    return { v: 1, exportedAt: new Date().toISOString(), owned: Array.from(owned), tcgOwned: Array.from(tcgOwned), tcgOwnedMeta: tcgOwnedMeta, tcgSaved: Array.from(tcgSaved), tcgSavedMeta: tcgSavedMeta, tcgPinned: Array.from(tcgPinned), tcgCustom: tcgCustom, tcgLang: tcgLang, huchaHistory: huchaHistory, tcgQuantities: tcgQuantities, tcgPricePaid: tcgPricePaid, tcgCopies: tcgCopies, tcgImageOverrides: tcgImageOverrides, tcgImageBlocked: tcgImageBlocked, tcgCardmarketUrls: tcgCardmarketUrls, tcgWishlist: Array.from(typeof tcgWishlist !== 'undefined' && tcgWishlist ? tcgWishlist : []), shopFollow: shopFollow, shopTargets: shopTargets, shopAlertSeen: shopAlertSeen, shopReleasesUser: shopReleasesUser, shopStoresCustom: shopStoresCustom };
+  }
+  function collectionToken() { return String(collectionSyncTokenEl && collectionSyncTokenEl.value || '').trim(); }
+  function collectionHeaders(token) { return { 'content-type': 'application/json', 'x-collection-token': token }; }
+  function collectionRequest(method, token, body) {
+    return fetch(COLLECTION_SYNC_URL, { method: method, headers: collectionHeaders(token), body: body == null ? undefined : JSON.stringify(body), cache: 'no-store' }).then(function(res) { return res.json().catch(function() { return {}; }).then(function(data) { if (!res.ok) { var e = new Error(data.error || 'Error de sincronización'); e.data = data; e.status = res.status; throw e; } return data; }); });
+  }
+  function collectionSaveToken(token) { try { localStorage.setItem(COLLECTION_TOKEN_KEY, token); } catch (e) {} }
+  function collectionSaveVersion(version) { try { localStorage.setItem(COLLECTION_VERSION_KEY, String(version || 0)); } catch (e) {} }
+  function collectionLocalVersion() { try { return Number(localStorage.getItem(COLLECTION_VERSION_KEY) || 0); } catch (e) { return 0; } }
+  async function collectionDownload() {
+    var token = collectionToken();
+    if (!/^[A-Za-z0-9_-]{40,80}$/.test(token)) { collectionSyncStatus('Genera o pega un código válido primero.', true); return; }
+    collectionSyncStatus('Descargando colección…', false);
+    try {
+      var remote = await collectionRequest('GET', token);
+      if (!remote.payload) { collectionSyncStatus('No hay ninguna colección guardada con ese código.', true); return; }
+      var data = await collectionDecrypt(remote.payload, token);
+      if (!window.confirm('La colección remota reemplazará los datos de este dispositivo. ¿Continuar?')) { collectionSyncStatus('Descarga cancelada.', false); return; }
+      importBackupFile(new Blob([JSON.stringify(data)], { type: 'application/json' }), true);
+      collectionSaveVersion(remote.version);
+      collectionSyncStatus('Colección descargada correctamente.', false);
+    } catch (e) { collectionSyncStatus(e.status === 401 ? 'Código incorrecto o caducado.' : (e.message || 'No se pudo descargar la colección.'), true); }
+  }
+  async function collectionUpload() {
+    var token = collectionToken();
+    if (!/^[A-Za-z0-9_-]{40,80}$/.test(token)) { collectionSyncStatus('Genera o pega un código válido primero.', true); return; }
+    collectionSyncStatus('Cifrando y subiendo colección…', false);
+    try {
+      var remote = await collectionRequest('GET', token);
+      var baseVersion = collectionLocalVersion();
+      if (remote.version && remote.version !== baseVersion) { collectionSyncStatus('Hay cambios más recientes en la nube. Descarga primero para evitar sobrescribirlos.', true); return; }
+      var version = Date.now();
+      var encrypted = await collectionEncrypt(collectionPayload(), token);
+      await collectionRequest('PUT', token, { version: version, baseVersion: remote.version || 0, payload: encrypted });
+      collectionSaveVersion(version);
+      collectionSyncStatus('Colección subida y cifrada correctamente.', false);
+    } catch (e) { collectionSyncStatus(e.status === 409 ? 'Conflicto detectado: descarga primero la versión más reciente.' : (e.message || 'No se pudo subir la colección.'), true); }
+  }
+  (function initCollectionSync() {
+    var saved = ''; try { saved = localStorage.getItem(COLLECTION_TOKEN_KEY) || ''; } catch (e) {}
+    if (collectionSyncTokenEl) collectionSyncTokenEl.value = saved;
+    if (collectionSyncCreateBtn) collectionSyncCreateBtn.addEventListener('click', function() { var token = collectionRandomToken(); collectionSyncTokenEl.value = token; collectionSaveToken(token); collectionSaveVersion(0); collectionSyncStatus('Código generado. Guárdalo en un lugar seguro y úsalo en el otro dispositivo.', false); });
+    if (collectionSyncTokenEl) collectionSyncTokenEl.addEventListener('change', function() { collectionSaveToken(collectionToken()); collectionSaveVersion(0); collectionSyncStatus('Código guardado en este dispositivo.', false); });
+    if (collectionSyncCopyBtn) collectionSyncCopyBtn.addEventListener('click', function() { var token = collectionToken(); if (!token) { collectionSyncStatus('Genera o pega un código primero.', true); return; } (navigator.clipboard ? navigator.clipboard.writeText(token) : Promise.reject()).then(function() { collectionSyncStatus('Código copiado.', false); }).catch(function() { collectionSyncStatus('No se pudo copiar automáticamente; selecciónalo y cópialo.', true); }); });
+    if (collectionSyncDownloadBtn) collectionSyncDownloadBtn.addEventListener('click', collectionDownload);
+    if (collectionSyncUploadBtn) collectionSyncUploadBtn.addEventListener('click', collectionUpload);
+  })();
 
   backupBtn.addEventListener('click', function() {
     closeSettingsPopup();

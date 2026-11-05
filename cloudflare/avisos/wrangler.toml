@@ -1,0 +1,40 @@
+# Worker de avisos de Mi Pokédex
+# Documentación: LEEME.md
+#
+# Despliegue:
+#   npm install
+#   npx wrangler login
+#   npm run vapid          # genera VAPID_PUBLIC_KEY y VAPID_PRIVATE_KEY
+#   npx wrangler secret put SYNC_SECRET
+#   npx wrangler secret put VAPID_PUBLIC_KEY
+#   npx wrangler secret put VAPID_PRIVATE_KEY
+#   npx wrangler secret put VAPID_SUBJECT   # mailto:tu@email.com
+#   npx wrangler r2 bucket create pokedex-card-images
+#   npm run deploy
+
+name = "pokedex-avisos"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Cron: revisa precios y lanzamientos varias veces al día (UTC).
+# Ajusta a tu gusto; 4 veces/día es un buen equilibrio con los límites gratis.
+[triggers]
+crons = ["0 7,12,17,22 * * *"]
+
+[[kv_namespaces]]
+binding = "STORE"
+# Tras crear el namespace: npx wrangler kv namespace create pokedex-avisos
+# pega aquí el id generado:
+id = "b15a06b1eb33490aa26955731318e51a"
+preview_id = "877147568f7d4eefa47165b6348c5466"
+
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "pokedex-card-images"
+
+[vars]
+# Público: se puede leer desde la app. No pongas secretos aquí.
+APP_NAME = "Mi Pokédex"
+# Origen(es) permitidos para CORS (separados por coma). "*" vale para desarrollo.
+CORS_ORIGINS = "*"
