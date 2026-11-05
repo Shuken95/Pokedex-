@@ -6760,6 +6760,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       editEntry.cardmarketUrl = tcgAddSubmitBtn.dataset.cardmarketUrl || '';
       tcgCustom[editEntry.id] = editEntry;
       saveTcgCustom();
+      // Persistir también la imagen de una carta manual en el almacenamiento compartido.
+      // La carta sigue siendo local hasta que exista sincronización de colección, pero la
+      // imagen ya no depende del teléfono original.
+      if (editEntry.image) publishTcgSharedImage(editEntry.id, editEntry.image);
       closeTcgAddPopup();
 
       // Reconstruimos la carta en el sitio donde estaba para que se vea el cambio (ej. la
@@ -6784,6 +6788,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     };
     tcgCustom[id] = entry;
     saveTcgCustom();
+    // Guardar una copia Cloudflare de la imagen introducida por URL.
+    if (entry.image) publishTcgSharedImage(id, entry.image);
     tcgOwned.add(id);
     tcgOwnedMeta[id] = { slug: slug, setName: entry.setName || 'Añadida a mano' };
     saveTcgOwned();
