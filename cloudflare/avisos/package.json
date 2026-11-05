@@ -1,0 +1,20 @@
+{
+  "name": "pokedex-avisos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Worker de avisos (Web Push) e imágenes compartidas para Mi Pokédex",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "vapid": "node scripts/generate-vapid.js"
+  },
+  "devDependencies": {
+    "web-push": "^3.6.7",
+    "wrangler": "^4.154.0"
+  },
+  "dependencies": {
+    "@block65/webcrypto-web-push": "^2.0.0"
+  }
+}
