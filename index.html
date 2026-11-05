@@ -2485,7 +2485,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   </div>
 </div>
 
-<div id="daily-summary-popup" class="daily-summary-popup" hidden role="dialog" aria-labelledby="daily-summary-title">
+<div id="daily-summary-popup" class="daily-summary-popup" hidden role="dialog" aria-modal="true" aria-labelledby="daily-summary-title">
   <div class="daily-summary-card">
     <button id="daily-summary-close" class="tcg-lang-sheet-close" type="button" aria-label="Cerrar">×</button>
     <h2 id="daily-summary-title">Resumen de las últimas 24 h</h2>
@@ -4913,6 +4913,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   function importBackupFile(file) {
+    if (!window.confirm('Importar una copia reemplazará los datos guardados en este dispositivo. ¿Quieres continuar?')) return;
     var reader = new FileReader();
     reader.onload = function() {
       var data;
@@ -14382,9 +14383,20 @@ mark();})();
   btn.addEventListener('click',function(){
     btn.disabled=true; out.hidden=false; out.className='diagnostics-status'; out.textContent='Comprobando…';
     var support=('serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window)?'Notificaciones del dispositivo: compatibles':'Notificaciones del dispositivo: no disponibles';
-    Promise.all([check('https://api.tcgdex.net/v2/en/cards?name=Pikachu*&category=Pokemon','Catálogo TCG'),check('https://pokeapi.co/api/v2/pokemon/pikachu','Datos Pokédex'),check('https://pokedex-avisos.danicrevi95.workers.dev/health','Worker de avisos')]).then(function(rows){
-      out.textContent=rows.concat([support]).join(String.fromCharCode(10));
-      out.classList.toggle('is-ok',rows.every(function(x){return x.indexOf('correcto')!==-1;}));
+    function storageHealth(){
+      try { var k='__pokecheck_diag__'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return Promise.resolve('Almacenamiento local: disponible'); }
+      catch(e){ return Promise.resolve('Almacenamiento local: no disponible'); }
+    }
+    function pushHealth(){
+      if (!('serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window)) return Promise.resolve(support);
+      return navigator.serviceWorker.getRegistration().then(function(reg){
+        if (Notification.permission !== 'granted') return support + ' · permiso no concedido';
+        return reg && reg.pushManager.getSubscription().then(function(sub){ return support + (sub ? ' · suscripción activa' : ' · sin suscripción'); });
+      }).catch(function(){ return support + ' · estado no comprobable'; });
+    }
+    Promise.all([check('https://api.tcgdex.net/v2/en/cards?name=Pikachu*&category=Pokemon','Catálogo TCG'),check('https://pokeapi.co/api/v2/pokemon/pikachu','Datos Pokédex'),check('https://pokedex-avisos.danicrevi95.workers.dev/health','Worker de avisos'),storageHealth(),pushHealth()]).then(function(rows){
+      out.textContent=rows.join(String.fromCharCode(10));
+      out.classList.toggle('is-ok',rows.slice(0,3).every(function(x){return x.indexOf('correcto')!==-1;}) && rows[3].indexOf('disponible')!==-1);
       out.classList.toggle('is-error',rows.some(function(x){return x.indexOf('no disponible')!==-1;}));
       btn.disabled=false;
     });
