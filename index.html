@@ -12144,7 +12144,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     priced.sort(function(a, b) { return b.price - a.price; });
 
     // seguidas de la tienda
-    var ups = 0, downs = 0, movers = [], followed = 0;
+    var ups = 0, downs = 0, followed = 0;
     try {
       var items = shopTrackedItems();
       followed = items.length;
@@ -12152,10 +12152,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         var inf = shopInfo(it.id);
         if (inf.diff != null && inf.diff > 0.004) ups++;
         if (inf.diff != null && inf.diff < -0.004) downs++;
-        if (inf.pct != null && Math.abs(inf.diff) >= 0.005) movers.push({ name: it.name, pct: inf.pct, price: inf.price });
       });
     } catch (e) {}
-    movers.sort(function(a, b) { return Math.abs(b.pct) - Math.abs(a.pct); });
 
     var tile = function(go, big, label) { return '<button type="button" class="home-tile" data-go="' + go + '"><span>' + label + '</span><b>' + big + '</b></button>'; };
     html += '<div class="home-grid">' +
@@ -12169,19 +12167,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       '<div class="home-row"><span>Cartas seguidas</span><span>' + followed + '</span></div></section>';
 
     var row = function(name, right, cls) { return '<div class="home-row"><span>' + esc(name) + '</span><span class="' + (cls || '') + '">' + right + '</span></div>'; };
-    try { html += uxTodayHtml(); } catch (e) {}
-    html += '<section class="home-card"><h3>Cambios en tus seguidas</h3>' + (movers.length ?
-      movers.slice(0, 5).map(function(m) {
-        return row(m.name, (m.pct > 0 ? '+' : '') + (m.pct * 100).toFixed(1).replace('.', ',') + '% \u00b7 ' + formatEuro(m.price), m.pct > 0 ? 'up' : 'down');
-      }).join('') : '<p class="home-sub">Cuando cambie el precio de las cartas que sigues en la tienda, lo ver\u00e1s aqu\u00ed.</p>') + '</section>';
     try {
       var hitItems = shopAlertItems(shopTrackedItems());
       if (hitItems.length) html += '<section class="home-card"><h3>' + ICO.bell + ' En tu precio</h3>' +
         hitItems.slice(0, 5).map(function(it) { return '<button type="button" class="home-row is-link home-buy-row" data-buy-card="' + esc(it.id) + '"><span>' + esc(it.name) + '</span><span class="down">' + formatEuro(shopInfo(it.id).price) + ' (≤ ' + formatEuro(shopTargetOf(it.id)) + ') ↗</span></button>'; }).join('') + '</section>';
     } catch (e) {}
-    if (priced.length) html += '<section class="home-card"><h3>Tus cartas más valiosas</h3>' + priced.slice(0, 3).map(function(p) { return '<div class="home-valuable-row">' + (p.image ? '<img class="home-valuable-thumb" src="' + esc(p.image) + '" loading="lazy" alt="">' : '<span class="home-valuable-thumb"></span>') + '<span class="home-valuable-main"><span class="home-valuable-name">' + esc(p.name) + '</span><span class="home-valuable-meta">' + formatEuro(p.price) + '</span></span></div>'; }).join('') + '</section>';
+    if (priced.length) html += '<section class="home-card"><h3>Tus cartas más valiosas</h3>' + priced.slice(0, 5).map(function(p) { return '<div class="home-valuable-row">' + (p.image ? '<img class="home-valuable-thumb" src="' + esc(p.image) + '" loading="lazy" alt="">' : '<span class="home-valuable-thumb"></span>') + '<span class="home-valuable-main"><span class="home-valuable-name">' + esc(p.name) + '</span><span class="home-valuable-meta">' + formatEuro(p.price) + '</span></span></div>'; }).join('') + '</section>';
     homeViewEl.innerHTML = html;
-    var topMissing = priced.slice(0, 3).filter(function(p) { return !p.image; }).map(function(p) { return p.id; });
+    var topMissing = priced.slice(0, 5).filter(function(p) { return !p.image; }).map(function(p) { return p.id; });
     if (topMissing.length && !renderHome._valuableImagesPending && typeof fetchOwnedCardInfo === 'function') {
       renderHome._valuableImagesPending = true;
       Promise.all(topMissing.map(fetchOwnedCardInfo)).then(function() { renderHome._valuableImagesPending = false; renderHome(); }).catch(function() { renderHome._valuableImagesPending = false; });
@@ -13602,20 +13595,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         var wl = wishlistRows();
         var sets = setProgressRows().slice(0, 6);
         var extra = '';
-        extra += '<section class="home-card"><h3>Lista de compra</h3>';
-        if (!wl.length) {
-          extra += '<p class="home-sub">Mantén pulsada una carta en TCG y elige «Lista de compra». Aquí verás lo que te falta y el total estimado.</p>';
-        } else {
-          var t = 0, k = 0;
-          extra += wl.slice(0, 8).map(function(r) {
-            if (r.price != null) { t += r.price; k++; }
-            return '<div class="home-row"><span>' + String(r.name).replace(/</g,'') + (r.set ? ' <small style="opacity:.65">' + String(r.set).replace(/</g,'') + '</small>' : '') + '</span><span>' + (r.price != null ? formatEuro(r.price) : '—') + '</span></div>';
-          }).join('');
-          if (wl.length > 8) extra += '<p class="home-sub">… y ' + (wl.length - 8) + ' más</p>';
-          extra += '<p class="home-sub">Total estimado (' + k + '/' + wl.length + '): <b>' + (formatEuro(t) || '—') + '</b></p>';
-          extra += '<div class="home-export-row"><button type="button" id="home-copy-wishlist">Copiar lista</button></div>';
-        }
-        extra += '</section>';
         extra += '<section class="home-card"><h3>Progreso por set</h3>';
         if (!sets.length) extra += '<p class="home-sub">Cuando marques cartas en TCG, verás aquí cuántas tienes por expansión.</p>';
         else {
