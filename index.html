@@ -243,7 +243,12 @@
   .advisor-total.is-over{ color:var(--danger); }
   .advisor-note{ font-size:11px; color:var(--text-dim); margin:4px 0 0; }
   html.ai-lock, html.ai-lock body{ overflow:hidden; overscroll-behavior:none; }
-  #ai-view:not([hidden]){ display:flex; flex-direction:column; height:calc(100dvh - 250px); min-height:280px; }
+  .ai-popup{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:16px;}
+  .ai-popup[hidden]{display:none}
+  .ai-popup-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.34);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+  .ai-popup-card{position:relative;display:flex;flex-direction:column;min-height:0;width:min(720px,100%);max-height:calc(100dvh - 32px);border:1px solid var(--border);border-radius:18px;background:var(--surface);box-shadow:0 18px 52px rgba(0,0,0,.26);overflow:hidden;padding:14px 14px 0}
+  .ai-popup-card #ai-view{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+  .ai-popup-card .ai-dock{margin:0 -14px;padding:8px 14px 12px;background:var(--surface);border-top:1px solid var(--border)}
   .ai-scroll{ flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; display:flex; flex-direction:column; scrollbar-width:none; }
   .ai-scroll::-webkit-scrollbar{ display:none; }
   .ai-scroll > *{ flex-shrink:0; }
@@ -2227,6 +2232,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       <p><span id="overall-count">–</span></p>
     </div>
     <div class="header-actions">
+      <button id="ai-btn" class="icon-btn" title="Asistente IA" aria-label="Asistente IA">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3l1.8 4.7L17.5 9.5l-4.7 1.8L11 16l-1.8-4.7L4.5 9.5l4.7-1.8z"/><path d="M19 14l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
+      </button>
       <button id="summary-btn" class="icon-btn" title="Novedades y valor" aria-label="Novedades y valor">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m7.5 14 2.7-3 2.2 2 4.1-4.5"/><path d="M7.5 17h9"/></svg>
       </button>
@@ -2299,7 +2307,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     <button type="button" class="mode-tab" id="tab-tcg" data-mode="tcg"><span class="tab-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="12" height="15" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg></span><span class="tab-label">TCG</span></button>
     <button type="button" class="mode-tab" id="tab-trade" data-mode="trade" data-testid="tab-trade" hidden aria-hidden="true"><span class="tab-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span><span class="tab-label">Cambios</span><span class="trade-tab-badge" id="trade-tab-badge" hidden></span></button>
     <button type="button" class="mode-tab" id="tab-shop" data-mode="shop" data-testid="tab-shop"><span class="tab-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></span><span class="tab-label">Tienda</span><span id="shop-tab-badge" class="shop-tab-badge" hidden></span></button>
-    <button type="button" class="mode-tab" id="tab-ai" data-mode="ai" data-testid="tab-ai"><span class="tab-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3l1.8 4.7L17.5 9.5l-4.7 1.8L11 16l-1.8-4.7L4.5 9.5l4.7-1.8z"/><path d="M19 14l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></span><span class="tab-label">IA</span></button>
   </nav>
 
 <div id="tcg-lang-popup" class="tcg-lang-popup" hidden>
@@ -2900,39 +2907,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       </div>
     </div>
   </div>
-  <div id="ai-view" hidden data-testid="ai-view">
-    <div class="ai-top-row">
-      <div class="ai-brand">
-        <div><p class="ai-title">Asistente IA</p></div>
-      </div>
-      <div class="ai-top-actions">
-        <button type="button" id="ai-data-btn" class="ai-icon-btn" title="Qué datos ve la IA" aria-label="Qué datos ve la IA" data-testid="ai-data"></button>
-        <button type="button" id="ai-history-btn" class="ai-icon-btn" title="Chats anteriores" aria-label="Chats anteriores" data-testid="ai-history"></button>
-        <button type="button" id="ai-new" class="ai-icon-btn" title="Nuevo chat" aria-label="Nuevo chat" data-testid="ai-new"></button>
-      </div>
-    </div>
-    <div id="ai-stats" class="ai-stats"></div>
-    <div id="ai-scroll" class="ai-scroll">
-    <div id="ai-panel" class="ai-panel" hidden></div>
-    <div id="ai-hero" class="ai-hero">
-      <div id="ai-hero-sprite" class="ai-hero-sprite"></div>
-      <p id="ai-hero-title" class="ai-hero-title"></p>
-      <p class="ai-hero-text">Analizo tu Pokédex, tus cartas, lo que sigues en la Tienda y los lanzamientos, y consulto la web para ver popularidad y tendencias.</p>
-      <div id="ai-cards" class="ai-cards"></div>
-    </div>
-    <div id="ai-log" class="ai-log" data-testid="ai-log"></div>
-    <div id="ai-foot" class="ai-foot" hidden></div>
-    <p id="ai-status" class="tcg-add-status" hidden></p>
-    </div>
-    <div class="ai-dock">
-      <div id="ai-chips" class="ai-chips"></div>
-      <div class="ai-inputbar">
-        <textarea id="ai-input" rows="1" placeholder="Escribe tu pregunta…" data-testid="ai-input"></textarea>
-        <button type="button" id="ai-send" class="ai-send is-idle" data-testid="ai-send" aria-label="Enviar"></button>
-      </div>
-    </div>
-  </div>
-
   <div id="trade-view" hidden data-testid="trade-view"><div id="trade-root" class="trade-root"></div></div>
 
   <div id="vgc-view" hidden data-testid="vgc-view">
@@ -2961,6 +2935,46 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     <div id="vgc-result"><div class="vgc-card vgc-say">Elige uno o varios Pokémon que quieras llevar sí o sí (por ejemplo Torkoal y Farigiraf) y completo el resto del equipo con los datos del meta, con una puntuación de 0 a 100.</div></div>
   </div>
 </main>
+
+  <div id="ai-popup" class="ai-popup" hidden role="dialog" aria-modal="true" aria-labelledby="ai-title">
+    <div id="ai-popup-backdrop" class="ai-popup-backdrop"></div>
+    <div class="ai-popup-card" id="ai-popup-card">
+      <div id="ai-view" data-testid="ai-view">
+    <div class="ai-top-row">
+      <div class="ai-brand">
+        <div><p class="ai-title" id="ai-title">Asistente IA</p></div>
+      </div>
+      <div class="ai-top-actions">
+        <button type="button" id="ai-data-btn" class="ai-icon-btn" title="Qué datos ve la IA" aria-label="Qué datos ve la IA" data-testid="ai-data"></button>
+        <button type="button" id="ai-history-btn" class="ai-icon-btn" title="Chats anteriores" aria-label="Chats anteriores" data-testid="ai-history"></button>
+        <button type="button" id="ai-new" class="ai-icon-btn" title="Nuevo chat" aria-label="Nuevo chat" data-testid="ai-new"></button>
+        <button type="button" id="ai-close" class="ai-icon-btn" title="Cerrar" aria-label="Cerrar"></button>
+      </div>
+    </div>
+    <div id="ai-stats" class="ai-stats"></div>
+    <div id="ai-scroll" class="ai-scroll">
+    <div id="ai-panel" class="ai-panel" hidden></div>
+    <div id="ai-hero" class="ai-hero">
+      <div id="ai-hero-sprite" class="ai-hero-sprite"></div>
+      <p id="ai-hero-title" class="ai-hero-title"></p>
+      <p class="ai-hero-text">Analizo tu Pokédex, tus cartas, lo que sigues en la Tienda y los lanzamientos, y consulto la web para ver popularidad y tendencias.</p>
+      <div id="ai-cards" class="ai-cards"></div>
+    </div>
+    <div id="ai-log" class="ai-log" data-testid="ai-log"></div>
+    <div id="ai-foot" class="ai-foot" hidden></div>
+    <p id="ai-status" class="tcg-add-status" hidden></p>
+    </div>
+    <div class="ai-dock">
+      <div id="ai-chips" class="ai-chips"></div>
+      <div class="ai-inputbar">
+        <textarea id="ai-input" rows="1" placeholder="Escribe tu pregunta…" data-testid="ai-input"></textarea>
+        <button type="button" id="ai-send" class="ai-send is-idle" data-testid="ai-send" aria-label="Enviar"></button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  </div>
 
 <div id="tcg-imgfix" class="tcg-imgfix" hidden>
   <div class="tcg-imgfix-card" role="dialog" aria-label="Corregir imagen">
@@ -5136,6 +5150,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   backupClose.addEventListener('click', closeBackupPopup);
   document.addEventListener('keydown', function(e) {
     if (e.key !== 'Escape') return;
+    if (aiPopupOpen()) return closeAiPopup();
     if (summaryPopup && !summaryPopup.hidden) return closeDailySummary();
     if (backupPopup && !backupPopup.hidden) return closeBackupPopup();
     if (settingsPopup && !settingsPopup.hidden) return closeSettingsPopup();
@@ -5318,7 +5333,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function switchMode(mode, dir) {
     // Pestaña Cambios (intercambios) desactivada
     if (mode === 'trade') mode = 'home';
-    var views = { home: homeViewEl, dex: dexViewEl, tcg: tcgViewEl, shop: shopViewEl, vgc: vgcViewEl, ai: aiViewEl, trade: tradeViewEl };
+    var views = { home: homeViewEl, dex: dexViewEl, tcg: tcgViewEl, shop: shopViewEl, vgc: vgcViewEl, trade: tradeViewEl };
     if (!views[mode]) return;
     if (!views[mode].hidden && mode !== 'home') return;
     tabHomeBtn.classList.toggle('is-active', mode === 'home');
@@ -5326,8 +5341,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tabTcgBtn.classList.toggle('is-active', mode === 'tcg');
     tabShopBtn.classList.toggle('is-active', mode === 'shop');
     tabVgcBtn.classList.toggle('is-active', mode === 'vgc');
-    tabAiBtn.classList.toggle('is-active', mode === 'ai');
-    document.documentElement.classList.toggle('ai-lock', mode === 'ai');
     if (tabTradeBtn) tabTradeBtn.classList.toggle('is-active', mode === 'trade');
     dexControlsEl.hidden = mode !== 'dex';
     tcgControlsEl.hidden = mode !== 'tcg';
@@ -5337,7 +5350,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (mode === 'shop') { renderShop(); shopRefresh(false); }
     if (mode === 'home') renderHome();
     if (mode === 'vgc') vgcOnEnter();
-    if (mode === 'ai') aiOnEnter();
     if (mode !== 'trade') tradeLeave();
     if (mode === 'trade') tradeOnEnter();
     var enteringEl = views[mode];
@@ -5422,8 +5434,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var isFastFlick = dt < MODE_SWIPE_VELOCITY_MS && Math.abs(dx) >= MODE_SWIPE_VELOCITY_DIST;
     if (Math.abs(dx) < MODE_SWIPE_MIN_DIST && !isFastFlick) return;
     // Orden de pestañas: Colección -> Pokédex -> VGC -> TCG -> Tienda (sin Cambios)
-    var MODE_ORDER = ['home', 'dex', 'vgc', 'tcg', 'shop', 'ai'];
-    var modeViews = { home: homeViewEl, dex: dexViewEl, vgc: vgcViewEl, tcg: tcgViewEl, shop: shopViewEl, ai: aiViewEl };
+    var MODE_ORDER = ['home', 'dex', 'vgc', 'tcg', 'shop'];
+    var modeViews = { home: homeViewEl, dex: dexViewEl, vgc: vgcViewEl, tcg: tcgViewEl, shop: shopViewEl };
     var idx = -1;
     for (var mi = 0; mi < MODE_ORDER.length; mi++) { if (!modeViews[MODE_ORDER[mi]].hidden) { idx = mi; break; } }
     if (idx < 0) return;
@@ -5457,6 +5469,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var popupSkipPop = 0;
   function closePopupEl(el) {
     if (!el) return;
+    if (el.id === 'ai-popup') { closeAiPopup(); return; }
     if (el.id === 'tcg-lightbox') {
       var lc = document.getElementById('tcg-lightbox-close');
       if (lc) lc.click(); else el.hidden = true;
@@ -5473,7 +5486,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     return false;
   }
   (function() {
-    var els = Array.prototype.slice.call(document.querySelectorAll('.tcg-lang-popup, #tcg-lightbox'));
+    var els = Array.prototype.slice.call(document.querySelectorAll('.tcg-lang-popup, #tcg-lightbox, #ai-popup'));
     var obs = new MutationObserver(function(muts) {
       muts.forEach(function(m) {
         var el = m.target, i = popupStack.indexOf(el);
@@ -10859,6 +10872,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   tcgLangClose.addEventListener('click', closeTcgLangPopup);
   document.addEventListener('keydown', function(e) {
     if (e.key !== 'Escape') return;
+    if (aiPopupOpen()) return closeAiPopup();
     if (tcgLangPopup.classList.contains('is-open')) closeTcgLangPopup();
     if (tcgFiltersPopup.classList.contains('is-open')) closeTcgFiltersPopup();
     if (!backupPopup.hidden) closeBackupPopup();
@@ -10913,7 +10927,6 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var vgcViewEl = document.getElementById('vgc-view');
   var tabVgcBtn = document.getElementById('tab-vgc');
   var aiViewEl = document.getElementById('ai-view');
-  var tabAiBtn = document.getElementById('tab-ai');
   var tabShopBtn = document.getElementById('tab-shop');
   var shopTotalEl = document.getElementById('shop-total');
   var shopSubEl = document.getElementById('shop-sub');
@@ -13214,7 +13227,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   tabVgcBtn.addEventListener('click', function() { switchMode('vgc'); });
-  tabAiBtn.addEventListener('click', function() { switchMode('ai'); });
+  var aiBtnEl = document.getElementById('ai-btn');
+  var aiCloseBtnEl = document.getElementById('ai-close');
+  var aiBackdropEl = document.getElementById('ai-popup-backdrop');
+  if (aiBtnEl) aiBtnEl.addEventListener('click', function() { openAiPopup(); });
+  if (aiCloseBtnEl) aiCloseBtnEl.addEventListener('click', function() { closeAiPopup(); });
+  if (aiBackdropEl) aiBackdropEl.addEventListener('click', function() { closeAiPopup(); });
   vgcEls.search.addEventListener('input', function() {
     var q = vgcEls.search.value.trim();
     if (!q) { vgcEls.sugg.hidden = true; return; }
@@ -13766,6 +13784,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var aiDataBtn = document.getElementById('ai-data-btn');
   var aiHistoryBtn = document.getElementById('ai-history-btn');
   var aiNewBtn = document.getElementById('ai-new');
+  var aiCloseBtn = document.getElementById('ai-close');
   function aiIco(path, size) { return '<svg width="' + (size || 18) + '" height="' + (size || 18) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + path + '</svg>'; }
   var AI_ICO = {
     plus: aiIco('<path d="M12 5v14M5 12h14"/>'),
@@ -13813,7 +13832,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     img.src = base + 'versions/generation-v/black-white/animated/' + id + '.gif';
     return img;
   }
-  aiDataBtn.innerHTML = AI_ICO.eye; aiHistoryBtn.innerHTML = AI_ICO.clock; aiNewBtn.innerHTML = AI_ICO.plus; aiSendBtn.innerHTML = AI_ICO.send;
+  aiDataBtn.innerHTML = AI_ICO.eye; aiHistoryBtn.innerHTML = AI_ICO.clock; aiNewBtn.innerHTML = AI_ICO.plus; aiSendBtn.innerHTML = AI_ICO.send; aiCloseBtn.innerHTML = AI_ICO.x;
   var AI_QUICK = [
     ['Qu\u00e9 comprar con 50 \u20ac', 'De mis cartas seguidas, con el mejor valor', 'Con un presupuesto m\u00e1ximo de 50 \u20ac, \u00bfqu\u00e9 cartas de las que sigo me conviene comprar primero y por qu\u00e9?'],
     ['Resumen de mi colecci\u00f3n', 'Valor, cartas destacadas y tendencia', 'Hazme un resumen de mi colecci\u00f3n: cu\u00e1nto vale, qu\u00e9 cartas destacan y c\u00f3mo va su tendencia.'],
@@ -14195,19 +14214,35 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
   // Ajusta la altura de la vista al espacio libre (entre la cabecera, la barra inferior y el teclado).
   function aiFitHeight() {
-    if (aiViewEl.hidden) return;
-    var tabs = document.getElementById('main-tabs');
-    var limit = tabs ? tabs.getBoundingClientRect().top : window.innerHeight;
+    var pop = document.getElementById('ai-popup');
+    var card = document.getElementById('ai-popup-card');
+    if (!pop || pop.hidden || !card) return;
     var vv = window.visualViewport;
-    if (vv) limit = Math.min(limit, vv.offsetTop + vv.height);
-    var h = Math.max(280, Math.floor(limit - aiViewEl.getBoundingClientRect().top - 8));
-    aiViewEl.style.height = h + 'px';
+    var limit = vv ? Math.min(window.innerHeight, vv.offsetTop + vv.height) : window.innerHeight;
+    card.style.height = Math.max(320, Math.floor(limit - 32)) + 'px';
   }
   function aiAutosize() { aiInputEl.style.height = 'auto'; aiInputEl.style.height = Math.min(140, aiInputEl.scrollHeight) + 'px'; aiUpdateSend(); }
   function aiUpdateSend() {
     aiSendBtn.innerHTML = aiBusy ? AI_ICO.stop : AI_ICO.send;
     aiSendBtn.classList.toggle('is-idle', !aiBusy && !aiInputEl.value.trim());
     aiSendBtn.setAttribute('aria-label', aiBusy ? 'Detener' : 'Enviar');
+  }
+  function aiPopupOpen() {
+    var pop = document.getElementById('ai-popup');
+    return !!(pop && !pop.hidden);
+  }
+  function openAiPopup() {
+    var pop = document.getElementById('ai-popup');
+    if (!pop) return;
+    pop.hidden = false;
+    document.documentElement.classList.add('ai-lock');
+    aiOnEnter();
+  }
+  function closeAiPopup() {
+    var pop = document.getElementById('ai-popup');
+    if (!pop || pop.hidden) return;
+    pop.hidden = true;
+    document.documentElement.classList.remove('ai-lock');
   }
   function aiOnEnter() { window.scrollTo(0, 0); aiFitHeight(); aiRenderAll(); aiFitHeight(); aiScrollEnd(); }
 
@@ -14337,7 +14372,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   aiHeroSpriteEl.addEventListener('click', aiToggleCompanion);
   aiInputEl.addEventListener('focus', function() { setTimeout(function() { aiFitHeight(); aiScrollEnd(); }, 300); });
   window.addEventListener('resize', aiFitHeight);
-  if (window.visualViewport) { window.visualViewport.addEventListener('resize', function() { aiFitHeight(); if (!aiViewEl.hidden) aiScrollEnd(); }); }
+  if (window.visualViewport) { window.visualViewport.addEventListener('resize', function() { aiFitHeight(); if (aiPopupOpen()) aiScrollEnd(); }); }
   aiHistoryBtn.addEventListener('click', function() { aiPanelMode = aiPanelMode === 'history' ? null : 'history'; aiRenderPanel(); });
   aiDataBtn.addEventListener('click', function() { aiPanelMode = aiPanelMode === 'data' ? null : 'data'; aiRenderPanel(); });
 
@@ -14422,7 +14457,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       var q = 'Sobre la carta ' + label + (info.price != null ? ', que ahora cuesta ' + info.price.toFixed(2) + ' EUR' : '') + ': \u00bfmerece la pena comprarla, conservarla o venderla? \u00bfEst\u00e1 cara o barata para lo que suele valer?';
       closeTcgLightbox();
       aiStore.active = null;
-      switchMode('ai');
+      openAiPopup();
       setTimeout(function() { aiSend(q); }, 250);
     });
   })();
