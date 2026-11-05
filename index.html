@@ -2627,14 +2627,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         <div class="settings-group-body">
           <strong>Sincronizar entre dispositivos</strong>
           <p class="backup-desc">Genera un código secreto y úsalo en tus otros móviles. La colección se cifra en el navegador antes de enviarse a Cloudflare.</p>
-          <input id="collection-sync-token" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="Código de sincronización">
+          <input id="collection-sync-token" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="Código de sincronización" aria-label="Código secreto de sincronización">
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
             <button type="button" id="collection-sync-create" class="backup-action">Generar código</button>
             <button type="button" id="collection-sync-copy" class="backup-action">Copiar código</button>
             <button type="button" id="collection-sync-download" class="backup-action">Descargar colección</button>
             <button type="button" id="collection-sync-upload" class="backup-action">Subir colección</button>
+            <button type="button" id="collection-sync-delete" class="backup-action">Borrar copia remota</button>
           </div>
-          <p id="collection-sync-status" class="backup-status" hidden></p>
+          <p id="collection-sync-status" class="backup-status" hidden role="status" aria-live="polite"></p>
         </div>
       </div>
       <p id="backup-status" class="backup-status" hidden></p>
@@ -3611,6 +3612,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   var collectionSyncCopyBtn = document.getElementById('collection-sync-copy');
   var collectionSyncDownloadBtn = document.getElementById('collection-sync-download');
   var collectionSyncUploadBtn = document.getElementById('collection-sync-upload');
+  var collectionSyncDeleteBtn = document.getElementById('collection-sync-delete');
   var collectionSyncStatusEl = document.getElementById('collection-sync-status');
   var csvExportBtn = document.getElementById('csv-export-btn');
   var statsBtn = null;
@@ -5053,6 +5055,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function collectionSaveToken(token) { try { localStorage.setItem(COLLECTION_TOKEN_KEY, token); } catch (e) {} }
   function collectionSaveVersion(version) { try { localStorage.setItem(COLLECTION_VERSION_KEY, String(version || 0)); } catch (e) {} }
   function collectionLocalVersion() { try { return Number(localStorage.getItem(COLLECTION_VERSION_KEY) || 0); } catch (e) { return 0; } }
+  var collectionLastHash = '';
+  async function collectionHash() {
+    var stable = collectionPayload(); delete stable.exportedAt;
+    var bytes = new TextEncoder().encode(JSON.stringify(stable));
+    var digest = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(digest)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+  }
   async function collectionDownload() {
     var token = collectionToken();
     if (!/^[A-Za-z0-9_-]{40,80}$/.test(token)) { collectionSyncStatus('Genera o pega un código válido primero.', true); return; }
@@ -5064,13 +5073,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       if (!window.confirm('La colección remota reemplazará los datos de este dispositivo. ¿Continuar?')) { collectionSyncStatus('Descarga cancelada.', false); return; }
       importBackupFile(new Blob([JSON.stringify(data)], { type: 'application/json' }), true);
       collectionSaveVersion(remote.version);
+      collectionLastHash = await collectionHash();
       collectionSyncStatus('Colección descargada correctamente.', false);
     } catch (e) { collectionSyncStatus(e.status === 401 ? 'Código incorrecto o caducado.' : (e.message || 'No se pudo descargar la colección.'), true); }
   }
-  async function collectionUpload() {
+  async function collectionUpload(isAutomatic) {
     var token = collectionToken();
     if (!/^[A-Za-z0-9_-]{40,80}$/.test(token)) { collectionSyncStatus('Genera o pega un código válido primero.', true); return; }
-    collectionSyncStatus('Cifrando y subiendo colección…', false);
+    if (!isAutomatic) collectionSyncStatus('Cifrando y subiendo colección…', false);
     try {
       var remote = await collectionRequest('GET', token);
       var baseVersion = collectionLocalVersion();
@@ -5079,17 +5089,38 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       var encrypted = await collectionEncrypt(collectionPayload(), token);
       await collectionRequest('PUT', token, { version: version, baseVersion: remote.version || 0, payload: encrypted });
       collectionSaveVersion(version);
-      collectionSyncStatus('Colección subida y cifrada correctamente.', false);
+      collectionLastHash = await collectionHash();
+      collectionSyncStatus(isAutomatic ? 'Sincronización automática completada.' : 'Colección subida y cifrada correctamente.', false);
     } catch (e) { collectionSyncStatus(e.status === 409 ? 'Conflicto detectado: descarga primero la versión más reciente.' : (e.message || 'No se pudo subir la colección.'), true); }
+  }
+  async function collectionDeleteRemote() {
+    var token = collectionToken();
+    if (!/^[A-Za-z0-9_-]{40,80}$/.test(token)) { collectionSyncStatus('Genera o pega un código válido primero.', true); return; }
+    if (!window.confirm('Se borrará la copia cifrada de Cloudflare y no podrá recuperarse. ¿Continuar?')) return;
+    try { await collectionRequest('DELETE', token); collectionSaveVersion(0); collectionLastHash = ''; collectionSyncStatus('Copia remota borrada.', false); }
+    catch (e) { collectionSyncStatus(e.message || 'No se pudo borrar la copia remota.', true); }
+  }
+  var collectionAutoTimer = null;
+  function startCollectionAutoSync() {
+    clearInterval(collectionAutoTimer);
+    if (!collectionToken()) return;
+    collectionAutoTimer = setInterval(function() {
+      collectionHash().then(function(hash) {
+        if (collectionLastHash && hash !== collectionLastHash) return collectionUpload(true);
+        if (!collectionLastHash) collectionLastHash = hash;
+      }).catch(function() {});
+    }, 60000);
   }
   (function initCollectionSync() {
     var saved = ''; try { saved = localStorage.getItem(COLLECTION_TOKEN_KEY) || ''; } catch (e) {}
     if (collectionSyncTokenEl) collectionSyncTokenEl.value = saved;
-    if (collectionSyncCreateBtn) collectionSyncCreateBtn.addEventListener('click', function() { var token = collectionRandomToken(); collectionSyncTokenEl.value = token; collectionSaveToken(token); collectionSaveVersion(0); collectionSyncStatus('Código generado. Guárdalo en un lugar seguro y úsalo en el otro dispositivo.', false); });
-    if (collectionSyncTokenEl) collectionSyncTokenEl.addEventListener('change', function() { collectionSaveToken(collectionToken()); collectionSaveVersion(0); collectionSyncStatus('Código guardado en este dispositivo.', false); });
+    if (collectionSyncCreateBtn) collectionSyncCreateBtn.addEventListener('click', function() { var token = collectionRandomToken(); collectionSyncTokenEl.value = token; collectionSaveToken(token); collectionSaveVersion(0); collectionLastHash = ''; startCollectionAutoSync(); collectionSyncStatus('Código generado. Guárdalo en un lugar seguro y úsalo en el otro dispositivo.', false); });
+    if (collectionSyncTokenEl) collectionSyncTokenEl.addEventListener('change', function() { collectionSaveToken(collectionToken()); collectionSaveVersion(0); collectionLastHash = ''; startCollectionAutoSync(); collectionSyncStatus('Código guardado en este dispositivo.', false); });
     if (collectionSyncCopyBtn) collectionSyncCopyBtn.addEventListener('click', function() { var token = collectionToken(); if (!token) { collectionSyncStatus('Genera o pega un código primero.', true); return; } (navigator.clipboard ? navigator.clipboard.writeText(token) : Promise.reject()).then(function() { collectionSyncStatus('Código copiado.', false); }).catch(function() { collectionSyncStatus('No se pudo copiar automáticamente; selecciónalo y cópialo.', true); }); });
     if (collectionSyncDownloadBtn) collectionSyncDownloadBtn.addEventListener('click', collectionDownload);
-    if (collectionSyncUploadBtn) collectionSyncUploadBtn.addEventListener('click', collectionUpload);
+    if (collectionSyncUploadBtn) collectionSyncUploadBtn.addEventListener('click', function() { collectionUpload(false); });
+    if (collectionSyncDeleteBtn) collectionSyncDeleteBtn.addEventListener('click', collectionDeleteRemote);
+    startCollectionAutoSync();
   })();
 
   backupBtn.addEventListener('click', function() {
