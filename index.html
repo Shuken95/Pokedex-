@@ -5670,7 +5670,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (typeof pushCfg !== 'undefined' && pushCfg && pushCfg.key) headers['x-sync-key'] = pushCfg.key;
     return fetch(TCG_SHARED_IMAGE_WORKER + path, { method: method || 'GET', headers: headers, body: body === undefined ? undefined : JSON.stringify(body) });
   }
-  function publishTcgSharedImage(cardId, image) {
+  function publishTcgSharedImage(cardId, image, onStored) {
     if (!cardId || !/^https:\/\//i.test(image)) return;
     tcgSharedImageRequest('/card-image', 'POST', { id: cardId, url: image })
       .then(function(res) { return res.ok ? res.json() : null; })
@@ -5678,6 +5678,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         if (data && data.url) {
           tcgImageOverrides[cardId] = data.url;
           saveTcgImageOverrides();
+          if (typeof onStored === 'function') onStored(data.url);
         }
       }).catch(function() {});
   }
@@ -6873,7 +6874,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       // Persistir también la imagen de una carta manual en el almacenamiento compartido.
       // La carta sigue siendo local hasta que exista sincronización de colección, pero la
       // imagen ya no depende del teléfono original.
-      if (editEntry.image) publishTcgSharedImage(editEntry.id, editEntry.image);
+      if (editEntry.image) publishTcgSharedImage(editEntry.id, editEntry.image, function(storedUrl) {
+        if (tcgCustom[editEntry.id]) { tcgCustom[editEntry.id].image = storedUrl; saveTcgCustom(); }
+      });
       closeTcgAddPopup();
 
       // Reconstruimos la carta en el sitio donde estaba para que se vea el cambio (ej. la
@@ -6899,7 +6902,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgCustom[id] = entry;
     saveTcgCustom();
     // Guardar una copia Cloudflare de la imagen introducida por URL.
-    if (entry.image) publishTcgSharedImage(id, entry.image);
+    if (entry.image) publishTcgSharedImage(id, entry.image, function(storedUrl) {
+      if (tcgCustom[id]) { tcgCustom[id].image = storedUrl; saveTcgCustom(); }
+    });
     tcgOwned.add(id);
     tcgOwnedMeta[id] = { slug: slug, setName: entry.setName || 'Añadida a mano' };
     saveTcgOwned();
