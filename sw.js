@@ -1,5 +1,5 @@
-const SHELL_CACHE = 'pokecheck-shell-v4';
-const RUNTIME_CACHE = 'pokecheck-runtime-v1';
+const SHELL_CACHE = 'pokecheck-shell-v5';
+const RUNTIME_CACHE = 'pokecheck-runtime-v2';
 
 const SHELL_FILES = [
   './',
