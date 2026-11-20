@@ -1,5 +1,5 @@
-const SHELL_CACHE = 'pokecheck-shell-v7';
-const RUNTIME_CACHE = 'pokecheck-runtime-v4';
+const SHELL_CACHE = 'pokecheck-shell-v8';
+const RUNTIME_CACHE = 'pokecheck-runtime-v5';
 
 const SHELL_FILES = [
   './',
@@ -33,6 +33,20 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  const req0 = event.request;
+  const url0 = new URL(req0.url);
+  // HTML de la app: siempre red primero para no quedar atrapados con un shell viejo
+  if (req0.mode === 'navigate' || url0.pathname.endsWith('/') || url0.pathname.endsWith('/index.html')) {
+    event.respondWith(
+      fetch(req0).then((res) => {
+        const copy = res.clone();
+        caches.open(SHELL_CACHE).then((c) => c.put(req0, copy)).catch(() => {});
+        return res;
+      }).catch(() => caches.match(req0).then((c) => c || caches.match('./index.html')))
+    );
+    return;
+  }
+
   const req = event.request;
   if (req.method !== 'GET') return;
 

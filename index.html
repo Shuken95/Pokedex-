@@ -1785,11 +1785,7 @@
   #dex-controls:not(.filters-open) .filter-row,
   #dex-controls:not(.filters-open) .dex-global-row{ display:none; }
   /* Splash inicial: entrada breve y cuidada de la colección */
-  #app-splash{
-    position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;
-    background:#0a0a0a;color:#f5f5f5;
-    transition:opacity .18s ease,visibility .18s ease;
-  }
+  #app-splash{ display:none !important; }
   #app-splash.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
   #app-splash:before,#app-splash:after{display:none}
   .splash-panel{position:relative;z-index:1;width:min(340px,82vw);text-align:center}
@@ -2647,36 +2643,7 @@
 </head>
 <body>
 
-<div id="app-splash" aria-label="Cargando Mi Pokédex">
-  <div class="splash-panel">
-    <div class="splash-emblem" aria-hidden="true"><span class="splash-ball-dot"></span></div>
-    <p class="splash-kicker">COLLECTION / 01</p>
-    <h1 class="splash-title">MI POKÉDEX</h1>
-    <p class="splash-subtitle">Tu colección, a punto</p>
-    <div class="splash-progress" aria-hidden="true"><i></i></div>
-  </div>
-</div>
 
-
-<script>
-/* Splash failsafe: no depende del resto de la app */
-(function(){
-  var s = document.getElementById('app-splash');
-  if (!s) return;
-  var done = false;
-  function leave(){
-    if (done || !s) return;
-    done = true;
-    s.classList.add('is-leaving');
-    setTimeout(function(){ try { s.remove(); } catch(e) { if (s) s.style.display='none'; } }, 400);
-  }
-  if (document.readyState === 'complete') setTimeout(leave, 900);
-  else window.addEventListener('load', function(){ setTimeout(leave, 900); }, { once: true });
-  setTimeout(leave, 2800);
-  // Si el usuario toca, no le dejamos atrapado
-  s.addEventListener('click', leave, { once: true });
-})();
-</script>
 <header>
   <div class="header-top">
     <div class="title-block">
@@ -9455,7 +9422,7 @@
       if (!tradePushSupported()) return Promise.reject(new Error('Este navegador no admite notificaciones push. En iPhone, a\u00f1ade la app a la pantalla de inicio.'));
       return Notification.requestPermission().then(function(perm) {
         if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
-        return navigator.serviceWorker.register('sw.js');
+        return navigator.serviceWorker.register('sw.js?v=8');
       }).then(function() { return navigator.serviceWorker.ready; })
       .then(function(reg) {
         return tradeApi('/push-key', 'GET').then(function(d) {
@@ -12959,7 +12926,7 @@
   function pushEnableWeb() {
     return Notification.requestPermission().then(function(perm) {
       if (perm !== 'granted') throw new Error('No se concedi\u00f3 el permiso de notificaciones.');
-      return navigator.serviceWorker.register('sw.js');
+      return navigator.serviceWorker.register('sw.js?v=8');
     }).then(function() {
       return navigator.serviceWorker.ready;
     }).then(function(reg) {
@@ -14723,20 +14690,7 @@
 
 
   setTimeout(function() { try { maybeShowTabTip('home'); } catch (e) {} }, 900);
-  // Splash: refuerzo por si el failsafe temprano no corrió
-  (function() {
-    var splash = document.getElementById('app-splash');
-    if (!splash) return;
-    function leave() {
-      if (!splash || !splash.parentNode) return;
-      splash.classList.add('is-leaving');
-      setTimeout(function() { try { if (splash && splash.parentNode) splash.remove(); } catch (e) {} }, 500);
-    }
-    try { init(false); } catch (e) { console.error('init', e); }
-    if (document.readyState === 'complete') setTimeout(leave, 400);
-    else window.addEventListener('load', function() { setTimeout(leave, 400); }, { once: true });
-    setTimeout(leave, 2500);
-  })();
+  try { init(false); } catch (e) { console.error('init', e); }
 
 
   // ---------- Pestaña IA: consultor con todos los datos de la app ----------
