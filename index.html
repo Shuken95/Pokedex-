@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Pokédex · Colección</title>
-<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#f5f5f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" id="meta-theme-color" content="#f5f5f5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Pokédex">
@@ -13,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Baloo+2:wght@500;600;700;800&family=Press+Start+2P&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>try{document.documentElement.setAttribute("data-style","snkrs")}catch(e){document.documentElement.setAttribute("data-style","snkrs")}</script>
 <style>
   :root{
@@ -1391,95 +1390,93 @@
   .shop-chip{ border-color:transparent; background:var(--seg-bg); color:var(--text); }
   button{ -webkit-tap-highlight-color:transparent; }
 
-  /* ===== Estilos seleccionables ===== */
-html[data-style="pop"]{--font:'Baloo 2',ui-rounded,-apple-system,system-ui,sans-serif;--bg:#eef0ff;--bg-radial:#eef0ff;--surface:#fff;--surface-hover:#fff6c7;--border:rgba(29,27,58,.14);--border-strong:#1d1b3a;--text:#1d1b3a;--text-dim:#6a678f;--accent:#6c5ce7;--accent-soft:rgba(108,92,231,.14);--header-bg:#ffd93d;--shelf-divider:rgba(29,27,58,.25);--seg-bg:#fff;--seg-active:#ff6b9d;--bubble:#fff0f6;--radius:20px;--shadow-sm:0 3px 0 #1d1b3a;--shadow-md:0 5px 0 #1d1b3a;}
-html[data-style="pop"] body{font-weight:500;letter-spacing:0}
-html[data-style="pop"] header{background:#ffd93d;border-bottom:3px solid #1d1b3a;backdrop-filter:none;-webkit-backdrop-filter:none;padding:18px 16px 16px}
-html[data-style="pop"] .title-block h1{font-size:36px;line-height:1;font-weight:800;transform:rotate(-1.5deg);transform-origin:left;text-shadow:2px 2px 0 #fff}
-html[data-style="pop"] .title-block p{font-size:13px;font-weight:600;color:#1d1b3a}
-html[data-style="pop"] #search,html[data-style="pop"] #tcg-search,html[data-style="pop"] #vgc-search{background:#fff;border:2px solid #1d1b3a;border-radius:999px;font-weight:600}
-html[data-style="pop"] .mode-tabs,html[data-style="pop"] .tcg-segmented{background:#fff;border:2px solid #1d1b3a;border-radius:999px;padding:3px}
-html[data-style="pop"] .mode-tab,html[data-style="pop"] .tcg-segment{border-radius:999px;color:#1d1b3a;font-weight:700}
-html[data-style="pop"] .mode-tab.is-active,html[data-style="pop"] .tcg-segment.is-selected{background:#ff6b9d;color:#fff;box-shadow:none}
-html[data-style="pop"] .tcg-filters-btn,html[data-style="pop"] .tcg-lang-btn{background:#fff;border:2px solid #1d1b3a;border-radius:14px;box-shadow:0 3px 0 #1d1b3a}
-html[data-style="pop"] .poke-card,html[data-style="pop"] .tcg-card,html[data-style="pop"] .hucha-card,html[data-style="pop"] .shop-head,html[data-style="pop"] .stats-kpi,html[data-style="pop"] .tcg-collection-card{border:2px solid #1d1b3a;border-radius:20px;box-shadow:0 4px 0 #1d1b3a}
-html[data-style="pop"] .poke-card:active,html[data-style="pop"] .tcg-card:active{transform:translateY(3px);box-shadow:0 1px 0 #1d1b3a}
-html[data-style="pop"] .poke-card.owned,html[data-style="pop"] .tcg-card.owned{background:#c8f7dc;border-color:#1d1b3a}
-html[data-style="pop"] .poke-name{font-weight:800}
-html[data-style="pop"] .gen-region{font-size:22px;font-weight:800}
-html[data-style="pop"] .gen-roman{font-size:40px;font-weight:800;color:#ff6b9d;text-shadow:2px 2px 0 #1d1b3a}
-html[data-style="pop"] .gen-count,html[data-style="pop"] .binder-count,html[data-style="pop"] .tcg-count{background:#1d1b3a;color:#fff;border-radius:999px;padding:2px 10px;font-weight:700}
-html[data-style="pop"] .tcg-missing-dex-toggle,html[data-style="pop"] .tcg-custom-section-header{font-size:17px;font-weight:800}
-html[data-style="pop"] .tcg-completion{font-size:15px;font-weight:700}
-html[data-style="pop"] .progress-track,html[data-style="pop"] .binder-track{height:12px;border-radius:999px;border:2px solid #1d1b3a;background:#fff}
-html[data-style="pop"] .progress-fill,html[data-style="pop"] .binder-fill{background:repeating-linear-gradient(45deg,#6c5ce7 0 10px,#8b7cf6 10px 20px)}
-html[data-style="pop"] .tcg-add-status,html[data-style="pop"] .state-msg{position:relative;background:var(--bubble);border:2px solid #1d1b3a;border-radius:18px;padding:10px 14px;color:#1d1b3a;font-weight:600}
-html[data-style="pop"] .tcg-add-status::after,html[data-style="pop"] .state-msg::after{content:"";position:absolute;left:24px;bottom:-10px;width:14px;height:14px;background:var(--bubble);border-right:2px solid #1d1b3a;border-bottom:2px solid #1d1b3a;transform:rotate(45deg)}
-html[data-style="pop"] .tcg-add-status.is-error{color:#d63031}
-html[data-style="pop"] .tcg-lang-sheet{border:3px solid #1d1b3a;border-bottom:none;border-radius:32px 32px 0 0}
-html[data-style="pop"] .tcg-add-submit{border:2px solid #1d1b3a;border-radius:16px;background:#6c5ce7;box-shadow:0 4px 0 #1d1b3a;font-size:17px;font-weight:800}
-html[data-style="arcade"]{--px:'Press Start 2P',ui-monospace,monospace;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;--bg:#14142b;--bg-radial:#1c1c3f;--surface:#1f2144;--surface-hover:#2a2d5c;--border:rgba(255,255,255,.12);--border-strong:rgba(255,255,255,.32);--text:#f4f4ff;--text-dim:#a0a2cf;--accent:#4d7cff;--accent-soft:rgba(77,124,255,.2);--header-bg:#d62839;--shelf-divider:rgba(255,255,255,.18);--seg-bg:#0e0e20;--seg-active:#3b4cca;--radius:12px;--shadow-sm:0 4px 0 #0a0a1c;--shadow-md:0 6px 0 #0a0a1c;}
-html[data-style="arcade"] body{background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
-html[data-style="arcade"] header{background:#d62839;border-bottom:6px solid #8c1523;backdrop-filter:none;-webkit-backdrop-filter:none;padding:26px 16px 16px}
-html[data-style="arcade"] header::before{content:"";position:absolute;top:9px;left:16px;width:9px;height:9px;border-radius:50%;background:#ffcb05;box-shadow:15px 0 #4cd964,30px 0 #4d7cff}
-html[data-style="arcade"] .title-block h1{font-family:var(--px);font-size:15px;line-height:1.5;font-weight:400;color:#fff;letter-spacing:0;text-shadow:2px 2px 0 #8c1523}
-html[data-style="arcade"] .title-block p{color:#ffd6da;font-size:12px}
-html[data-style="arcade"] #search,html[data-style="arcade"] #tcg-search,html[data-style="arcade"] #vgc-search{background:#0e0e20;border:2px solid rgba(255,255,255,.3);border-radius:8px}
-html[data-style="arcade"] .mode-tabs,html[data-style="arcade"] .tcg-segmented{background:#0e0e20;border:2px solid rgba(255,255,255,.2);border-radius:8px}
-html[data-style="arcade"] .mode-tab,html[data-style="arcade"] .tcg-segment{font-family:var(--px);font-size:9px;font-weight:400;padding:11px 6px;border-radius:5px;color:#a0a2cf}
-html[data-style="arcade"] .mode-tab.is-active,html[data-style="arcade"] .tcg-segment.is-selected{background:#3b4cca;color:#ffcb05;box-shadow:none}
-html[data-style="arcade"] .tcg-filters-btn,html[data-style="arcade"] .tcg-lang-btn{background:#0e0e20;border:2px solid rgba(255,255,255,.3);border-radius:8px}
-html[data-style="arcade"] .poke-card,html[data-style="arcade"] .tcg-card,html[data-style="arcade"] .hucha-card,html[data-style="arcade"] .shop-head,html[data-style="arcade"] .stats-kpi,html[data-style="arcade"] .tcg-collection-card{border:2px solid rgba(255,255,255,.18);border-radius:12px;box-shadow:0 4px 0 #0a0a1c}
-html[data-style="arcade"] .poke-card.owned,html[data-style="arcade"] .tcg-card.owned{border-color:#ffcb05;box-shadow:0 4px 0 #0a0a1c,0 0 16px rgba(255,203,5,.4)}
-html[data-style="arcade"] .poke-num{font-family:var(--px);font-size:8px;color:#ffcb05}
-html[data-style="arcade"] .poke-name{font-weight:700}
-html[data-style="arcade"] .gen-region{font-family:var(--px);font-size:13px;line-height:1.5;font-weight:400}
-html[data-style="arcade"] .gen-roman{font-family:var(--px);font-size:28px;font-weight:400;color:#ffcb05;text-shadow:3px 3px 0 #0a0a1c}
-html[data-style="arcade"] .gen-count,html[data-style="arcade"] .binder-count,html[data-style="arcade"] .tcg-count{font-family:var(--px);font-size:9px;background:#ffcb05;color:#14142b;border-radius:5px;padding:4px 6px}
-html[data-style="arcade"] .tcg-missing-dex-toggle,html[data-style="arcade"] .tcg-custom-section-header{font-family:var(--px);font-size:11px;font-weight:400;line-height:1.6}
-html[data-style="arcade"] .progress-track,html[data-style="arcade"] .binder-track{height:10px;border-radius:3px;border:2px solid #fff;background:#0e0e20}
-html[data-style="arcade"] .progress-fill,html[data-style="arcade"] .binder-fill{background:repeating-linear-gradient(90deg,#4cd964 0 8px,#2fa84a 8px 10px)}
-html[data-style="arcade"] .tcg-add-status,html[data-style="arcade"] .state-msg{position:relative;background:#10105a;color:#fff;border:3px solid #fff;border-radius:8px;padding:10px 26px 10px 12px;font-size:12px;line-height:1.6}
-html[data-style="arcade"] .tcg-add-status::after,html[data-style="arcade"] .state-msg::after{content:"▼";position:absolute;right:10px;bottom:6px;font-size:9px;color:#ffcb05;animation:blink 1s steps(2) infinite}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @keyframes blink{50%{opacity:0}}
-html[data-style="arcade"] .tcg-add-status.is-error{color:#ff8a93}
-html[data-style="arcade"] .tcg-lang-sheet{background:#1f2144;border:3px solid #fff;border-bottom:none;border-radius:16px 16px 0 0}
-html[data-style="arcade"] .tcg-add-submit{font-family:var(--px);font-size:11px;font-weight:400;border-radius:8px;background:#3b4cca;border-bottom:4px solid #1c2e8a}
-html[data-style="menta"]{--font:'Fredoka',ui-rounded,-apple-system,system-ui,sans-serif;--bg:#effaf7;--bg-radial:#f7fffd;--surface:#fff;--surface-hover:#e3f6f1;--border:rgba(31,59,77,.1);--border-strong:rgba(31,59,77,.22);--text:#1f3b4d;--text-dim:#6b8794;--accent:#0d9488;--accent-soft:rgba(13,148,136,.12);--header-bg:#d5f3ea;--shelf-divider:rgba(31,59,77,.14);--seg-bg:rgba(13,148,136,.1);--seg-active:#fff;--radius:26px;--shadow-sm:0 6px 16px -8px rgba(13,148,136,.35);--shadow-md:0 12px 26px -10px rgba(13,148,136,.45);}
-html[data-style="menta"] body{letter-spacing:0}
-html[data-style="menta"] header{background:linear-gradient(135deg,#c9f2e6,#cfe8ff);border-bottom:none;border-radius:0 0 30px 30px;backdrop-filter:none;-webkit-backdrop-filter:none;padding:20px 18px 18px;box-shadow:0 10px 24px -14px rgba(13,148,136,.5)}
-html[data-style="menta"] .title-block h1{font-size:32px;line-height:1.05;font-weight:600;color:#1f3b4d}
-html[data-style="menta"] .title-block p{font-size:13px;color:#4f7a8a}
-html[data-style="menta"] #search,html[data-style="menta"] #tcg-search,html[data-style="menta"] #vgc-search{background:#fff;border:none;border-radius:999px;box-shadow:var(--shadow-sm)}
-html[data-style="menta"] .mode-tabs,html[data-style="menta"] .tcg-segmented{border-radius:999px;padding:4px}
-html[data-style="menta"] .mode-tab,html[data-style="menta"] .tcg-segment{border-radius:999px;font-weight:500}
-html[data-style="menta"] .mode-tab.is-active,html[data-style="menta"] .tcg-segment.is-selected{color:#0d9488;font-weight:600;box-shadow:var(--shadow-sm)}
-html[data-style="menta"] .tcg-filters-btn,html[data-style="menta"] .tcg-lang-btn{background:#fff;border-radius:999px;box-shadow:var(--shadow-sm)}
-html[data-style="menta"] .poke-card,html[data-style="menta"] .tcg-card,html[data-style="menta"] .hucha-card,html[data-style="menta"] .shop-head,html[data-style="menta"] .stats-kpi,html[data-style="menta"] .tcg-collection-card{border-radius:26px;border:none}
-html[data-style="menta"] .poke-card:nth-child(4n+1),html[data-style="menta"] .tcg-card:nth-child(4n+1){background:#d9f5ec}
-html[data-style="menta"] .poke-card:nth-child(4n+2),html[data-style="menta"] .tcg-card:nth-child(4n+2){background:#dcefff}
-html[data-style="menta"] .poke-card:nth-child(4n+3),html[data-style="menta"] .tcg-card:nth-child(4n+3){background:#d2f1f4}
-html[data-style="menta"] .poke-card:nth-child(4n),html[data-style="menta"] .tcg-card:nth-child(4n){background:#e6efff}
-html[data-style="menta"] .poke-card.owned,html[data-style="menta"] .tcg-card.owned{outline:3px solid #0d9488;outline-offset:-3px}
-html[data-style="menta"] .poke-card:active,html[data-style="menta"] .tcg-card:active{transform:scale(.94) rotate(-2deg)}
-html[data-style="menta"] .poke-sprite-wrap{transform:scale(1.1)}
-html[data-style="menta"] .poke-name{font-weight:600}
-html[data-style="menta"] .gen-section{border-radius:26px}
-html[data-style="menta"] .gen-header{background:linear-gradient(135deg,#c9f2e6,#cfe8ff);border-radius:0;padding:12px 18px}
-html[data-style="menta"] .gen-region{font-size:22px;font-weight:600}
-html[data-style="menta"] .gen-roman{font-size:42px;font-weight:600;color:#fff;text-shadow:0 3px 0 rgba(13,148,136,.4)}
-html[data-style="menta"] .gen-count,html[data-style="menta"] .binder-count,html[data-style="menta"] .tcg-count{background:#fff;color:#0d9488;border-radius:999px;padding:2px 10px;font-weight:600}
-html[data-style="menta"] .tcg-missing-dex-toggle,html[data-style="menta"] .tcg-custom-section-header{font-size:17px;font-weight:600}
-html[data-style="menta"] .progress-track,html[data-style="menta"] .binder-track{height:14px;border-radius:999px;background:rgba(13,148,136,.14)}
-html[data-style="menta"] .progress-fill,html[data-style="menta"] .binder-fill{background:linear-gradient(90deg,#5eead4,#7dd3fc)}
-html[data-style="menta"] .tcg-add-status,html[data-style="menta"] .state-msg{position:relative;background:#fff;border-radius:22px;padding:11px 16px;box-shadow:var(--shadow-sm);color:#1f3b4d}
-html[data-style="menta"] .tcg-add-status::after,html[data-style="menta"] .state-msg::after{content:"";position:absolute;left:26px;bottom:-9px;border:9px solid transparent;border-top-color:#fff;border-bottom:0}
-html[data-style="menta"] .tcg-add-status.is-error{color:var(--danger)}
-html[data-style="menta"] .suggestions-dropdown{border-radius:22px;overflow:hidden}
-html[data-style="menta"] .tcg-lang-sheet{border-radius:36px 36px 0 0}
-html[data-style="menta"] .tcg-lang-sheet-handle{background:#9be7d6}
-html[data-style="menta"] .tcg-add-submit,html[data-style="menta"] .shop-refresh-btn{border-radius:999px;background:#0d9488;color:#fff;box-shadow:0 8px 18px -6px rgba(13,148,136,.55);font-size:17px;font-weight:600}
-html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shadow:var(--shadow-sm)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   .tcg-section-meta{display:flex;align-items:center;gap:10px;margin:6px 4px 10px;font-size:12px;color:var(--text-dim);cursor:pointer;-webkit-tap-highlight-color:transparent}
   .tcg-section-meta:active{opacity:.7}
   .tcg-section-progress{flex:1;height:8px;border-radius:999px;background:var(--seg-bg);overflow:hidden}
@@ -1555,23 +1552,25 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   .home-valuable-meta{display:block;color:var(--text-dim);font-size:11px;margin-top:2px;}
   .home-row span:last-child{font-weight:600;white-space:nowrap}
   header .mode-tabs .mode-tab{padding-left:2px;padding-right:2px;font-size:12px;white-space:nowrap}
-  html[data-style="arcade"] header .mode-tabs .mode-tab{font-size:7px;padding:12px 2px}
-  html[data-style="arcade"] .home-value{font-family:var(--px);font-size:24px;color:#ffcb05;text-shadow:3px 3px 0 #0a0a1c}
-  html[data-style="arcade"] .home-hero,html[data-style="arcade"] .home-tile,html[data-style="arcade"] .home-card{border:2px solid rgba(255,255,255,.18);box-shadow:0 4px 0 #0a0a1c;border-radius:12px}
-  html[data-style="pop"] .home-hero,html[data-style="pop"] .home-tile,html[data-style="pop"] .home-card{border:2px solid #1d1b3a;box-shadow:0 4px 0 #1d1b3a;border-radius:20px}
-  html[data-style="pop"] .home-hero{background:#c8f7dc}
-  html[data-style="pop"] .home-value{font-size:46px;font-weight:800}
-  html[data-style="menta"] .home-hero{background:linear-gradient(135deg,#c9f2e6,#cfe8ff);border:none;border-radius:30px}
-  html[data-style="menta"] .home-tile,html[data-style="menta"] .home-card{border:none;border-radius:26px}
-  html[data-style="menta"] .home-tile:nth-child(1){background:#d9f5ec}html[data-style="menta"] .home-tile:nth-child(2){background:#dcefff}
-  html[data-style="menta"] .home-tile:nth-child(3){background:#d2f1f4}html[data-style="menta"] .home-tile:nth-child(4){background:#e6efff}
+
+
+
+
+
+
+
+
+
+
+
+
 
   /* ---- Pokédex más aireada: menos elementos por tarjeta ---- */
   .gen-body{padding:16px 14px}
   .poke-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:14px 12px}
   .poke-card{padding:18px 6px 12px}
   .poke-sprite-wrap{width:68px;height:68px}
-  html[data-style="menta"] .poke-sprite-wrap{transform:none}
+
   .poke-meta{display:block;margin-top:6px}
   .poke-meta .poke-num{margin-top:0;font-size:11px}
   .poke-name{font-size:12.5px;margin-top:2px;padding:0 2px}
@@ -1595,8 +1594,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   .poke-more{position:absolute;top:6px;right:6px;bottom:auto;width:24px;height:24px;border:none;background:transparent;color:var(--text-dim);opacity:.55;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:500;line-height:1;cursor:pointer;z-index:2;transition:opacity .15s ease,background .15s ease,color .15s ease}
   .poke-more::after{content:"";position:absolute;inset:-6px}
   .poke-more:active{opacity:1;background:var(--accent);color:#fff}
-  html[data-style="menta"] .poke-card:nth-child(n){background:#f3faf8}
-  html[data-style="menta"] .poke-card.owned:nth-child(n){background:radial-gradient(circle at 50% 38%,var(--type-tint,transparent) 0%,transparent 70%),#d9f5ec;outline:2px solid #0d9488;outline-offset:-2px}
+
+
   header .mode-tabs .mode-tab{flex:1 1 auto}
   .dex-detail-sheet{max-height:90vh}
   .dd-hero{display:flex;gap:14px;align-items:center;margin:4px 0 12px}
@@ -1671,8 +1670,8 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   .vgc-mega{ font-size:11px; font-weight:700; color:var(--accent); background:var(--accent-soft); border-radius:var(--r-sm); padding:1px 5px; margin-left:4px; vertical-align:1px; }
   .vgc-note{ font-size:11.5px; color:var(--text-dim); line-height:1.5; margin:10px 0 0; }
   .vgc-note a{ color:var(--accent); }
-  html[data-style="arcade"] .vgc-card{ border:2px solid rgba(255,255,255,.18); box-shadow:0 4px 0 #0a0a1c; border-radius:12px; }
-  html[data-style="pop"] .vgc-card{ border:2px solid #1d1b3a; box-shadow:0 4px 0 #1d1b3a; border-radius:20px; }
+
+
   header .mode-tabs .mode-tab{ font-size:11.5px; }
   .vgc-ai-btn{ width:100%; border:none; border-radius:var(--r-md); padding:12px 14px; font-family:var(--font); font-size:14px; font-weight:700; background:var(--accent); color:#fff; cursor:pointer; }
   .vgc-ai-btn:active{ opacity:.8; }
@@ -1710,10 +1709,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     --card-radius:var(--r-lg); --card-border:1px solid var(--border); --card-shadow:var(--shadow-sm);
     --tabbar-h:60px;
   }
-  html[data-theme="light"], html[data-style="menta"], html[data-style="pop"]{ --up:#23824f; --down:#c43d3d; --danger:#c8324a; }
-  html[data-style="menta"]{ --text-dim:#55717f; --card-radius:26px; --card-border:none; }
-  html[data-style="pop"]{ --card-radius:20px; --card-border:2px solid #1d1b3a; --card-shadow:0 4px 0 #1d1b3a; }
-  html[data-style="arcade"]{ --card-radius:12px; --card-border:2px solid rgba(255,255,255,.18); --card-shadow:0 4px 0 #0a0a1c; }
+  html[data-theme="light"]{ --up:#23824f; --down:#c43d3d; --danger:#c8324a; }
+
+
+
 
   /* Un solo origen para las tarjetas que los temas no cubrían */
   .shop-row,.shop-release,.shop-mover-col,.global-row,.vgc-card{
@@ -1725,11 +1724,11 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   header{ padding:12px 16px 10px; }
   .header-top{ margin-bottom:8px; }
   .progress-track{ margin-bottom:10px; }
-  html[data-style="menta"] header{ padding:14px 18px 14px; }
-  html[data-style="menta"] .title-block h1{ font-size:28px; }
-  html[data-style="pop"] header{ padding:12px 16px 14px; }
-  html[data-style="pop"] .title-block h1{ font-size:30px; }
-  html[data-style="arcade"] header{ padding:24px 16px 12px; }
+
+
+
+
+
 
   #main-tabs{
     position:fixed; left:0; right:0; bottom:0; z-index:30; margin:0;
@@ -1757,17 +1756,17 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   #main-tabs .mode-tab{ flex:1 1 auto; max-width:none; font-size:10.5px; }
   #main-tabs .tab-ico{ width:40px; }
   #main-tabs .shop-tab-badge{ position:absolute; top:-1px; left:calc(50% + 8px); margin:0; min-width:16px; height:16px; line-height:16px; font-size:11px; }
-  html[data-style="menta"] #main-tabs{ border-top:none; border-radius:24px 24px 0 0; box-shadow:0 -10px 30px -14px rgba(13,148,136,.45); }
-  html[data-style="menta"] #main-tabs .mode-tab.is-active{ color:#0d9488; }
-  html[data-style="menta"] #main-tabs .mode-tab.is-active .tab-ico{ background:#c9f2e6; }
-  html[data-style="pop"] #main-tabs{ border-top:3px solid #1d1b3a; box-shadow:none; background:#fff; }
-  html[data-style="pop"] #main-tabs .mode-tab{ color:#1d1b3a; font-weight:700; }
-  html[data-style="pop"] #main-tabs .mode-tab.is-active{ color:#1d1b3a; }
-  html[data-style="pop"] #main-tabs .mode-tab.is-active .tab-ico{ background:#ff6b9d; color:#fff; border:2px solid #1d1b3a; }
-  html[data-style="arcade"] #main-tabs{ background:#0e0e20; border-top:4px solid #8c1523; box-shadow:none; }
-  html[data-style="arcade"] #main-tabs .mode-tab{ font-family:var(--font); font-size:11.5px; font-weight:600; padding:2px; color:#a0a2cf; }
-  html[data-style="arcade"] #main-tabs .mode-tab.is-active{ color:#ffcb05; }
-  html[data-style="arcade"] #main-tabs .mode-tab.is-active .tab-ico{ background:#3b4cca; border-radius:6px; }
+
+
+
+
+
+
+
+
+
+
+
   .undo-toast{ bottom:calc(var(--tabbar-h) + 20px + env(safe-area-inset-bottom, 0px)); }
 
   /* Filtros del Pokédex plegados detrás de un botón */
@@ -2148,20 +2147,16 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   /* ---------- 2 · Tipografía: mínimos legibles ---------- */
   .poke-meta .poke-num{ font-size:11.5px; }
-  html[data-style="arcade"] .mode-tab, html[data-style="arcade"] .tcg-segment{ font-size:10px; }
-  html[data-style="arcade"] .poke-num{ font-size:10px; }
-  html[data-style="arcade"] .gen-count, html[data-style="arcade"] .binder-count, html[data-style="arcade"] .tcg-count{ font-size:10px; }
-  html[data-style="arcade"] .tcg-add-status::after, html[data-style="arcade"] .state-msg::after{ font-size:11px; }
 
-  /* ---------- 3 · Menta: el color ya no rota sin sentido ---------- */
-  html[data-style="menta"] .tcg-card:nth-child(n){ background:#f3faf8; }
-  html[data-style="menta"] .tcg-card.owned:nth-child(n){ background:#d9f5ec; }
+
+
+
+
+
 
   /* ---------- 4 · Estado "capturado": silueta -> color ---------- */
   .poke-card:not(.owned) img{ filter:brightness(0) invert(1); opacity:.16; }
-  html[data-theme="light"] .poke-card:not(.owned) img,
-  html[data-style="menta"] .poke-card:not(.owned) img,
-  html[data-style="pop"] .poke-card:not(.owned) img{ filter:brightness(0); opacity:.2; }
+  html[data-theme="light"] .poke-card:not(.owned) img{ filter:brightness(0); opacity:.2; }
   .poke-check{ width:22px; height:22px; }
   .poke-check svg{ width:13px; height:13px; }
   @media (prefers-reduced-motion:no-preference){
@@ -2184,6 +2179,64 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
   .holo-sheen.on{ opacity:.55; }
 
+  /* ---- Lightbox: arrastre + holo/partículas ---- */
+  .tcg-lightbox-img-wrap{
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .tcg-lightbox-img-wrap.is-dragging{ cursor: grabbing; }
+  .tcg-lightbox-card-stage{
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    transform-origin: center center;
+    will-change: transform;
+    transition: transform .12s ease-out;
+  }
+  .tcg-lightbox-img-wrap.is-dragging .tcg-lightbox-card-stage{
+    transition: none;
+  }
+  .tcg-lightbox-card-stage img{
+    display: block;
+    max-width: 100%;
+    max-height: min(58vh, 520px);
+    border-radius: var(--card-corner, 12px);
+    box-shadow: 0 20px 50px -10px rgba(0,0,0,.7);
+  }
+  .holo-sheen{
+    border-radius: var(--card-corner, 12px) !important;
+  }
+  .holo-particles{
+    position: absolute; inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: var(--card-corner, 12px);
+    z-index: 3;
+  }
+  .holo-particle{
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 6px 1px rgba(255,255,255,.85);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .tcg-lightbox-card-stage.is-holo .holo-sheen.on{
+    opacity: .72;
+  }
+  @keyframes holoSpark{
+    0%{ opacity: 0; transform: translate(0,0) scale(.4); }
+    20%{ opacity: 1; }
+    100%{ opacity: 0; transform: translate(var(--dx,8px), var(--dy,-18px)) scale(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .holo-particle{ display: none !important; }
+    .tcg-lightbox-card-stage{ transition: none !important; }
+  }
+
 
   /* =====================================================================
      v5-11-0 · Intercambios como pestaña propia (mapa, lista, mensajes) + ajustes ordenados en grupos
@@ -2204,12 +2257,391 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   /* Contenedor concéntrico con la carta: radio exterior = interior + relleno.
      Antes los temas lo ponían a 20-26px y chocaba con el texto y las esquinas. */
   html[data-style] .tcg-card, html .tcg-card{ border-radius:12px; padding:6px 6px 8px; }
-  html[data-style="menta"] .tcg-card, html[data-style="pop"] .tcg-card{ border-radius:14px; }
-  html[data-style="arcade"] .tcg-card{ border-radius:10px; }
+
+
   .tcg-card-set{ margin-top:7px; font-size:11px; line-height:1.3; padding:0; }
   .tcg-card-cardmarket-btn, .tcg-zoom-btn{ bottom:6px; }
   .tcg-card-cardmarket-btn{ left:6px; } .tcg-zoom-btn{ right:6px; }
   .tcg-bookmark-btn{ top:6px; left:6px; }
+
+  /* =====================================================================
+     v6-design-polish · Refinamiento UX (safe-area, motion, progreso, cartas)
+     ===================================================================== */
+  :root{
+    --ease-standard: cubic-bezier(.22, 1, .36, 1);
+    --ease-out: var(--ease-standard);
+    --ease-spring: cubic-bezier(.34, 1.4, .64, 1);
+    --header-pad-top: max(12px, env(safe-area-inset-top, 0px));
+  }
+
+  /* Safe areas */
+  header{
+    padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  }
+  .undo-toast{
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  }
+  .tt-popup, .ai-popup, .daily-summary-popup, .push-onboard{
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  }
+  .tcg-lightbox{
+    padding-top: max(32px, calc(16px + env(safe-area-inset-top, 0px)));
+    padding-bottom: max(24px, calc(12px + env(safe-area-inset-bottom, 0px)));
+  }
+  .tcg-lightbox-close{
+    top: max(18px, calc(10px + env(safe-area-inset-top, 0px)));
+  }
+
+  /* Progress bar más tangible */
+  .progress-track{
+    height: 4px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .progress-fill{
+    border-radius: 999px;
+    transition: width .45s var(--ease-standard);
+  }
+  .binder-track{
+    height: 3px;
+    border-radius: 999px;
+    margin-top: 8px;
+  }
+  .binder-fill{
+    border-radius: 999px;
+    transition: width .5s var(--ease-standard);
+  }
+
+  /* Contador de cabecera más legible */
+  #overall-count{
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .title-block h1{
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  /* Microinteracción al capturar Pokémon */
+  @keyframes pokeReveal{
+    0%{ filter: grayscale(1) brightness(.6); opacity: .35; transform: scale(.92); }
+    55%{ filter: grayscale(0) brightness(1.08); opacity: 1; transform: scale(1.06); }
+    100%{ filter: none; opacity: 1; transform: scale(1); }
+  }
+  @keyframes checkPop{
+    0%{ transform: scale(.2); opacity: 0; }
+    60%{ transform: scale(1.25); opacity: 1; }
+    100%{ transform: scale(1); opacity: 1; }
+  }
+  @keyframes cardGlow{
+    0%{ box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+    40%{ box-shadow: 0 0 0 3px var(--accent-soft), 0 8px 24px -8px rgba(0,0,0,.35); }
+    100%{ box-shadow: var(--shadow-sm); }
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .poke-card.just-owned{
+      animation: cardGlow .7s var(--ease-standard);
+    }
+    .poke-card.just-owned img{
+      animation: pokeReveal .6s var(--ease-spring) both;
+    }
+    .poke-card.just-owned .poke-check{
+      animation: checkPop .5s var(--ease-spring) both;
+    }
+    .tcg-card.just-owned{
+      animation: cardGlow .75s var(--ease-standard);
+    }
+    .tcg-card.just-owned img{
+      filter: none !important;
+      opacity: 1 !important;
+      transition: filter .35s ease, opacity .35s ease;
+    }
+  }
+
+  /* Jerarquía en cartas TCG: la ilustración manda */
+  .tcg-card-cardmarket-btn,
+  .tcg-zoom-btn,
+  .tcg-bookmark-btn,
+  .tcg-card-edit-btn,
+  .tcg-card-delete-btn{
+    opacity: .72;
+    transition: opacity .15s ease, background .15s ease, transform .15s ease;
+  }
+  .tcg-card:hover .tcg-card-cardmarket-btn,
+  .tcg-card:hover .tcg-zoom-btn,
+  .tcg-card:hover .tcg-bookmark-btn,
+  .tcg-card:focus-within .tcg-card-cardmarket-btn,
+  .tcg-card:focus-within .tcg-zoom-btn,
+  .tcg-card:focus-within .tcg-bookmark-btn{
+    opacity: 1;
+  }
+  @media (hover: none){
+    .tcg-card-cardmarket-btn,
+    .tcg-zoom-btn,
+    .tcg-bookmark-btn{ opacity: .9; }
+  }
+
+  /* Toasts más premium */
+  .ux-toast{
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 28px -8px rgba(0,0,0,.35);
+    letter-spacing: -0.01em;
+  }
+
+  /* Estados vacíos / mensajes con más aire */
+  .state-msg{
+    padding: 48px 24px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .shop-empty, .dups-meta, .ai-panel-note, .backup-desc{
+    line-height: 1.5;
+  }
+
+  /* Filtros: más respiro entre grupos */
+  .tcg-filters-body{
+    padding: 8px 14px 10px;
+  }
+  .tcg-filters-label{
+    margin: 16px 0 10px;
+    letter-spacing: .04em;
+  }
+  .tcg-filters-label:first-child{ margin-top: 4px; }
+  .tcg-filters-reset{
+    margin-top: 22px;
+  }
+
+  /* Sheets: safe area inferior ya existía; refuerzo de handle y respiro */
+  .tcg-lang-sheet{
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+  .tcg-lang-sheet-handle{
+    margin-bottom: 12px;
+  }
+
+  /* Motion unificado */
+  .view-fade,
+  .mode-slide-from-right,
+  .mode-slide-from-left,
+  .binder.is-opening .binder-cover,
+  .shop-row{
+    animation-timing-function: var(--ease-standard) !important;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .poke-card.just-owned,
+    .poke-card.just-owned img,
+    .poke-card.just-owned .poke-check,
+    .tcg-card.just-owned,
+    .tcg-card.just-owned img,
+    .view-fade,
+    .mode-slide-from-right,
+    .mode-slide-from-left,
+    .binder.is-opening .binder-cover,
+    .shop-row,
+    .hucha-value,
+    .ux-toast,
+    .ux-ptr,
+    .swipe-hint,
+    .skel-pulse{
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* Contraste leve en textos dim */
+  :root{ --text-dim: #949494; }
+  html[data-theme="light"]{ --text-dim: #666666; }
+
+  /* Hucha: variación diaria más visible cuando exista */
+  .hucha-gain{
+    font-size: 13px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---- Home: Hoy + variación diaria ---- */
+  .home-today{
+    margin: 0 0 14px;
+    padding: 14px 14px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  .home-today h3{
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .home-today-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 12px;
+    margin: 0 0 8px;
+    color: var(--text);
+    font-family: var(--font);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .home-today-row:last-child{ margin-bottom: 0; }
+  .home-today-row:hover{ background: var(--surface-hover); border-color: var(--border-strong); }
+  .home-today-row:active{ transform: scale(.99); }
+  .home-today-label{ font-size: 13px; font-weight: 600; }
+  .home-today-value{ font-size: 12.5px; color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums; }
+  .home-today-value.is-up{ color: var(--up); font-weight: 700; }
+  .home-today-value.is-down{ color: var(--down); font-weight: 700; }
+  .home-delta.today-up{ color: var(--up); font-weight: 700; }
+  .home-delta.today-down{ color: var(--down); font-weight: 700; }
+  .home-set-progress{
+    display: block;
+    height: 3px;
+    background: var(--border);
+    border-radius: 999px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .home-set-progress > i{
+    display: block; height: 100%; width: 0%;
+    background: var(--accent); border-radius: 999px;
+    transition: width .4s var(--ease-standard, cubic-bezier(.22,1,.36,1));
+  }
+
+  /* Celebración set TCG */
+  @keyframes setCompleteBurst{
+    0%{ transform: scale(.96); box-shadow: 0 0 0 0 transparent; }
+    40%{ transform: scale(1.02); box-shadow: 0 0 0 4px var(--accent-soft); }
+    100%{ transform: scale(1); box-shadow: var(--shadow-sm); }
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .tcg-grid.is-set-complete .tcg-card.owned{
+      animation: setCompleteBurst .85s var(--ease-standard, cubic-bezier(.22,1,.36,1));
+    }
+  }
+
+  /* ---- Lightbox polish + jerarquía de acciones ---- */
+  html.lb-lock, html.lb-lock body{ overflow:hidden; overscroll-behavior:none; }
+  .tcg-lightbox{
+    opacity:0;
+    transition:opacity .22s ease;
+    background:rgba(8,8,9,.92);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  .tcg-lightbox.is-open{ opacity:1; }
+  .tcg-lightbox-content{
+    opacity:0;
+    transform:translateY(12px) scale(.97);
+    transition:opacity .28s var(--ease-standard,cubic-bezier(.22,1,.36,1)), transform .28s var(--ease-standard,cubic-bezier(.22,1,.36,1));
+  }
+  .tcg-lightbox.is-open .tcg-lightbox-content{ opacity:1; transform:none; }
+  .tcg-lightbox img{ max-height:min(58vh, 520px); }
+  .tcg-lightbox-info{ border-radius:16px; padding:16px 16px 18px; }
+  .tcg-lightbox-cardmarket-link{ margin-top:4px; border-radius:12px; padding:12px; font-size:13.5px; }
+  .tcg-lightbox-nav-btn{ width:42px; height:42px; background:rgba(16,16,18,.72); backdrop-filter:blur(6px); }
+  .tcg-lightbox-close{ width:42px; height:42px; background:rgba(30,30,32,.85); border:1px solid var(--border-strong); }
+
+  .tcg-card .tcg-card-cardmarket-btn{ opacity:0; pointer-events:none; transform:scale(.9); }
+  .tcg-card .tcg-zoom-btn{ opacity:.55; }
+  .tcg-card:hover .tcg-zoom-btn,
+  .tcg-card:focus-within .tcg-zoom-btn,
+  .tcg-card.is-longpress .tcg-zoom-btn{ opacity:1; }
+  @media (hover:none){
+    .tcg-card .tcg-zoom-btn{ opacity:.7; }
+    .tcg-card .tcg-card-cardmarket-btn{ opacity:0; pointer-events:none; }
+  }
+  @media (hover:hover){
+    .tcg-card:hover .tcg-card-cardmarket-btn,
+    .tcg-card:focus-within .tcg-card-cardmarket-btn{
+      opacity:.85; pointer-events:auto; transform:none;
+    }
+  }
+  .tcg-bookmark-btn{ opacity:.65; }
+  .tcg-bookmark-btn.is-saved{ opacity:1; }
+  @media (prefers-reduced-motion:reduce){
+    .tcg-lightbox, .tcg-lightbox-content, .tcg-lightbox img{
+      transition:none !important; transform:none !important; opacity:1 !important;
+    }
+  }
+
+  /* ---- v6-polish-2: vacíos, skeletons, sheets, a11y focus ---- */
+  .state-msg, .shop-empty, .stats-empty, .dups-meta, .tcg-missing-dex-empty{
+    text-align: center;
+    padding: 36px 22px;
+    line-height: 1.55;
+    color: var(--text-dim);
+    font-size: 13.5px;
+  }
+  .state-msg .empty-ico,
+  .empty-state .empty-ico{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px; height: 52px;
+    margin: 0 auto 12px;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 22px;
+  }
+  .state-msg strong, .empty-state strong{
+    display: block;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .state-msg button, .empty-state .empty-cta{
+    margin-top: 14px;
+  }
+  .skel-pulse{
+    background: linear-gradient(90deg, var(--border) 25%, var(--border-strong) 50%, var(--border) 75%);
+    background-size: 200% 100%;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .skel-pulse{ animation: skelShimmer 1.35s ease-in-out infinite; }
+  }
+  @keyframes skelShimmer{
+    0%{ background-position: 100% 0; }
+    100%{ background-position: -100% 0; }
+  }
+  .tcg-card.is-skeleton, .binder.is-skeleton{
+    border-radius: var(--r-md);
+  }
+  .tcg-card.is-skeleton .tcg-card-img-wrap{
+    border-radius: var(--card-corner, 8px);
+  }
+  .tcg-filters-body .tcg-segmented{
+    margin-bottom: 2px;
+  }
+  .tcg-lang-sheet{
+    max-height: min(88vh, 720px);
+  }
+  .tcg-lang-sheet [role="dialog"],
+  .tcg-lang-popup .tcg-lang-sheet{
+    outline: none;
+  }
+  /* Focus visible más claro en controles densos */
+  .tcg-segment:focus-visible,
+  .mode-tab:focus-visible,
+  .home-today-row:focus-visible,
+  .home-row:focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
 
 </style>
 </head>
@@ -2969,7 +3401,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     <div id="ai-hero" class="ai-hero">
       <div id="ai-hero-sprite" class="ai-hero-sprite"></div>
       <p id="ai-hero-title" class="ai-hero-title"></p>
-      <p class="ai-hero-text">Analizo tu Pokédex, tus cartas, lo que sigues en la Tienda y los lanzamientos, y consulto la web para ver popularidad y tendencias.</p>
+      <p class="ai-hero-text" hidden></p>
       <div id="ai-cards" class="ai-cards"></div>
     </div>
     <div id="ai-log" class="ai-log" data-testid="ai-log"></div>
@@ -4051,14 +4483,61 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     });
   }
 
+  // ---------- Modales: foco, Escape y feedback táctil ----------
+  var uxModalStack = [];
+  function uxHaptic(pattern) {
+    try {
+      if (navigator.vibrate) navigator.vibrate(pattern || 14);
+    } catch (e) {}
+  }
+  function uxModalOpen(popup, opts) {
+    if (!popup) return;
+    opts = opts || {};
+    var prev = document.activeElement;
+    popup.hidden = false;
+    requestAnimationFrame(function() {
+      popup.classList.add('is-open');
+      var focusEl = opts.focusEl || popup.querySelector('[data-autofocus], .tcg-lang-sheet-close, button, [href], input, select, textarea');
+      if (focusEl) {
+        try { focusEl.focus({ preventScroll: true }); } catch (e) { try { focusEl.focus(); } catch (e2) {} }
+      }
+    });
+    uxModalStack.push({ el: popup, prev: prev });
+  }
+  function uxModalClose(popup) {
+    if (!popup) return;
+    popup.classList.remove('is-open');
+    var entry = null;
+    for (var i = uxModalStack.length - 1; i >= 0; i--) {
+      if (uxModalStack[i].el === popup) { entry = uxModalStack.splice(i, 1)[0]; break; }
+    }
+    setTimeout(function() {
+      popup.hidden = true;
+      if (entry && entry.prev && typeof entry.prev.focus === 'function') {
+        try { entry.prev.focus({ preventScroll: true }); } catch (e) { try { entry.prev.focus(); } catch (e2) {} }
+      }
+    }, 250);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    // Lightbox tiene su propio manejador; el resto de sheets usan la pila
+    if (typeof tcgLightboxEl !== 'undefined' && tcgLightboxEl && !tcgLightboxEl.hidden) return;
+    if (!uxModalStack.length) return;
+    var top = uxModalStack[uxModalStack.length - 1];
+    if (!top || !top.el || top.el.hidden) return;
+    e.preventDefault();
+    // Preferir botón de cerrar si existe (para lógica extra)
+    var closer = top.el.querySelector('.tcg-lang-sheet-close, [data-close], #settings-close, #stats-close, #backup-close, #value-close, #dups-close, #cardmarket-close');
+    if (closer) closer.click();
+    else uxModalClose(top.el);
+  });
+
   function openSettingsPopup() {
     settingsApiKeyInput.value = aiWorkerEnabled;
-    settingsPopup.hidden = false;
-    requestAnimationFrame(function() { settingsPopup.classList.add('is-open'); });
+    uxModalOpen(settingsPopup);
   }
   function closeSettingsPopup() {
-    settingsPopup.classList.remove('is-open');
-    setTimeout(function() { settingsPopup.hidden = true; }, 250);
+    uxModalClose(settingsPopup);
   }
 
   // ---------- Popup flotante de ayuda, una vez por pestaña ----------
@@ -4095,6 +4574,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     ttCloseTimer = setTimeout(function() { ttPopup.hidden = true; }, 300);
   }
   function maybeShowTabTip(mode) {
+    return; // tips orientativos desactivados: la UI se explica sola
     var t = TAB_TIPS[mode];
     if (!t || ttSeenGet()[mode] || !ttPopup.hidden) return;
     ttSeenSet(mode);
@@ -4112,12 +4592,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   function openBackupPopup() {
     backupStatusEl.hidden = true;
-    backupPopup.hidden = false;
-    requestAnimationFrame(function() { backupPopup.classList.add('is-open'); });
+    uxModalOpen(backupPopup);
   }
   function closeBackupPopup() {
-    backupPopup.classList.remove('is-open');
-    setTimeout(function() { backupPopup.hidden = true; }, 250);
+    uxModalClose(backupPopup);
   }
 
   function computeBestGen() {
@@ -4166,13 +4644,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       statsBestGenEl.appendChild(nameSpan);
       statsBestGenEl.appendChild(pctSpan);
     } else {
-      statsBestGenEl.innerHTML = '<span class="stats-empty">Aún no has marcado ningún Pokémon.</span>';
+      statsBestGenEl.innerHTML = '<span class="stats-empty">—</span>';
     }
 
     var setRows = computeTcgSetCounts();
     statsSetsListEl.innerHTML = '';
     if (setRows.length === 0) {
-      statsSetsListEl.innerHTML = '<p class="stats-empty">Aún no has marcado cartas TCG.</p>';
+      statsSetsListEl.innerHTML = '<p class="stats-empty">—</p>';
     } else {
       setRows.slice(0, 6).forEach(function(row) {
         var rowEl = document.createElement('div');
@@ -4194,12 +4672,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     renderStats();
     renderHuchaTotal();
     refreshHuchaPrices(false);
-    statsPopup.hidden = false;
-    requestAnimationFrame(function() { statsPopup.classList.add('is-open'); });
+    uxModalOpen(statsPopup);
   }
   function closeStatsPopup() {
-    statsPopup.classList.remove('is-open');
-    setTimeout(function() { statsPopup.hidden = true; }, 250);
+    uxModalClose(statsPopup);
   }
 
   function buildCardmarketRow(name, dexId) {
@@ -4242,12 +4718,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   function openCardmarketPopup() {
     renderCardmarketList();
-    cardmarketPopup.hidden = false;
-    requestAnimationFrame(function() { cardmarketPopup.classList.add('is-open'); });
+    uxModalOpen(cardmarketPopup);
   }
   function closeCardmarketPopup() {
-    cardmarketPopup.classList.remove('is-open');
-    setTimeout(function() { cardmarketPopup.hidden = true; }, 250);
+    uxModalClose(cardmarketPopup);
   }
   // "Cartas guardadas" es un desplegable en la propia vista de TCG (igual que "Te faltan en
   // la Pokédex"), no un popup aparte: se oculta entero si no hay ninguna guardada, y el grid
@@ -4867,12 +5341,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     customSectionArtistStatusEl.hidden = true;
     customSectionChosenArtist = null;
     setCustomSectionMode('names');
-    customSectionPopup.hidden = false;
-    requestAnimationFrame(function() { customSectionPopup.classList.add('is-open'); });
+    uxModalOpen(customSectionPopup);
   }
   function closeCustomSectionPopup() {
-    customSectionPopup.classList.remove('is-open');
-    setTimeout(function() { customSectionPopup.hidden = true; }, 250);
+    uxModalClose(customSectionPopup);
   }
 
   customSectionCreateBtn.addEventListener('click', openCustomSectionPopup);
@@ -5464,6 +5936,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     themeIconMoon.hidden = isLight;
     themeIconSun.hidden = !isLight;
     themeBtn.setAttribute('aria-label', isLight ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro');
+    // Sincroniza la barra de estado del sistema con el tema real de la app
+    var metaTheme = document.getElementById('meta-theme-color');
+    if (metaTheme) metaTheme.setAttribute('content', isLight ? '#f5f5f5' : '#0a0a0a');
+    try {
+      var apple = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+      if (apple) apple.setAttribute('content', isLight ? 'default' : 'black-translucent');
+    } catch (e) {}
   }
 
   var currentTheme = 'light';
@@ -5808,15 +6287,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
 
   function openTcgLangPopup() {
-    tcgLangPopup.hidden = false;
-    requestAnimationFrame(function() { tcgLangPopup.classList.add('is-open'); });
+    uxModalOpen(tcgLangPopup, { focusEl: document.getElementById('tcg-lang-close') });
     tcgLangBtn.setAttribute('aria-expanded', 'true');
   }
 
   function closeTcgLangPopup() {
-    tcgLangPopup.classList.remove('is-open');
     tcgLangBtn.setAttribute('aria-expanded', 'false');
-    setTimeout(function() { tcgLangPopup.hidden = true; }, 250);
+    uxModalClose(tcgLangPopup);
   }
 
   function activeTcgFilterCount() {
@@ -5849,15 +6326,13 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   function openTcgFiltersPopup() {
     syncTcgFiltersUI();
-    tcgFiltersPopup.hidden = false;
-    requestAnimationFrame(function() { tcgFiltersPopup.classList.add('is-open'); });
+    uxModalOpen(tcgFiltersPopup, { focusEl: document.getElementById('tcg-filters-close') });
     tcgFiltersBtn.setAttribute('aria-expanded', 'true');
   }
 
   function closeTcgFiltersPopup() {
-    tcgFiltersPopup.classList.remove('is-open');
     tcgFiltersBtn.setAttribute('aria-expanded', 'false');
-    setTimeout(function() { tcgFiltersPopup.hidden = true; }, 250);
+    uxModalClose(tcgFiltersPopup);
   }
 
   // Reordena/filtra y vuelve a pintar los últimos resultados sin llamar a la API otra vez
@@ -6037,7 +6512,19 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (tcgSetInfoCache[setId] !== undefined) return Promise.resolve(tcgSetInfoCache[setId]);
     return tcgFetchJson('https://api.tcgdex.net/v2/en/sets/' + encodeURIComponent(setId))
       .then(function(set) {
-        var info = set ? { name: set.name || null, tcgOnline: set.tcgOnline || null, releaseDate: set.releaseDate || null } : null;
+        if (!set) { tcgSetInfoCache[setId] = null; return null; }
+        var cc = set.cardCount || {};
+        var total = typeof cc.total === 'number' ? cc.total
+          : (typeof cc.official === 'number' ? cc.official
+          : (Array.isArray(set.cards) ? set.cards.length : 0));
+        var official = typeof cc.official === 'number' ? cc.official : total;
+        var info = {
+          name: set.name || null,
+          tcgOnline: set.tcgOnline || null,
+          releaseDate: set.releaseDate || null,
+          cardCountTotal: total || 0,
+          cardCountOfficial: official || 0
+        };
         tcgSetInfoCache[setId] = info;
         return info;
       })
@@ -6080,6 +6567,81 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function markPokedexOwnedBySlug(slug) { /* independiente */ }
   function unmarkPokedexOwnedBySlugIfNoCards(slug) { /* independiente */ }
 
+
+  // ---------- Celebración al completar un set en la vista actual ----------
+  var TCG_SET_DONE_KEY = 'pokecheck_tcg_sets_done_v1';
+  var tcgSetsDone = {};
+  try { tcgSetsDone = JSON.parse(localStorage.getItem(TCG_SET_DONE_KEY) || '{}') || {}; } catch (e) { tcgSetsDone = {}; }
+  function saveTcgSetsDone() { try { localStorage.setItem(TCG_SET_DONE_KEY, JSON.stringify(tcgSetsDone)); } catch (e) {} }
+  function uxCelebrateSetComplete(label, key, ownedN, total) {
+    if (!key || tcgSetsDone[key]) return;
+    tcgSetsDone[key] = Date.now();
+    saveTcgSetsDone();
+    if (tcgGridEl) {
+      tcgGridEl.classList.add('is-set-complete');
+      setTimeout(function() { tcgGridEl.classList.remove('is-set-complete'); }, 1100);
+    }
+    if (typeof uxToast === 'function') {
+      var msg = total
+        ? ('¡Set «' + label + '» completo! ' + ownedN + '/' + total + ' ✨')
+        : ('¡Set «' + label + '» completo en esta vista! ✨');
+      setTimeout(function() { uxToast(msg); }, 280);
+    }
+  }
+  function uxCountOwnedInSet(setId, setLabel) {
+    var n = 0;
+    tcgOwned.forEach(function(id) {
+      var sid = tcgCardSetId({ id: id });
+      if (setId && sid === setId) { n++; return; }
+      if (!setId && setLabel) {
+        var meta = tcgOwnedMeta[id] || {};
+        if ((meta.setName || '') === setLabel) n++;
+      }
+    });
+    return n;
+  }
+  function uxCheckTcgSetComplete(setLabel, setIdHint) {
+    var setId = setIdHint || null;
+    if (!setId && tcgGridEl) {
+      var first = tcgGridEl.querySelector('.tcg-card[data-card-id]');
+      if (first) setId = tcgCardSetId({ id: first.getAttribute('data-card-id') });
+    }
+    function fallbackView() {
+      if (!setLabel || !tcgGridEl) return;
+      var cards = tcgGridEl.querySelectorAll('.tcg-card');
+      if (cards.length < 5) return;
+      var total = 0, ownedN = 0;
+      cards.forEach(function(c) {
+        var setEl = c.querySelector('.tcg-card-set');
+        var label = setEl ? setEl.textContent : '';
+        if (label !== setLabel) return;
+        total++;
+        if (c.classList.contains('owned')) ownedN++;
+      });
+      if (!total || total < 5 || ownedN < total) return;
+      uxCelebrateSetComplete(setLabel, 'view:' + setLabel, ownedN, total);
+    }
+    if (!setId) { fallbackView(); return; }
+    ensureSetInfo(setId).then(function(info) {
+      var official = (info && (info.cardCountOfficial || info.cardCountTotal)) || 0;
+      var label = (info && info.name) || setLabel || setId;
+      var ownedN = uxCountOwnedInSet(setId, label);
+      if (official > 0 && ownedN >= official) {
+        uxCelebrateSetComplete(label, 'set:' + setId, ownedN, official);
+        return;
+      }
+      if (tcgGridEl) {
+        var inView = tcgGridEl.querySelectorAll('.tcg-card').length;
+        var ownedView = tcgGridEl.querySelectorAll('.tcg-card.owned').length;
+        if (official > 0 && inView >= official && ownedView >= official) {
+          uxCelebrateSetComplete(label, 'set:' + setId, ownedView, official);
+          return;
+        }
+      }
+      if (!official) fallbackView();
+    }).catch(function() { fallbackView(); });
+  }
+
   function buildTcgCard(card, setLabel, englishName) {
     var wrap = document.createElement('button');
     wrap.type = 'button';
@@ -6089,7 +6651,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (tcgOwned.has(card.id)) {
       wrap.classList.add('owned');
       if (!tcgMetaSlug(tcgOwnedMeta[card.id])) {
-        tcgOwnedMeta[card.id] = { slug: speciesSlug(englishName || card.name || ''), setName: setLabel || card.id, number: tcgCardLocalNumber(card), lang: card._matchLang || '' };
+        tcgOwnedMeta[card.id] = { slug: speciesSlug(englishName || card.name || ''), setName: setLabel || card.id, number: tcgCardLocalNumber(card), lang: card._matchLang || '', setId: tcgCardSetId(card) || '' };
         saveTcgOwnedMeta();
       }
     }
@@ -6299,7 +6861,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       var slug = speciesSlug(englishName || card.name || '');
       if (willOwn) {
         tcgOwned.add(card.id);
-        tcgOwnedMeta[card.id] = { slug: slug, setName: setLabel || card.id, number: tcgCardLocalNumber(card), lang: card._matchLang || '' };
+        tcgOwnedMeta[card.id] = { slug: slug, setName: setLabel || card.id, number: tcgCardLocalNumber(card), lang: card._matchLang || '', setId: tcgCardSetId(card) || '' };
         markPokedexOwnedBySlug(slug);
       } else {
         var prevQty = tcgQuantities[card.id];
@@ -6315,7 +6877,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         showUndoToast('Quitada de tu colección.', function() {
           wrap.classList.add('owned');
           tcgOwned.add(card.id);
-          tcgOwnedMeta[card.id] = { slug: slug, setName: setLabel || card.id, number: tcgCardLocalNumber(card), lang: card._matchLang || '' };
+          tcgOwnedMeta[card.id] = { slug: slug, setName: setLabel || card.id, number: tcgCardLocalNumber(card), lang: card._matchLang || '', setId: tcgCardSetId(card) || '' };
           if (prevQty !== undefined) tcgQuantities[card.id] = prevQty;
           if (prevPaid !== undefined) tcgPricePaid[card.id] = prevPaid;
           tcgCopiesRestore(card.id, prevCopies);
@@ -6331,6 +6893,19 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       saveTcgOwned();
       saveTcgOwnedMeta();
       refreshTcgCardVisibility(wrap);
+      if (willOwn) {
+        try {
+          var sidDone = tcgCardSetId(card);
+          if (sidDone && tcgOwnedMeta[card.id]) {
+            tcgOwnedMeta[card.id].setId = sidDone;
+            saveTcgOwnedMeta();
+          }
+          uxHaptic(12);
+          uxCheckTcgSetComplete(setLabel || (card.set && card.set.name) || '', sidDone);
+        } catch (eSet) {}
+      } else {
+        try { uxHaptic([8, 30, 8]); } catch (eH) {}
+      }
       // En la vista filtrada de "Tus colecciones" solo deben verse las cartas
       // que tienes: si se desmarca una, desaparece de la lista al momento
       // (y del caché de resultados, para que no reaparezca al reordenar/filtrar).
@@ -7220,6 +7795,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (!detail) return;
     var badges = [];
     if (detail.rarity) badges.push(detail.rarity);
+    try { if (tcgFixCtx && tcgFixCtx.card && detail) lbSetHoloMode(lbIsHoloCard(tcgFixCtx.card, detail)); } catch (eH) {}
     if (typeof detail.hp === 'number') badges.push(detail.hp + ' HP');
     if (Array.isArray(detail.types)) detail.types.forEach(function(t) { badges.push(t); });
     if (detail.illustrator) badges.push('Ilustr.: ' + detail.illustrator);
@@ -7228,6 +7804,168 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       badge.className = 'tcg-lightbox-badge';
       badge.textContent = text;
       tcgLightboxBadgesEl.appendChild(badge);
+    });
+  }
+
+
+  // ---------- Lightbox: arrastre, tilt y partículas holo ----------
+  var lbDrag = { x: 0, y: 0, rotX: 0, rotY: 0, active: false, startX: 0, startY: 0, baseX: 0, baseY: 0, holo: false };
+  function lbIsHoloCard(card, detail) {
+    var r = '';
+    if (detail && detail.rarity) r = String(detail.rarity);
+    else if (card && card.rarity) r = String(card.rarity);
+    else if (card && card.id && tcgOwnedCardsCache[card.id] && tcgOwnedCardsCache[card.id].rarity) r = String(tcgOwnedCardsCache[card.id].rarity);
+    var s = (r + ' ' + ((card && card.name) || '')).toLowerCase();
+    return /holo|holograph|reverse|secret|hyper|rainbow|gold|shiny|illustration|特画|ur\b|sar\b|hr\b|sir\b|alt art|full art/.test(s);
+  }
+  function lbEnsureStage() {
+    var wrap = tcgLightboxImgWrapEl;
+    if (!wrap) return null;
+    var stage = wrap.querySelector('.tcg-lightbox-card-stage');
+    if (!stage) {
+      stage = document.createElement('div');
+      stage.className = 'tcg-lightbox-card-stage';
+      // move img + nav stay as siblings; stage only wraps image
+      var img = tcgLightboxImg;
+      if (img && img.parentNode === wrap) {
+        wrap.insertBefore(stage, img);
+        stage.appendChild(img);
+      }
+    }
+    var sheen = stage.querySelector('.holo-sheen');
+    if (!sheen) {
+      sheen = document.createElement('div');
+      sheen.className = 'holo-sheen';
+      stage.appendChild(sheen);
+    }
+    var parts = stage.querySelector('.holo-particles');
+    if (!parts) {
+      parts = document.createElement('div');
+      parts.className = 'holo-particles';
+      stage.appendChild(parts);
+    }
+    return stage;
+  }
+  function lbApplyTransform() {
+    var stage = tcgLightboxImgWrapEl && tcgLightboxImgWrapEl.querySelector('.tcg-lightbox-card-stage');
+    if (!stage) return;
+    stage.style.transform =
+      'translate3d(' + lbDrag.x.toFixed(1) + 'px,' + lbDrag.y.toFixed(1) + 'px,0) rotateX(' + lbDrag.rotX.toFixed(2) + 'deg) rotateY(' + lbDrag.rotY.toFixed(2) + 'deg)';
+  }
+  function lbResetTransform(animate) {
+    lbDrag.x = lbDrag.y = lbDrag.rotX = lbDrag.rotY = 0;
+    var stage = tcgLightboxImgWrapEl && tcgLightboxImgWrapEl.querySelector('.tcg-lightbox-card-stage');
+    if (stage) {
+      if (!animate) stage.style.transition = 'none';
+      lbApplyTransform();
+      if (!animate) requestAnimationFrame(function() { stage.style.transition = ''; });
+    }
+  }
+  function lbSpawnParticles(cx, cy, burst) {
+    if (!lbDrag.holo) return;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var stage = tcgLightboxImgWrapEl && tcgLightboxImgWrapEl.querySelector('.tcg-lightbox-card-stage');
+    var layer = stage && stage.querySelector('.holo-particles');
+    if (!layer) return;
+    var n = burst ? 10 : 2;
+    var rect = stage.getBoundingClientRect();
+    for (var i = 0; i < n; i++) {
+      var p = document.createElement('span');
+      p.className = 'holo-particle';
+      var colors = ['#fff', '#a5f3fc', '#f0abfc', '#fde68a', '#f9a8d4'];
+      p.style.background = colors[(Math.random() * colors.length) | 0];
+      p.style.left = (cx != null ? cx : Math.random() * rect.width) + 'px';
+      p.style.top = (cy != null ? cy : Math.random() * rect.height) + 'px';
+      var dx = (Math.random() * 28 - 14).toFixed(1) + 'px';
+      var dy = (-8 - Math.random() * 22).toFixed(1) + 'px';
+      p.style.setProperty('--dx', dx);
+      p.style.setProperty('--dy', dy);
+      p.style.animation = 'holoSpark ' + (0.55 + Math.random() * 0.45).toFixed(2) + 's ease-out forwards';
+      layer.appendChild(p);
+      (function(el) { setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 1000); })(p);
+    }
+  }
+  function lbUpdateSheen(clientX, clientY) {
+    var stage = tcgLightboxImgWrapEl && tcgLightboxImgWrapEl.querySelector('.tcg-lightbox-card-stage');
+    if (!stage) return;
+    var img = tcgLightboxImg;
+    var sheen = stage.querySelector('.holo-sheen');
+    if (!img || !sheen) return;
+    var r = img.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    var mx = ((clientX - r.left) / r.width) * 100;
+    var my = ((clientY - r.top) / r.height) * 100;
+    sheen.style.left = '0'; sheen.style.top = '0';
+    sheen.style.width = '100%'; sheen.style.height = '100%';
+    sheen.style.setProperty('--mx', mx + '%');
+    sheen.style.setProperty('--my', my + '%');
+    sheen.classList.add('on');
+    // tilt from pointer position
+    lbDrag.rotY = Math.max(-14, Math.min(14, (mx - 50) / 50 * 12));
+    lbDrag.rotX = Math.max(-10, Math.min(10, (50 - my) / 50 * 10));
+    lbApplyTransform();
+    if (lbDrag.holo && Math.random() < 0.35) {
+      lbSpawnParticles((mx / 100) * r.width, (my / 100) * r.height, false);
+    }
+  }
+  function lbSetHoloMode(on) {
+    lbDrag.holo = !!on;
+    var stage = lbEnsureStage();
+    if (stage) stage.classList.toggle('is-holo', !!on);
+  }
+  function lbBindDrag() {
+    var wrap = tcgLightboxImgWrapEl;
+    if (!wrap || wrap._lbBound) return;
+    wrap._lbBound = true;
+    var moved = false;
+    function down(e) {
+      if (e.button != null && e.button !== 0) return;
+      if (e.target && e.target.closest && e.target.closest('.tcg-lightbox-nav-btn')) return;
+      lbDrag.active = true;
+      moved = false;
+      wrap.classList.add('is-dragging');
+      var pt = e.touches ? e.touches[0] : e;
+      lbDrag.startX = pt.clientX;
+      lbDrag.startY = pt.clientY;
+      lbDrag.baseX = lbDrag.x;
+      lbDrag.baseY = lbDrag.y;
+      try { wrap.setPointerCapture && e.pointerId != null && wrap.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+    function move(e) {
+      if (!lbDrag.active) return;
+      var pt = e.touches ? e.touches[0] : e;
+      var dx = pt.clientX - lbDrag.startX;
+      var dy = pt.clientY - lbDrag.startY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+      lbDrag.x = lbDrag.baseX + dx;
+      lbDrag.y = lbDrag.baseY + dy;
+      lbUpdateSheen(pt.clientX, pt.clientY);
+      if (e.cancelable && e.touches) e.preventDefault();
+    }
+    function up(e) {
+      if (!lbDrag.active) return;
+      lbDrag.active = false;
+      wrap.classList.remove('is-dragging');
+      var pt = (e.changedTouches && e.changedTouches[0]) || e;
+      // flick horizontal corto sin mucho desplazamiento vertical → cambiar carta
+      var dx = pt.clientX - lbDrag.startX;
+      var dy = pt.clientY - lbDrag.startY;
+      if (!moved) {
+        // tap: solo sheen
+      } else if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.4 && Math.abs(lbDrag.baseX) < 8) {
+        lbResetTransform(true);
+        tcgLightboxGo(dx < 0 ? 1 : -1);
+      }
+      if (lbDrag.holo) lbSpawnParticles(null, null, true);
+    }
+    wrap.addEventListener('pointerdown', down);
+    wrap.addEventListener('pointermove', move);
+    wrap.addEventListener('pointerup', up);
+    wrap.addEventListener('pointercancel', up);
+    wrap.addEventListener('pointerleave', function(e) {
+      if (lbDrag.active) up(e);
+      var sheen = wrap.querySelector('.holo-sheen');
+      if (sheen) sheen.classList.remove('on');
     });
   }
 
@@ -7243,6 +7981,19 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgLightboxImg.alt = alt || '';
     tcgLightboxImg.onerror = null;
     tcgLightboxEl.hidden = false;
+    tcgLightboxEl.classList.remove('is-open');
+    requestAnimationFrame(function() {
+      tcgLightboxEl.classList.add('is-open');
+      var closeBtn = document.getElementById('tcg-lightbox-close');
+      if (closeBtn) try { closeBtn.focus({ preventScroll: true }); } catch (e) { try { closeBtn.focus(); } catch (e2) {} }
+    });
+    try { document.documentElement.classList.add('lb-lock'); } catch (e) {}
+    try {
+      lbEnsureStage();
+      lbResetTransform(false);
+      lbSetHoloMode(lbIsHoloCard(card, null));
+      lbBindDrag();
+    } catch (eLb) {}
 
     var displayName = alt || (card && card.name) || '';
     tcgLightboxNameEl.textContent = displayName;
@@ -7953,8 +8704,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     dupsShareBtn.disabled = ids.length === 0;
     var _csvb = document.getElementById('dups-csv-btn'); if (_csvb) _csvb.disabled = ids.length === 0;
     var _imgb = document.getElementById('dups-img-btn'); if (_imgb) _imgb.disabled = ids.length === 0;
-    dupsPopup.hidden = false;
-    requestAnimationFrame(function() { dupsPopup.classList.add('is-open'); });
+    uxModalOpen(dupsPopup);
     if (ids.length === 0) {
       dupsMetaEl.textContent = 'Todavía no tienes ninguna carta con más de una copia.';
       return;
@@ -7970,8 +8720,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
   function closeDupsPopup() {
     dupsLoadToken++;
-    dupsPopup.classList.remove('is-open');
-    setTimeout(function() { dupsPopup.hidden = true; }, 250);
+    uxModalClose(dupsPopup);
   }
 
   function shareDupsHtml() {
@@ -8314,16 +9063,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   function renderTradeWelcome() {
     tradeClear();
     var hero = shopEl('div', 'trade-hero');
-    hero.appendChild(shopEl('h2', null, 'Intercambia cartas con otros jugadores'));
-    hero.appendChild(shopEl('p', null, 'Mira en un mapa quién tiene las cartas que te faltan, comprueba qué repetidas tiene y escríbele desde la app para quedar.'));
-    var ul = document.createElement('ul');
-    ['Crea tu perfil con tu zona.', 'Tus repetidas se publican solas.', 'Encuentra a alguien cerca y chatea con él.'].forEach(function(t) {
-      var li = document.createElement('li'); li.textContent = t; ul.appendChild(li);
-    });
-    hero.appendChild(ul);
+    hero.appendChild(shopEl('h2', null, 'Intercambios'));
     hero.appendChild(tradeButton('Crear mi perfil', 'shop-refresh-btn', renderTradeSetup));
     tradeRootEl.appendChild(hero);
-    tradeRootEl.appendChild(shopEl('p', 'backup-desc', 'Solo se publica tu nombre, tu zona aproximada y tus cartas. Nunca tu dirección ni tu ubicación exacta.'));
   }
   function renderTradeSetup() {
     tradeClear();
@@ -8784,6 +9526,19 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgLightboxImg.src = entry.image || '';
     tcgLightboxImg.alt = entry.displayName || '';
     tcgLightboxEl.hidden = false;
+    tcgLightboxEl.classList.remove('is-open');
+    requestAnimationFrame(function() {
+      tcgLightboxEl.classList.add('is-open');
+      var closeBtn = document.getElementById('tcg-lightbox-close');
+      if (closeBtn) try { closeBtn.focus({ preventScroll: true }); } catch (e) { try { closeBtn.focus(); } catch (e2) {} }
+    });
+    try { document.documentElement.classList.add('lb-lock'); } catch (e) {}
+    try {
+      lbEnsureStage();
+      lbResetTransform(false);
+      lbSetHoloMode(lbIsHoloCard({ name: entry.displayName || '', rarity: entry.rarity || '' }, null));
+      lbBindDrag();
+    } catch (eLb) {}
 
     tcgLightboxNameEl.textContent = entry.displayName || '';
     tcgLightboxMetaEl.textContent = (entry.setName || 'Añadida a mano') + (entry.number ? ' \u00b7 #' + entry.number : '');
@@ -8799,14 +9554,14 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgLightboxEl.dataset.token = requestToken;
 
     if (!entry.cardmarketUrl) {
-      tcgLightboxPriceBodyEl.innerHTML = '<p class="tcg-lightbox-price-note">Esta carta no tiene un enlace de Cardmarket guardado, así que no se puede consultar su precio aquí. Usa el enlace de abajo para buscarla.</p>';
+      tcgLightboxPriceBodyEl.innerHTML = '<p class="tcg-lightbox-price-note">Sin enlace de Cardmarket guardado.</p>';
       return;
     }
 
     fetchManualCardmarketPrice(entry.cardmarketUrl).then(function(price) {
       if (tcgLightboxEl.dataset.token !== requestToken) return; // el usuario ya abrió otra carta
       if (!price) {
-        tcgLightboxPriceBodyEl.innerHTML = '<p class="tcg-lightbox-price-note">No se pudo leer el precio automáticamente. Consúltalo en el enlace de Cardmarket de abajo.</p>';
+        tcgLightboxPriceBodyEl.innerHTML = '<p class="tcg-lightbox-price-note">Precio no disponible.</p>';
         return;
       }
       renderTcgLightboxPricing({ pricing: { cardmarket: price } });
@@ -9004,6 +9759,9 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   // </copies-ui>
 
   function closeTcgLightbox() {
+    tcgLightboxEl.classList.remove('is-open');
+    try { document.documentElement.classList.remove('lb-lock'); } catch (e) {}
+    try { lbResetTransform(false); lbSetHoloMode(false); } catch (e) {}
     tcgLightboxEl.hidden = true;
     tcgLightboxImg.src = '';
     tcgLightboxEl.dataset.token = '';
@@ -9051,26 +9809,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   tcgLightboxPrevBtn.addEventListener('click', function(e) { e.stopPropagation(); tcgLightboxGo(-1); });
   tcgLightboxNextBtn.addEventListener('click', function(e) { e.stopPropagation(); tcgLightboxGo(1); });
 
-  (function() {
-    var startX = 0, startY = 0, tracking = false;
-    tcgLightboxImgWrapEl.addEventListener('touchstart', function(e) {
-      if (e.touches.length !== 1) return;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      tracking = true;
-    }, { passive: true });
-    tcgLightboxImgWrapEl.addEventListener('touchend', function(e) {
-      if (!tracking) return;
-      tracking = false;
-      var t = e.changedTouches[0];
-      var dx = t.clientX - startX;
-      var dy = t.clientY - startY;
-      // Debe ser un gesto claramente horizontal y de recorrido suficiente, para no confundirlo
-      // con un scroll vertical accidental.
-      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
-      tcgLightboxGo(dx < 0 ? 1 : -1);
-    }, { passive: true });
-  })();
+  // swipe horizontal integrado en lbBindDrag
 
   tcgLightboxClose.addEventListener('click', closeTcgLightbox);
   tcgLightboxEl.addEventListener('click', function(e) {
@@ -10129,7 +10868,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
             if (missingOnly) applyFilters();
           }
         });
-        if (willOwn) uxCheckGenComplete(sec);
+        if (willOwn) { uxHaptic(12); uxCheckGenComplete(sec); } else { uxHaptic([8, 30, 8]); }
       }
     });
 
@@ -12299,7 +13038,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
       '<div class="home-value">' + (formatEuro(stats.total) || '0,00 \u20ac') + '</div>' + deltaHtml + chartHtml +
       '<p class="home-sub">' + sub + '</p>' +
       (stats.invested > 0 && stats.gainKnown > 0 ? '<p class="home-sub">Invertido ' + formatEuro(stats.invested) + ' \u00b7 ' + (stats.gain >= 0 ? '+' : '') + formatEuro(stats.gain) + '</p>' : '') +
-      (stats.ownedCount ? '<p class="home-hint">Toca para ver el desglose por carta \u203a</p>' : '') +
+      '' +
       '<button type="button" class="home-refresh" id="home-refresh">Actualizar precios</button></section>';
 
     // cartas por valor
@@ -12362,6 +13101,12 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     if (typeof renderValueBreakdown === 'function' && valuePopupEl && !valuePopupEl.hidden) renderValueBreakdown();
   }
   homeViewEl.addEventListener('click', function(e) {
+    var setBtn = e.target.closest && e.target.closest('[data-home-set]');
+    if (setBtn) {
+      var sn = setBtn.getAttribute('data-home-set');
+      if (sn && typeof openTcgOwnedSet === 'function') openTcgOwnedSet(sn);
+      return;
+    }
     var go = e.target.closest && e.target.closest('[data-go]');
     if (go) { switchMode(go.getAttribute('data-go')); return; }
     var buy=e.target.closest&&e.target.closest('[data-buy-card]');if(buy){var item=shopTrackedItems().find(function(x){return x.id===buy.getAttribute('data-buy-card');});if(item)window.open(item.cardmarketUrl||cardmarketCardSearchUrl(item.englishName||item.name,item.localId||'',null),'_blank','noopener');return;}
@@ -12460,12 +13205,10 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 
   function openValuePopup() {
     renderValueBreakdown();
-    valuePopupEl.hidden = false;
-    requestAnimationFrame(function() { valuePopupEl.classList.add('is-open'); });
+    uxModalOpen(valuePopupEl);
   }
   function closeValuePopup() {
-    valuePopupEl.classList.remove('is-open');
-    setTimeout(function() { valuePopupEl.hidden = true; }, 250);
+    uxModalClose(valuePopupEl);
   }
   document.getElementById('value-backdrop').addEventListener('click', closeValuePopup);
   document.getElementById('value-close').addEventListener('click', closeValuePopup);
@@ -13267,7 +14010,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
   }
   function vgcAiOut(html) { var el = document.getElementById('vgc-ai-out'); if (el) el.innerHTML = html; }
   function vgcAiShow(text) {
-    vgcAiOut(vgcMd(text) + '<p class="vgc-note">Generado por la IA a partir de los datos de arriba. Es una guía orientativa y puede equivocarse: pruébala en partidas y ajústala.</p>' +
+    vgcAiOut(vgcMd(text) + 
       '<button type="button" class="vgc-ai-btn is-ghost" data-vgc-ai="1">Volver a generar</button>');
   }
   function vgcAiInit() {
@@ -13760,10 +14503,15 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     tcgOwned.forEach(function(id) {
       var meta = tcgOwnedMeta[id] || {};
       var set = meta.setName || (id.indexOf('-') !== -1 ? id.split('-')[0] : 'Otros');
-      if (!bySet[set]) bySet[set] = { set: set, n: 0, value: 0 };
+      var sid = meta.setId || tcgCardSetId({ id: id }) || '';
+      if (!bySet[set]) bySet[set] = { set: set, n: 0, value: 0, setId: sid };
       bySet[set].n++;
+      if (!bySet[set].setId && sid) bySet[set].setId = sid;
       var p = huchaPriceCache[id] && huchaPriceCache[id].price;
       if (typeof p === 'number') bySet[set].value += p * (tcgQuantities[id] || 1);
+      if (sid && tcgSetInfoCache[sid] && tcgSetInfoCache[sid].cardCountOfficial) {
+        bySet[set].total = tcgSetInfoCache[sid].cardCountOfficial;
+      }
     });
     return Object.keys(bySet).map(function(k) { return bySet[k]; })
       .sort(function(a, b) { return b.n - a.n; });
@@ -13779,13 +14527,58 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
         if (!host) return;
         var wl = wishlistRows();
         var sets = setProgressRows().slice(0, 6);
+        // Precarga totales oficiales TCGdex para mostrar n/total en Home
+        try {
+          if (!renderHome._setTotalsLoading) {
+            var need = sets.filter(function(s) { return s.setId && !s.total; }).slice(0, 8);
+            if (need.length && typeof ensureSetInfo === 'function') {
+              renderHome._setTotalsLoading = true;
+              Promise.all(need.map(function(s) { return ensureSetInfo(s.setId); })).then(function() {
+                renderHome._setTotalsLoading = false;
+                try { renderHome(); } catch (e) {}
+              }).catch(function() { renderHome._setTotalsLoading = false; });
+            }
+          }
+        } catch (ePre) {}
         var extra = '';
+        // Sección Hoy al principio (después del hero si existe)
+        try {
+          var todayHtml = typeof uxTodayHtml === 'function' ? uxTodayHtml() : '';
+          if (todayHtml) {
+            var hero = host.querySelector('#home-hero') || host.querySelector('.home-hero');
+            if (hero && hero.nextSibling) hero.insertAdjacentHTML('afterend', todayHtml);
+            else host.insertAdjacentHTML('afterbegin', todayHtml);
+          }
+        } catch (eToday) {}
+        // Variación diaria también en el hero si hay dato de ayer
+        try {
+          var heroDelta = host.querySelector('.home-delta');
+          var stats2 = computeHuchaTotal();
+          var hist2 = huchaHistory || [];
+          var today2 = new Date().toISOString().slice(0, 10);
+          var prev2 = null;
+          for (var hi = hist2.length - 1; hi >= 0; hi--) {
+            if (hist2[hi].date && hist2[hi].date < today2) { prev2 = hist2[hi]; break; }
+          }
+          if (prev2 && typeof prev2.total === 'number' && Math.abs(stats2.total - prev2.total) >= 0.005) {
+            var d2 = stats2.total - prev2.total;
+            var daily = document.createElement('div');
+            daily.className = 'home-delta ' + (d2 > 0 ? 'today-up' : 'today-down');
+            daily.textContent = (d2 > 0 ? '▲ +' : '▼ ') + formatEuro(d2) + ' hoy';
+            if (heroDelta) heroDelta.parentNode.insertBefore(daily, heroDelta.nextSibling);
+            else {
+              var hv = host.querySelector('.home-value');
+              if (hv) hv.insertAdjacentElement('afterend', daily);
+            }
+          }
+        } catch (eDelta) {}
         extra += '<section class="home-card"><h3>Progreso por set</h3>';
-        if (!sets.length) extra += '<p class="home-sub">Cuando marques cartas en TCG, verás aquí cuántas tienes por expansión.</p>';
+        if (!sets.length) extra += '<p class="home-sub">Sin cartas por set todavía.</p>';
         else {
           extra += sets.map(function(s) {
             var label = String(s.set).replace(/</g,'').replace(/"/g, '&quot;');
-            return '<button type="button" class="home-row is-link" data-home-set="' + label + '"><span>' + label + '</span><span>' + s.n + ' cartas' + (s.value ? ' · ' + formatEuro(s.value) : '') + '</span></button>';
+            var prog = s.total ? (s.n + '/' + s.total) : (s.n + ' cartas');
+            return '<button type="button" class="home-row is-link" data-home-set="' + label + '"><span>' + label + '</span><span>' + prog + (s.value ? ' · ' + formatEuro(s.value) : '') + '</span></button>';
           }).join('');
         }
         extra += '</section>';
@@ -14562,31 +15355,74 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
     var total = section.querySelectorAll('.poke-card').length;
     if (total && section.querySelectorAll('.poke-card.owned').length === total) {
       var r = section.querySelector('.gen-region');
-      setTimeout(function() { uxToast('\u00a1' + (r ? r.textContent : 'Generaci\u00f3n') + ' completada! \ud83c\udf89'); }, 600);
+      setTimeout(function() { uxToast('¡' + (r ? r.textContent : 'Generación') + ' completada! 🎉'); }, 600);
     }
   }
 
   // Tarjeta \u00abHoy\u00bb de la pantalla de inicio
   function uxTodayHtml() {
     var rows = [];
+    // Variación diaria de la hucha (hoy vs último día anterior en el historial)
+    try {
+      var stats = typeof computeHuchaTotal === 'function' ? computeHuchaTotal() : null;
+      var hist = huchaHistory || [];
+      if (stats && hist.length) {
+        var today = new Date().toISOString().slice(0, 10);
+        var prev = null;
+        for (var i = hist.length - 1; i >= 0; i--) {
+          if (hist[i].date && hist[i].date < today) { prev = hist[i]; break; }
+        }
+        if (prev && typeof prev.total === 'number') {
+          var d = stats.total - prev.total;
+          if (Math.abs(d) >= 0.005) {
+            var pct = prev.total > 0 ? Math.round(d / prev.total * 1000) / 10 : 0;
+            var cls = d > 0 ? 'is-up' : 'is-down';
+            var txt = (d > 0 ? '▲ +' : '▼ ') + formatEuro(d) + (pct ? ' (' + (pct > 0 ? '+' : '') + pct + '%)' : '') + ' hoy';
+            rows.push({ go: 'home', label: 'Valor de la colección', value: txt, valueCls: cls, isDelta: true });
+          } else {
+            rows.push({ go: 'home', label: 'Valor de la colección', value: 'Sin cambios hoy', valueCls: '', isDelta: true });
+          }
+        }
+      }
+    } catch (e) {}
     try {
       var rel = shopReleasesAll().filter(function(r) { return shopDaysUntil(r.d) >= 0; }).sort(function(a, b) { return a.d < b.d ? -1 : 1; })[0];
       if (rel) {
         var dd = shopDaysUntil(rel.d);
-        rows.push(['shop', 'Pr\u00f3ximo lanzamiento', rel.n + ' \u00b7 ' + (dd === 0 ? 'hoy' : dd === 1 ? 'ma\u00f1ana' : 'en ' + dd + ' d\u00edas')]);
+        rows.push({ go: 'shop', label: 'Próximo lanzamiento', value: rel.n + ' · ' + (dd === 0 ? 'hoy' : dd === 1 ? 'mañana' : 'en ' + dd + ' días') });
       }
     } catch (e) {}
     try {
       var best = null;
-      gensContainer.querySelectorAll('.gen-section').forEach(function(sec) {
-        var tot = sec.querySelectorAll('.poke-card').length, own = sec.querySelectorAll('.poke-card.owned').length, left = tot - own;
-        if (tot && left > 0 && (!best || left < best.left)) { var rg = sec.querySelector('.gen-region'); best = { left: left, name: rg ? rg.textContent : 'una generaci\u00f3n' }; }
-      });
-      if (best) rows.push(['dex', 'M\u00e1s cerca de completar', best.name + ' \u00b7 te ' + (best.left === 1 ? 'falta 1' : 'faltan ' + best.left)]);
+      if (typeof gensContainer !== 'undefined' && gensContainer) {
+        gensContainer.querySelectorAll('.gen-section').forEach(function(sec) {
+          var tot = sec.querySelectorAll('.poke-card').length, own = sec.querySelectorAll('.poke-card.owned').length, left = tot - own;
+          if (tot && left > 0 && (!best || left < best.left)) {
+            var rg = sec.querySelector('.gen-region');
+            best = { left: left, name: rg ? rg.textContent : 'una generación', tot: tot, own: own };
+          }
+        });
+      }
+      if (best) rows.push({ go: 'dex', label: 'Más cerca de completar', value: best.name + ' · te ' + (best.left === 1 ? 'falta 1' : 'faltan ' + best.left) });
+    } catch (e) {}
+    // Set TCG más cerca de completar (por cartas que ya tienes, agrupadas por set)
+    try {
+      if (typeof setProgressRows === 'function') {
+        var sets = setProgressRows();
+        // Prefer sets with progress but not complete; we only know owned counts, not totals for official sets.
+        // Show the set where you have the most cards as momentum.
+        if (sets.length) {
+          var top = sets[0];
+          rows.push({ go: 'tcg', label: 'Tu set más avanzado', value: top.set + ' · ' + top.n + ' cartas', setName: top.set });
+        }
+      }
     } catch (e) {}
     if (!rows.length) return '';
-    return '<section class="home-card"><h3>Hoy</h3>' + rows.map(function(r) {
-      return '<button type="button" class="home-row is-link" data-go="' + r[0] + '"><span>' + shareEscapeHtml(r[1]) + '</span><span>' + shareEscapeHtml(r[2]) + '</span></button>';
+    return '<section class="home-today" aria-label="Hoy"><h3>Hoy</h3>' + rows.map(function(r) {
+      var attr = r.setName ? ' data-home-set="' + shareEscapeHtml(String(r.setName)).replace(/"/g, '&quot;') + '"' : (r.go === 'home' ? '' : ' data-go="' + r.go + '"');
+      var tag = (r.go === 'home' && !r.setName) ? 'div' : 'button type="button"';
+      var close = (r.go === 'home' && !r.setName) ? 'div' : 'button';
+      return '<' + tag + ' class="home-today-row"' + attr + '><span class="home-today-label">' + shareEscapeHtml(r.label) + '</span><span class="home-today-value ' + (r.valueCls || '') + '">' + shareEscapeHtml(r.value) + '</span></' + close + '>';
     }).join('') + '</section>';
   }
 
@@ -14770,12 +15606,7 @@ html[data-style="menta"] .shop-chip{border-radius:999px;background:#fff;box-shad
 })();
 </script>
 
-<script>
-(function(){var tabs=document.querySelectorAll('#style-tabs .mode-tab');
-function mark(){var cur=document.documentElement.getAttribute('data-style');tabs.forEach(function(t){t.classList.toggle('is-active',t.getAttribute('data-style')===cur);});}
-tabs.forEach(function(t){t.addEventListener('click',function(){var k=t.getAttribute('data-style');document.documentElement.setAttribute('data-style',k);try{localStorage.setItem('pokecheck_style_v1',k);}catch(e){}mark();});});
-mark();})();
-</script>
+
 <script>
 /* v5-8-3 · filtros plegables, animación al capturar, brillo holo */
 (function(){
@@ -14802,30 +15633,17 @@ mark();})();
     new MutationObserver(function(list){
       list.forEach(function(m){
         var t=m.target;
-        if(!t.classList||!t.classList.contains('poke-card')||!t.classList.contains('owned')) return;
+        if(!t.classList||!t.classList.contains('owned')) return;
         if(((m.oldValue||'').split(/\s+/)).indexOf('owned')!==-1) return;
-        t.classList.add('just-owned');
-        setTimeout(function(){ t.classList.remove('just-owned'); },700);
+        if(t.classList.contains('poke-card') || t.classList.contains('tcg-card')){
+          t.classList.add('just-owned');
+          setTimeout(function(){ t.classList.remove('just-owned'); },900);
+        }
       });
     }).observe(document.body,{attributes:true,subtree:true,attributeFilter:['class'],attributeOldValue:true});
   }
-  if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){
-    var sheen=function(wrap){ var h=wrap.querySelector('.holo-sheen'); if(!h){ h=document.createElement('div'); h.className='holo-sheen'; wrap.appendChild(h); } return h; };
-    var move=function(e){
-      var img=e.target; if(!img||img.tagName!=='IMG') return;
-      var wrap=img.closest&&img.closest('.tcg-lightbox-img-wrap'); if(!wrap) return;
-      var h=sheen(wrap), r=img.getBoundingClientRect(), w=wrap.getBoundingClientRect();
-      if(!r.width||!r.height) return;
-      h.style.left=(r.left-w.left)+'px'; h.style.top=(r.top-w.top)+'px'; h.style.width=r.width+'px'; h.style.height=r.height+'px';
-      h.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
-      h.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
-      h.classList.add('on');
-    };
-    var off=function(){ var h=document.querySelector('.tcg-lightbox .holo-sheen'); if(h) h.classList.remove('on'); };
-    document.addEventListener('pointerdown',move,true);
-    document.addEventListener('pointermove',move,true);
-    ['pointerup','pointercancel'].forEach(function(n){ document.addEventListener(n,off,true); });
-  }
+  // holo/drag gestionado por lbBindDrag
+
 })();
 </script>
 
