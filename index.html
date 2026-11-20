@@ -2657,6 +2657,26 @@
   </div>
 </div>
 
+
+<script>
+/* Splash failsafe: no depende del resto de la app */
+(function(){
+  var s = document.getElementById('app-splash');
+  if (!s) return;
+  var done = false;
+  function leave(){
+    if (done || !s) return;
+    done = true;
+    s.classList.add('is-leaving');
+    setTimeout(function(){ try { s.remove(); } catch(e) { if (s) s.style.display='none'; } }, 400);
+  }
+  if (document.readyState === 'complete') setTimeout(leave, 900);
+  else window.addEventListener('load', function(){ setTimeout(leave, 900); }, { once: true });
+  setTimeout(leave, 2800);
+  // Si el usuario toca, no le dejamos atrapado
+  s.addEventListener('click', leave, { once: true });
+})();
+</script>
 <header>
   <div class="header-top">
     <div class="title-block">
@@ -4586,8 +4606,8 @@
     ttPopup.hidden = false;
     requestAnimationFrame(function() { requestAnimationFrame(function() { ttPopup.classList.add('is-open'); }); });
   }
-  document.getElementById('tt-backdrop').addEventListener('click', closeTabTip);
-  document.getElementById('tt-done').addEventListener('click', closeTabTip);
+  ((document.getElementById('tt-backdrop'))||{addEventListener:function(){}}).addEventListener('click', closeTabTip);
+  ((document.getElementById('tt-done'))||{addEventListener:function(){}}).addEventListener('click', closeTabTip);
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && !ttPopup.hidden) closeTabTip(); });
 
   function openBackupPopup() {
@@ -4939,7 +4959,7 @@
     renderOwnedGrid();
   });
   // Mantiene el contador al día cuando marcas/desmarcas una carta desde la pestaña TCG.
-  document.getElementById('tcg-view').addEventListener('click', function() {
+  ((document.getElementById('tcg-view'))||{addEventListener:function(){}}).addEventListener('click', function() {
     setTimeout(function() {
       tcgOwnedBadgeEl.textContent = tcgOwnedSectionCount();
       tcgOwnedDirty = true;
@@ -5795,7 +5815,7 @@
     closeSettingsPopup();
     setTimeout(openBackupPopup, 260);
   });
-  backupBackdrop.addEventListener('click', closeBackupPopup);
+  if (backupBackdrop) backupBackdrop.addEventListener('click', closeBackupPopup);
   backupClose.addEventListener('click', closeBackupPopup);
   document.addEventListener('keydown', function(e) {
     if (e.key !== 'Escape') return;
@@ -5805,9 +5825,9 @@
     if (settingsPopup && !settingsPopup.hidden) return closeSettingsPopup();
   });
   if (statsBtn) statsBtn.addEventListener('click', openStatsPopup);
-  statsBackdrop.addEventListener('click', closeStatsPopup);
+  if (statsBackdrop) statsBackdrop.addEventListener('click', closeStatsPopup);
   statsClose.addEventListener('click', closeStatsPopup);
-  huchaRefreshBtn.addEventListener('click', function() { refreshHuchaPrices(true); });
+  if (huchaRefreshBtn) huchaRefreshBtn.addEventListener('click', function() { refreshHuchaPrices(true); });
   if (cardmarketBtn) cardmarketBtn.addEventListener('click', openCardmarketPopup);
   cardmarketBackdrop.addEventListener('click', closeCardmarketPopup);
   cardmarketClose.addEventListener('click', closeCardmarketPopup);
@@ -8755,8 +8775,8 @@
     }
   }
 
-  document.getElementById('dups-backdrop').addEventListener('click', closeDupsPopup);
-  document.getElementById('dups-close').addEventListener('click', closeDupsPopup);
+  ((document.getElementById('dups-backdrop'))||{addEventListener:function(){}}).addEventListener('click', closeDupsPopup);
+  ((document.getElementById('dups-close'))||{addEventListener:function(){}}).addEventListener('click', closeDupsPopup);
   dupsShareBtn.addEventListener('click', shareDupsHtml);
 
   // Compartir como imagen: dibuja las repetidas en un lienzo (12 cartas por imagen) y las manda con
@@ -11103,8 +11123,8 @@
       if (token === globalToken) globalStatusEl.textContent = 'No se pudo cargar la lista. Comprueba tu conexión e inténtalo de nuevo.';
     });
   }
-  document.getElementById('global-open-btn').addEventListener('click', openGlobal);
-  document.getElementById('global-back-btn').addEventListener('click', function() { globalToken++; exitToShelf(); });
+  ((document.getElementById('global-open-btn'))||{addEventListener:function(){}}).addEventListener('click', openGlobal);
+  ((document.getElementById('global-back-btn'))||{addEventListener:function(){}}).addEventListener('click', function() { globalToken++; exitToShelf(); });
   globalMoreBtn.addEventListener('click', function() { globalShown += GLOBAL_PAGE; renderGlobal(true); });
   globalSortSelect.addEventListener('change', function() { globalKey = globalSortSelect.value; globalShown = GLOBAL_PAGE; renderGlobal(false); });
   globalDirBtn.addEventListener('click', function() {
@@ -12418,7 +12438,7 @@
     shopSealedToggle.setAttribute('aria-expanded', String(open));
   });
 
-  document.getElementById('shop-sealed-add').addEventListener('click', function() {
+  ((document.getElementById('shop-sealed-add'))||{addEventListener:function(){}}).addEventListener('click', function() {
     var name = document.getElementById('shop-sealed-name').value.trim();
     var url = document.getElementById('shop-sealed-url').value.trim();
     var img = document.getElementById('shop-sealed-img').value.trim();
@@ -12718,11 +12738,11 @@
       releaseCustomListEl.appendChild(chip);
     });
   }
-  document.getElementById('release-custom-toggle').addEventListener('click', function() {
+  ((document.getElementById('release-custom-toggle'))||{addEventListener:function(){}}).addEventListener('click', function() {
     var f = document.getElementById('release-custom-form');
     f.hidden = !f.hidden;
   });
-  document.getElementById('release-custom-add').addEventListener('click', function() {
+  ((document.getElementById('release-custom-add'))||{addEventListener:function(){}}).addEventListener('click', function() {
     var nameEl = document.getElementById('release-custom-name');
     var urlEl = document.getElementById('release-custom-url');
     var url = urlEl.value.trim();
@@ -12738,20 +12758,20 @@
   });
   renderReleaseCustom();
   releaseQueryEl.addEventListener('input', renderReleaseLinks);
-  document.getElementById('release-backdrop').addEventListener('click', closeReleasePopup);
-  document.getElementById('release-close').addEventListener('click', closeReleasePopup);
+  ((document.getElementById('release-backdrop'))||{addEventListener:function(){}}).addEventListener('click', closeReleasePopup);
+  ((document.getElementById('release-close'))||{addEventListener:function(){}}).addEventListener('click', closeReleasePopup);
   // </release-popup>
 
-  document.getElementById('shop-releases-toggle').addEventListener('click', function() {
+  ((document.getElementById('shop-releases-toggle'))||{addEventListener:function(){}}).addEventListener('click', function() {
     var box = document.getElementById('shop-releases-box');
     box.hidden = !box.hidden;
     this.setAttribute('aria-expanded', String(!box.hidden));
   });
-  document.getElementById('shop-releases-add-toggle').addEventListener('click', function() {
+  ((document.getElementById('shop-releases-add-toggle'))||{addEventListener:function(){}}).addEventListener('click', function() {
     var f = document.getElementById('shop-releases-form');
     f.hidden = !f.hidden;
   });
-  document.getElementById('shop-releases-add').addEventListener('click', function() {
+  ((document.getElementById('shop-releases-add'))||{addEventListener:function(){}}).addEventListener('click', function() {
     var n = document.getElementById('shop-releases-name').value.trim();
     var d = document.getElementById('shop-releases-date').value;
     if (!n || !/^\d{4}-\d{2}-\d{2}$/.test(d)) { shopReleasesMsg('Pon un nombre y una fecha.', true); return; }
@@ -12763,7 +12783,7 @@
     shopReleasesMsg('', false);
     renderShopReleases();
   });
-  document.getElementById('shop-releases-ai').addEventListener('click', function() {
+  ((document.getElementById('shop-releases-ai'))||{addEventListener:function(){}}).addEventListener('click', function() {
     var btn = this;
     if (!aiWorkerEnabled) { shopReleasesMsg('El servicio de IA no está activado. Revisa Ajustes.', true); return; }
     btn.disabled = true;
@@ -12889,13 +12909,13 @@
     pushCfg = { url: pushUrlInput.value.trim(), key: pushKeyInput.value.trim(), releases: pushReleasesInput.checked, telegram: pushTelegramInput.checked };
     try { localStorage.setItem(PUSH_CFG_KEY, JSON.stringify(pushCfg)); } catch (e) {}
   }
-  document.getElementById('push-sync-btn').addEventListener('click', function() {
+  ((document.getElementById('push-sync-btn'))||{addEventListener:function(){}}).addEventListener('click', function() {
     pushReadForm();
     if (!/^https:\/\//.test(pushCfg.url) || !pushCfg.key) { pushMsg('Pon la URL del Worker (https://…) y la clave.', true); return; }
     pushMsg('Sincronizando…', false);
     pushSync(true);
   });
-  document.getElementById('push-test-btn').addEventListener('click', function() {
+  ((document.getElementById('push-test-btn'))||{addEventListener:function(){}}).addEventListener('click', function() {
     pushReadForm();
     if (!pushCfg || !pushCfg.url) { pushMsg('No se ha podido localizar el servicio de notificaciones.', true); return; }
     pushMsg('Enviando prueba…', false);
@@ -13210,16 +13230,16 @@
   function closeValuePopup() {
     uxModalClose(valuePopupEl);
   }
-  document.getElementById('value-backdrop').addEventListener('click', closeValuePopup);
-  document.getElementById('value-close').addEventListener('click', closeValuePopup);
-  valueChipsEl.addEventListener('click', function(e) {
+  ((document.getElementById('value-backdrop'))||{addEventListener:function(){}}).addEventListener('click', closeValuePopup);
+  ((document.getElementById('value-close'))||{addEventListener:function(){}}).addEventListener('click', closeValuePopup);
+  if (valueChipsEl) valueChipsEl.addEventListener('click', function(e) {
     var chip = e.target.closest && e.target.closest('[data-sort]');
     if (!chip) return;
     valueSortKey = chip.getAttribute('data-sort');
     valueSortDir = VALUE_DEFAULT_DIR[valueSortKey];
     renderValueBreakdown();
   });
-  valueDirBtn.addEventListener('click', function() {
+  if (valueDirBtn) valueDirBtn.addEventListener('click', function() {
     valueSortDir = valueSortDir === 'asc' ? 'desc' : 'asc';
     renderValueBreakdown();
   });
@@ -13353,8 +13373,8 @@
     ddPopup.classList.remove('is-open');
     setTimeout(function() { ddPopup.hidden = true; }, 250);
   }
-  document.getElementById('dex-detail-close').addEventListener('click', closeDexDetail);
-  document.getElementById('dex-detail-backdrop').addEventListener('click', closeDexDetail);
+  ((document.getElementById('dex-detail-close'))||{addEventListener:function(){}}).addEventListener('click', closeDexDetail);
+  ((document.getElementById('dex-detail-backdrop'))||{addEventListener:function(){}}).addEventListener('click', closeDexDetail);
   renderHome();
 
 
@@ -14222,16 +14242,16 @@
       status('');
       panel.hidden = false;
     });
-    document.getElementById('tcg-imgfix-close').addEventListener('click', close);
+    ((document.getElementById('tcg-imgfix-close'))||{addEventListener:function(){}}).addEventListener('click', close);
     panel.addEventListener('click', function(e) { if (e.target === panel) close(); });
-    document.getElementById('tcg-imgfix-search').addEventListener('click', function() {
+    ((document.getElementById('tcg-imgfix-search'))||{addEventListener:function(){}}).addEventListener('click', function() {
       var c = cardOf();
       if (!c) return;
       var num = tcgCardLocalNumber(c);
       var q = [tcgFixCtx.englishName || tcgFixCtx.alt || c.name, tcgFixCtx.setLabel, num ? '#' + num : '', 'pokemon card'].filter(Boolean).join(' ');
       window.open('https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(q), '_blank', 'noopener');
     });
-    document.getElementById('tcg-imgfix-save').addEventListener('click', function() {
+    ((document.getElementById('tcg-imgfix-save'))||{addEventListener:function(){}}).addEventListener('click', function() {
       var c = cardOf();
       var url = String(urlEl.value || '').trim();
       if (!c) return;
@@ -14245,7 +14265,7 @@
       refreshViews(c.id, url);
       close();
     });
-    document.getElementById('tcg-imgfix-remove').addEventListener('click', function() {
+    ((document.getElementById('tcg-imgfix-remove'))||{addEventListener:function(){}}).addEventListener('click', function() {
       var c = cardOf();
       if (!c) return;
       delete tcgImageOverrides[c.id];
@@ -14702,15 +14722,20 @@
   })();
 
 
-  init(false);
-  setTimeout(function() { maybeShowTabTip('home'); }, 900);
-  // El splash acompaña la primera carga sin bloquear la app si una API tarda demasiado.
+  setTimeout(function() { try { maybeShowTabTip('home'); } catch (e) {} }, 900);
+  // Splash: refuerzo por si el failsafe temprano no corrió
   (function() {
     var splash = document.getElementById('app-splash');
     if (!splash) return;
-    function leave() { splash.classList.add('is-leaving'); setTimeout(function() { splash.remove(); }, 500); }
-    window.addEventListener('load', function() { setTimeout(leave, 1700); }, { once: true });
-    setTimeout(leave, 5000);
+    function leave() {
+      if (!splash || !splash.parentNode) return;
+      splash.classList.add('is-leaving');
+      setTimeout(function() { try { if (splash && splash.parentNode) splash.remove(); } catch (e) {} }, 500);
+    }
+    try { init(false); } catch (e) { console.error('init', e); }
+    if (document.readyState === 'complete') setTimeout(leave, 400);
+    else window.addEventListener('load', function() { setTimeout(leave, 400); }, { once: true });
+    setTimeout(leave, 2500);
   })();
 
 
